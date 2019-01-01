@@ -1,0 +1,64 @@
+/* Three image containers (use 25% for four, and 50% for two, etc) */
+.column {
+  float: none;
+  width: 60%;
+  padding: 2em;
+  display:inline-block;
+   vertical-align: middle;
+
+}
+
+/* Clear floats after image containers */
+.row {
+  text-align:center;
+    margin:0 auto;
+
+}
+
+
+/* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 500px) {
+  .column {
+    width: 80%;
+  }
+}
+
+* {
+  margin: 0;
+}
+
+a:hover {
+  color: hotpink;
+
+}
+
+img {
+
+}
+
+a {
+  color: white;
+  transition: color .2s ease;
+}
+
+body {
+  background-image: linear-gradient(
+    to right,
+    rgb(194, 255, 182),
+    rgb(255, 163, 182),
+    rgb(221, 169, 255),
+    rgb(162, 209, 255)
+    );
+    background-size: 200%;
+  }
+
+  .title {
+    text-align: center;
+    vertical-align:middle;
+    font-family:arial,helvetica,sans-serif;
+font-weight:bold;
+    font-style: italic;
+    font-size: 4em;
+    padding-top: 0.5em; /* need this to clear the default margin */
+    padding-bottom:0.5em;
+  }
