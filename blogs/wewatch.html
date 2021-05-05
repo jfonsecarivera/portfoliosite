@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<title>I Made A Mobile App for my Significant Other (And She Doesn't Use It)</title>
+	<meta charset="UTF-8">
+    <meta name="description" content="I Made An App For My Significant Other (And She Doesn't Use It).">
+	<meta name="keywords" content="Joshua Fonseca, Fonseca, Mobile App, WeWatch, React Native">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Metadata -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="language" content="English">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://jerseyfonseca.com/blogs/wewatch">
+    <meta property="og:title" content="I Made A Mobile App for my Significant Other (And She Doesn't Use It)">
+    <meta property="og:description" content="😢">
+    <meta property="og:image" content="https://wewatchapp.xyz/img/feature.PNG">
+
+	<!-- Main Styling-->
+	<link rel="stylesheet" href="/css/index.css">
+
+	<!-- Google Font: Roboto -->
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+	<!-- JQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="/js/loadTemplates.js"></script>
+
+	<!-- Mailchimp -->
+	<script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script>
+	<script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+</head>
+<body>
+    <div id="header"></div>
+    <div class="content">
+        <h1>I Made A Mobile App for my Significant Other (And She Won't Use It)</h1>
+        <img src="/projects/images/wewatch/feature.png">
+        <p>
+            My partner and I always have trouble finding what movie to watch. 
+            The typical process usually goes like this:
+        </p>
+        <blockquote>
+            <p>What do you want to watch?</p>
+            <p>I don't know, what do you want to watch?</p>
+            <p>Let's watch Kong vs. Godzilla</p>
+            <p>No, how about Zack Snyder's Justice League?</p>
+            <p>No, that's way too long. How about Minari?</p>
+            <p>No, too serious. How about...</p>
+        </blockquote>
+        <p>You get the point.</p>
+        <p>
+            We usually watch 1-2 movies a week, so we go through this 
+            process quite often... And this isn't just something that 
+            happens with my partner. I have literally spent over an hour 
+            trying to pick a movie with my friend group before.
+        </p>
+        <p>
+            The problem was simple: we don't know the subset of movies
+            that we are willing to watch. Heck, I don't even know the 
+            movies I'm willing to watch until you ask me! If only there 
+            were a way for me to fix this...
+        </p>
+        <h2>Of course there's a way!</h2>
+        <p>
+            I'm a Software Engineer! I literally make tech for a living. 
+            Surely, I could make something that will solve this problem 
+            for us. I began doing research into ways people have gone about 
+            solving this problem and found this glorious tweet. 
+        </p>
+        <blockquote class="twitter-tweet"><p lang="en" dir="ltr">Ok I’m stoned but this seems like a good idea: what if there was an app that both you and your partner have where you both swipe right or left on movies that are on your streaming services and when you find a match it lets you know</p>&mdash; c a i t l i n (@hello__caitlin) <a href="https://twitter.com/hello__caitlin/status/1304270134681448449?ref_src=twsrc%5Etfw">September 11, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
+        <p>
+            It wasn't an original idea, but I've never made a mobile app before, 
+            so I thought it would be a cool learning experience. On top of that, 
+            I would be making it to solve an actual problem I have with people I 
+            care about, and that's pretty special! 
+        </p>
+        <h2>How the heck do I make a mobile app?!</h2>
+        <p>
+            I knew at the basic level I would need:
+            <ul class="list">
+                <li>A backend server to handle API calls</li>
+                <li>A frontend client to actually render the app</li>
+                <li>A database to store movies and user's likes</li>
+                <li>An object storage solution to store images</li>
+            </ul>
+        </p>
+        <p>
+            Well, if I was already delving into mobile app development 
+            for the first time, why not just learn something new on all levels? 🤪
+        </p>
+        <h3>The Frontend: React Native</h3>
+        <p>
+            I didn't want to write native code because, well... 
+            I don't have time for that. Cross-platform development 
+            is clearly ideal. As far as I knew, my choices were React 
+            Native or Flutter. I have worked with React on some of my 
+            previous projects. I'm no expert in React, but I at least 
+            knew the basics. So, I decided to go with React Native. 
+        </p>
+        <p>
+            It's worth noting that I used <a href="https://docs.expo.io/">expo</a> 
+            to handle the actual build and deployment process. It really 
+            did save me hours of work at no cost!
+        </p>
+        <h3>The Backend: express.js</h3>
+        <p>
+            I don't have too much to say about this. I had never used Node.js 
+            before, but I heard about it so often that I wanted to give it a 
+            shot.
+        </p>
+        <p>
+            I was shocked at how easy it was to use! If you understand how APIs 
+            work, it's pretty easy to dive into. Also, I wrote my own middlewares 
+            for the first time - frickin amazing! Saved me so much time!
+        </p>
+        <h3>The Database: MongoDB</h3>
+        <p>
+            I had only worked with SQL databases before, so I thought I'd also 
+            give document-oriented databases a shot. Writing the models were 
+            pretty easy, but I had a hard time understanding MongoDB's query and 
+            aggregation flow. 
+        </p>
+        <p>
+            I think the queries can definitely be optimized, but hey, I was able to 
+            get it to work.
+        </p>
+        <h3>Blob Storage: Azure Storage</h3>
+        <p>
+            The only reason I chose to use this was because I get $100 of free 
+            monthly Azure credit. Honestly, I thought it was poorly documented 
+            and hard to interface with. It works, but it's still not clear how 
+            I should handle certain occurances.
+        </p>
+        <h3>Getting The Data</h3>
+        <p>
+            I wrote an automated web scraper that populates my database with new 
+            movies. Did you know that there are only about 500,000 movies? I can 
+            very feasibly have every movie ever made in my database :) 
+        </p>
+        <h2>The Timeline</h2>
+        <h3>Building The App</h3>
+        <p>
+            Honestly, building the app was the least time intensive, which became 
+            a point of frustration for me. It took me 2-3 weeks to build out the 
+            app to a point where it worked (with the exception of minor bug 
+            fixes).
+        </p>
+        <p>
+            I was pretty impressed by the end of it. I was able to: 
+            <ul class="list">
+                <li>See what me and a friend was willing to watch</li>
+                <li>Start a group and see what we were all willing to watch</li>
+                <li>Filter and see movies by service (Netflix, Hulu, etc.)</li>
+                <li>Filter and see movies by genre</li>
+            </ul>
+        </p>
+        <img src="/projects/images/wewatch/example1.png">
+        <img src="/projects/images/wewatch/example2.png">
+        <h3>Getting Approved For The App Store</h3>
+        <p>
+            Jeez, this process sucks. I had to pay a $25 one-time fee to get onto 
+            the Google Play Store, and an annual $100 to get onto Apple's app store.
+        </p>
+        <p>
+            <b>Pfffffffffffffffffffffffffffffffffffffffffffffffft.</b> 
+        </p>
+        <p>
+            And there are all these stupid requirements. I need at least X 
+            screenshots, and they have to be this exact resolution blah blah blah. 
+            On top of that, it took so long to get approved. My ADHD brain 
+            really suffered waiting for the gratification. 
+        </p>
+        <p>
+            Eat my butt, Apple. Eat my butt, Google. Just let me publish my 
+            frickin app, you already emptied my pockets.
+        </p>
+        <h2>Marketing</h2>
+        <p>
+            I know it was originally just for me and my friends, but if I had to pay 
+            to make this app, maybe I can get some more users and make my money back.
+        </p>
+        <h3>Reddit</h3>
+        <p>
+            As always, I spread it all over reddit, and got some pretty positive feedback, 
+            with multiple posts getting around 100 upvotes on r/sideproject.
+        </p>
+        <h3>Facebook</h3>
+        <p>
+            I've never done this before, but I shared what I created with my friends 
+            from college by posting on *dun dun dun* Facebook. They were actually really 
+            supportive, and helped me spread the app! I should have known, they're my 
+            friends!
+        </p>
+        <p>
+            I actually found this pretty cool service called loom and recorded a personal 
+            thank you to all my friends that signed up. It was very sweet. They were happy 
+            to see me, and I was happy to get the chance to say something nice to them. It 
+            also encouraged them to share it with their friends!
+        </p>
+        <img src="/projects/images/wewatch/loom.jpg">
+        <h2>The Aftermath</h2>
+        <p>
+            Now, <a href="https://wewatchapp.xyz/">WeWatch</a> has around 400 users, which 
+            is many more users than I've ever had on anything I've made! So that's also 
+            a really cool feeling :) 
+        </p>
+        <p>
+            Last weekend, my partner had her friends stay with us over the weekend. 
+            We needed to find a movie to watch. This was my chance! I was so excited!
+        </p>
+        <blockquote>
+            <p>
+                "Let's use WeWatch!"
+            </p>
+            <p>
+                "No, it would take too long. Let's just watch Space Jam."
+            </p>
+        </blockquote>
+        <p>
+            ☹️ Guess I still have some improvements to make.
+        </p>
+        <p>
+           If you liked this, <a href="https://twitter.com/_joshuafonseca">follow me on Twitter</a>!
+        </p>
+    </div>
+    
+	<div id="footer"></div>
+</body>
+</html>

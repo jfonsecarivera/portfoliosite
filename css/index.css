@@ -16,12 +16,26 @@ h1 {
   margin-bottom: 1em;
   margin-left: 0;
   margin-right: 0;
+  font-weight: 300;
+  font-size: 50px;
+}
+
+h2 {
+  margin-top: 2em;
+}
+
+h3 {
+  margin-top: 2em;
 }
 
 ul {
     padding: 0;
 }
 .list {
+    margin-left:2em;
+}
+
+.content ul {
     margin-left:2em;
 }
 

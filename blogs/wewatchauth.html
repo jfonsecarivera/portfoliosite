@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<title>I Made a Mistake That Cost me 612 Users</title>
+	<meta charset="UTF-8">
+    <meta name="description" content="Turns out, I don't need such intense authentication">
+	<meta name="keywords" content="Joshua Fonseca, Fonseca, WeWatch, App Authentication">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Metadata -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="language" content="English">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://jerseyfonseca.com/blogs/wewatchauth">
+    <meta property="og:title" content="I Made a Mistake That Cost me 612 Users">
+    <meta property="og:description" content="Turns out, I don't need such intense authentication">
+
+	<!-- Main Styling-->
+	<link rel="stylesheet" href="/css/index.css">
+
+	<!-- Google Font: Roboto -->
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+	<!-- JQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="/js/loadTemplates.js"></script>
+
+	<!-- Mailchimp -->
+	<script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script>
+	<script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+</head>
+<body>
+    <div id="header"></div>
+    <div class="content">
+        <h1>I Made a Mistake That Cost me 612 Users</h1>
+        <p>
+            Last week, I <a href="signficantother.html">wrote a blog post that reached the front page of Hacker News.</a> 
+            I was very lucky, and it got thousands of impressions for <a href="https://wewatchapp.xyz/">my app</a>. There were two
+            big problems, though.
+        </p>
+        <h2>People left 1 star reviews</h2>
+        <p>
+            Ouch 🤕
+        </p>
+        <h2>People were instantly uninstalling</h2>
+        <p>
+            Why? Well... I had some pretty intense 
+            authentication requirements. Here's a few:
+        </p>
+
+        <h3>Your password must have at least 8 characters, have a lowercase and uppercase character, a number, and a special character</h3>
+        <p>
+            Turns out, this doesn't work with most password managers, and most people 
+            don't have a password that has all these requirements. I honestly don't know 
+            where I got the idea that this was the standard 😅
+        </p>
+        <h3>Verify your password</h3>
+        <p>
+            Giving people one more thing to type in just makes the onboarding more cumbersome. 
+            If they typed their password incorrectly, they can just reset it when the time comes. 
+        </p>
+        <h3>You can't login until you verified your email</h3>
+        <p>
+            Why did I do this? Totally regret it. Makes the process very slow, sometimes mail 
+            gets lost in spam, and honestly? Nobody is trying to spam fake accounts on my app. 
+            Nobody even knows about it, why would they create a bunch of fake accounts? Just log 
+            them in after a successful signup.
+        </p>
+        <h2>Lesson Learned</h2>
+        <p>
+            What do I think I am, a government? 
+        </p>
+        <p>
+            My auth flow was like this because I had done something similar before and 
+            it was very quick to reuse my old code. I try to ship quickly, and it's totally 
+            fine to make mistakes like this, but it's just as important to fix those mistakes 
+            quickly. Unfortunately, I took a bit too long.
+        </p>
+        <p>
+            Since I pushed this update, I have seen a decrease in uninstalls while installs 
+            have remained constant. Now, I just need to take a bit too long to add in third 
+            party authentication 🙃
+        </p>
+        <p>
+            You can <a href="https://wewatchapp.xyz/">download and uninstall my app here</a>.
+        </p>
+        <p>
+            If you liked this, <a href="https://twitter.com/_joshuafonseca">follow me on Twitter</a>!
+        </p>
+        </div>
+    
+	<div id="footer"></div>
+</body>
+</html>
