@@ -39,6 +39,11 @@ ul {
     margin-left:2em;
 }
 
+.mobileScreenshot {
+    width: 50%;
+}
+
+
 .content h2 {
   display: block;
   margin-top: 2em;
@@ -100,4 +105,8 @@ a {
   html {
       padding: 1em;
   }
+
+.mobileScreenshot {
+    width: 100%;
+}
 }
