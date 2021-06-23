@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<!-- Metadata -->
+	<title>Combining Debouncing & The Doherty Threshold to Improve Search UX & Performance</title>
+	<meta charset="UTF-8">
+	<meta name="description" content="I constantly need to find ways to reduce API calls to keep my app 
+    as cheap to run as possible. It's a fun challenge, and forces me to learn new concepts. This 
+    week, I learned about 'debouncing' and the 'Doherty Threshold'. ">
+	<meta name="keywords" content="Debouncing, Doherty Threshold, Search, UX, Performance">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Main Styling-->
+	<link rel="stylesheet" href="/css/index.css">
+
+	<!-- Google Font: Roboto -->
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5B4GFEFWRJ"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-5B4GFEFWRJ');
+	</script>
+
+	<!-- JQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="/js/loadTemplates.js"></script>
+
+	<!-- Mailchimp -->
+	<script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script>
+	<script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+</head>
+<body>
+    <div id="header"></div>
+    <div class="content">
+	<h1>Combining Debouncing & The Doherty Threshold to Improve Search UX & Performance</h1>
+    <p>
+        Jeez, that's a mouthful...  
+    </p>
+    <p>
+        I constantly need to find ways to reduce API calls to keep <a href="./wewatch.html">my app</a> 
+        as cheap to run as possible. This is more true than ever now that I've been able to 
+        <a href="./wewatchgrowth.html">grow it to 32,000 users</a>. I will stay on my $5/mo Digital Ocean 
+        droplet as long as I possibly can.
+    </p>
+    <p>
+        It's a fun challenge, and it forces me to learn new concepts. 
+        This week, I learned about "debouncing" and the "Doherty Threshold". 
+        Check out the world of difference it made for me:
+    </p>
+    <h2>Before Debouncing</h2>
+    <p>
+        <blockquote class="twitter-tweet" data-conversation="none" data-dnt="true" data-theme="dark">
+            <p lang="en" dir="ltr">Here&#39;s what searching looked like before debouncing: <a
+                    href="https://t.co/Wy2m6luNyR">pic.twitter.com/Wy2m6luNyR</a></p>&mdash; joshua fonseca (@_joshuafonseca) <a
+                href="https://twitter.com/_joshuafonseca/status/1400112902523260939?ref_src=twsrc%5Etfw">June 2, 2021</a>
+        </blockquote>
+        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+    </p>
+    <h2>After Debouncing</h2>
+    <p>
+        <blockquote class="twitter-tweet" data-conversation="none" data-dnt="true" data-theme="dark">
+            <p lang="en" dir="ltr">And here&#39;s what it looked like after: <a
+                    href="https://t.co/DF3n86psEH">pic.twitter.com/DF3n86psEH</a></p>&mdash; joshua fonseca (@_joshuafonseca) <a
+                href="https://twitter.com/_joshuafonseca/status/1400112910127484933?ref_src=twsrc%5Etfw">June 2, 2021</a>
+        </blockquote>
+        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    </p>
+    <p>
+        What a difference!! Okay, let's get into it.
+    </p>
+    <h2>Problem 1: Unnecessary Server Calls</h2>
+    <p>
+        Each time a user enters a character in the search bar, it sends off an API call.
+    </p>
+    <p>
+        This is good because users get immediate feedback, 
+        but bad because it leads to a lot of unnecessary API calls. 
+        Nobody actually intends to see results after every keystroke, 
+        so why make an API call? 
+    </p>
+    <p>
+        It's a waste of resources. Hundreds of search requests 
+        should really just be a fraction of that.
+    </p>
+    <h3>Solution: Debouncing</h3>
+    <p>
+        Google doesn't search everytime I hit a keystroke... Try it yourself; 
+        you'll notice immediately. 
+    </p>
+    <p>
+        So, what do they do? <b>Debounce</b>.
+    </p>
+    <p>
+        Debouncing is when you wait for X milliseconds of uninterrupted time to pass 
+        before performing an action. It's used when you search for things, when you input 
+        your password incorrectly, etc..
+    </p>
+    <p>
+        Here is an overview of how I handle this:
+        <ul>
+            <li>User enters input</li>
+            <li>Timer begins to send API request</li>
+            <li>If user types before timer is up, restart the timer with the new input</li>
+        </ul>
+    </p>
+    <p>
+        It's a simple concept, but I neither learned it in college, 
+        nor had to deal with at work! It was just something I had to learn in 
+        the wild, so I hope that this is helpful for you too.
+    </p>
+    <h2>Problem 2: A Bad User Experience</h2>
+    <p>
+        Debouncing instantly improves the user experience, and someone on twitter 
+        perfectly explained why: 
+    </p>
+    <p>
+        <blockquote class="twitter-tweet" data-conversation="none" data-dnt="true" data-theme="dark">
+            <p lang="en" dir="ltr">Id add another point. Its incredibility frustrating and distracting when the page reloads on
+                every character entered. Humans think not in characters but in words. It would be soo irritating if my friend
+                said, hey do you want an a.. p.. p.. l.. e.. . Give me the Apple damn it! :)</p>&mdash; °𝐀llwyn 𝐅ernandes 📌
+            (@allwynpfr) <a href="https://twitter.com/allwynpfr/status/1400358433497382912?ref_src=twsrc%5Etfw">June 3, 2021</a>
+        </blockquote>
+        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    </p>
+    <p>
+        Well said. So, the user experience is fixed, right?
+    </p>
+    <p>
+        Well, not exactly - there's still one crucial piece of information that's missing... 
+        <b>How many milliseconds can I wait, and still keep responsiveness?</b>
+    </p>
+    <p>
+        The best answer is to test it with your users, and ask them. However, I don't have 
+        that luxury. I have a full-time job and make this mobile app just as a passion project. 
+        It's free & there are no ads. I can't really justify testing so extensively. 
+    </p>
+    <p>
+        So, what do I do? Guess?
+    </p>
+    <p>
+        Nah.
+    </p>
+    <h3>Solution: The Doherty Threshold</h3>
+    <p>
+        I rely on the <b>Doherty Threshold!</b>
+    </p>
+    <p>
+        <a href="https://lawsofux.com/doherty-threshold/">From lawsofux</a>: 
+        The Doherty Threshold states that productivity soars when a computer 
+        and its users interact at a pace (\<\400ms) that ensures that neither 
+        has to wait on the other.
+    </p>
+    <p>
+        My average api response time is about 100ms, so I decided to wait about 
+        300ms.
+    </p>
+        <h2>Thanks for reading!</h2>
+        <p>
+            I hope you learned something new, or just enjoyed reading :) If you liked this, you can <a
+                href="https://twitter.com/_joshuafonseca">follow me on twitter</a>
+            and keep up to date with all the stuff I'm learning!
+        </p>
+    </div>
+	<div id="footer"></div>
+</body>
+</html>
