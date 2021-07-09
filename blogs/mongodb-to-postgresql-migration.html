@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <!-- Metadata -->
+    <title>Why I Had to Migrate from MongoDB to PostgreSQL</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="
+            A few months ago, I made WeWatch,
+            a mobile app to help you find what films to watch.
+            I made the decision to use MongoDB because of the popularity
+            of the MERN stack.
+    ">
+    <meta name="keywords" content="Database Migration, Database, PostgreSQL, MongoDB">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Main Styling-->
+    <link rel="stylesheet" href="/css/index.css">
+
+    <!-- Google Font: Roboto -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5B4GFEFWRJ"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-5B4GFEFWRJ');
+    </script>
+
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="/js/loadTemplates.js"></script>
+
+    <!-- Mailchimp -->
+    <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script>
+    <script
+        type='text/javascript'>(function ($) { window.fnames = new Array(); window.ftypes = new Array(); fnames[0] = 'EMAIL'; ftypes[0] = 'email'; }(jQuery)); var $mcj = jQuery.noConflict(true);</script>
+</head>
+
+<body>
+    <div id="header"></div>
+    <div class="content">
+        <h1>Why I Had to Migrate from MongoDB to PostgreSQL</h1>
+        <img src="/projects/images/database-migration/storage.PNG"/>
+        <h2>TLDR;</h2>
+        <p>
+            <ul class="list">
+                <li>More complex relationships emerged in my app</li>
+                <li>
+                    Trying to restructure MongoDB to fulfill these 
+                    relationships made my MongoDB 4x in size
+                </li>
+                <li>I was working against what MongoDB was optimized for</li>
+            </ul>
+        </p>
+        <h2>The story</h2>
+        <p>
+            A few months ago, I <a href="./wewatch.html">made WeWatch,
+                a mobile app to help you find what films to watch</a>.
+            I made the decision to use MongoDB because of the popularity
+            of the <a href="https://www.mongodb.com/mern-stack">MERN stack</a>.
+            The idea of WeWatch is very simple:
+        <ul class="list">
+            <li>A user is presented with movies</li>
+            <li>The user can <b>LIKE</b> or <b>DISLIKE</b> a film</li>
+            <li>The user can add friends and see what movies both <b>LIKE</b></li>
+        </ul>
+        </p>
+        <p>
+            Thanks to MongoDB, I was able to move <i>really</i> fast, 
+            even with no prior knowledge of document databases. 
+            I finished this app in just a few weeks. It wasn't perfect, 
+            but it did everything that was promised.
+        </p>
+        <p>
+            When the app was done, I started sharing it on social media. 
+            I <a href="wewatchgrowth.html">went viral</a> a few times and 
+            had a large influx of users (34,000 at the time of writing this). 
+            As you can expect, with new users comes new feature requests.
+        </p>
+        <h2>New Features... So far so good...</h2>
+        <p>
+            Some features weren't hard to add.
+        </p>
+        <h3>I want to be able to mark a movie as SEEN instead of LIKE or DISLIKE</h3>
+        <p>
+            Okay, I'll just add an array of movies to the user document called 'seen'
+        </p>
+        <h3>I want to be able to be able to decide on a movie LATER</h3>
+        <p>
+            Okay, I'll just add an array of movies to the user document called 'later'
+        </p>
+        <p>
+            These features were not difficult, albeit a bit of monotonous work 
+            to add to my API due to a lack of abstraction. 
+        </p>
+        <h2>New Features are Getting Complicated</h2>
+        <p>
+            Things started getting a bit messy, but still manageable.
+        </p>
+        <h3>I want to be able to filter movies by genres and streaming services</h3>
+        <p>
+            Uhh, well, I can add an array of genres to each movie, and an array of 
+            preferred genres to each user, but maintaining data integrity is difficult 
+            with a document database. There are ways to do it, but not as easily as 
+            it would be with a relational database...
+        </p>
+        <h3>I want to see the cast for each movie</h3>
+        <p>
+            Uhh, well, I can add an array of people to each movie, but that will 
+            get inefficient because I will be repeating a lot of actors. I guess I 
+            will make a PERSON document and make a lookup to it. Huh... I'm essentially 
+            using a foreign key in a document database...
+        </p>
+        <h3>I want to be able to review a movie</h3>
+        <h3>I want to only see movies on a streaming service if it's in my country</h3>
+        <h3>I want to be able to mark a movie as seen, but also have it in my watchlist</h3>
+        <h3>I want to be able to swipe on tv shows</h3>
+        <h3>I want to see a feed of my friend's activities</h3>
+        <p>
+            As you can see, more complex relationships have emerged in my app. 
+            Users want more complex relationships with movies. They want to be able 
+            to LIKE, DISLIKE, SEEN, LATER, SEENBUTWATCHAGAIN, and I imagine 
+            new relationships will continue to emerge.
+        </p>
+        <p>
+            Movies also have many more relationships to keep track of than I 
+            initially anticipated. Its genres, streaming providers per country, 
+            its cast, etc..
+        </p>
+        <p>
+            I was able to make all this work with MongoDB, but the next stage of my app 
+            is what pushed me over the edge.
+        </p>
+        <h2>The Final Straw</h2>
+        <h3>I want to be able to swipe on restaurants, books, podcasts, and more!</h3>
+        <p>
+            Whoa... Well, that is the obvious direction 
+            that WeWatch should head towards. Why stop at movies? 
+            People need to come to a consensus on tons of things 
+            in life, and it's hard to keep track of everything you 
+            wanted to do with someone.
+        </p>
+        <p>
+            The architecture of my database at this point was just not 
+            going to cut it. I would need to add 
+            'restaurant_likes', 'book_likes', 'restaurant_dislikes', 'book_dislikes', 
+            etc. Clearly, this couldn't scale well.
+        </p>
+        <p>
+            I should have given up here, but I took one last stab at 
+            using MongoDB for these emerging relationships. Instead of 
+            nested documents, I decided to try and make an abstract join 
+            table that will capture the relationship between a user and an 
+            item.
+        </p>
+        <img src="/projects/images/database-migration/interaction.PNG"/>
+        <p>
+            It made my life a lot easier in terms of the API, 
+            although I wish I could have abstracted the 'movie' 
+            lookup to something like 'object.'
+        </p>
+        <p>
+            But here's the problem... I am working against what MongoDB 
+            is optimized for. And it showed. With the same amount of data, 
+            just in this new format, the size of my database increased from 150mb 
+            to over 700mb!! I could no longer use MongoDB on the free tier!!
+        </p>
+        <img src="/projects/images/database-migration/storage.PNG"/>
+        <p>
+            When I saw this, I knew it was time to make the switch to a 
+            relational database.
+        </p>
+        <h2>One Last Thing</h2>
+        <p>
+            MongoDB is great if you want to go fast; I recommend it if 
+            you are just playing around with an idea. But the moment you start 
+            working against the system, you need to change something about your 
+            approach. In my case, I changed the system.
+        </p> 
+        <p>
+            Now, I have to learn about modeling polymorphic associations in PostgreSQL 😅
+        </p>
+        <h2>Thanks for reading!</h2>
+        <p>
+            I hope you learned something new, or just enjoyed reading :) If you liked this, you can <a
+                href="https://twitter.com/_joshuafonseca">follow me on twitter</a>
+            and keep up to date with all the stuff I'm learning!
+        </p>
+    </div>
+    <div id="footer"></div>
+</body>
+
+</html>
