@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!-- Metadata -->
+	<title>I Replaced Animal Crossing's Dialogue with a Live LLM by Hacking GameCube Memory</title>
+	<meta charset="UTF-8">
+	<meta name="description" content="How I replaced Animal Crossing's dialogue with a live LLM by bridging GameCube memory to a cloud AI, with no game code changes required.">
+	<meta name="keywords" content="Animal Crossing, GameCube, Dolphin, Memory Hacking, LLM, AI, Reverse Engineering">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Main Styling -->
+	<link rel="stylesheet" href="/css/index.css">
+
+	<!-- Google Font: Roboto -->
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+	<!-- Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-5B4GFEFWRJ"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-5B4GFEFWRJ');
+	</script>
+
+	<!-- JQuery + Templates -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="/js/loadTemplates.js"></script>
+
+	<!-- Mermaid for diagrams -->
+	<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+	<script>mermaid.initialize({ startOnLoad: true, theme: 'default' });</script>
+
+	<!-- Highlight.js for code blocks -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+	<script>document.addEventListener('DOMContentLoaded', function(){ if (window.hljs) { hljs.highlightAll(); }});</script>
+
+	<!-- Page-specific styles for animations/visuals -->
+	<style>
+		/* Simple fade/slide-in */
+		.reveal { opacity: 0; transform: translateY(24px); transition: opacity 600ms ease, transform 600ms ease; }
+		.reveal.visible { opacity: 1; transform: translateY(0); }
+
+		/* Floating sprites (emoji as stand-ins for villagers) */
+		.ac-sprites { position: relative; height: 140px; margin: 24px 0 8px; overflow: visible; }
+		.ac-sprite { position: absolute; font-size: 44px; filter: drop-shadow(0 6px 12px rgba(0,0,0,0.2)); transform: translateY(0) translateX(0) rotate(0); will-change: transform; transition: transform 300ms ease-out; }
+		.ac-sprite:nth-child(1) { left: 8%; }
+		.ac-sprite:nth-child(2) { left: 45%; }
+		.ac-sprite:nth-child(3) { left: 78%; }
+
+		/* Speech bubble */
+		.bubble { display: inline-block; background: #ffffff; border-radius: 12px; padding: 12px 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); position: relative; }
+		.bubble::after { content:""; position:absolute; bottom:-10px; left: 24px; width:0; height:0; border-left:10px solid transparent; border-right:10px solid transparent; border-top:10px solid #ffffff; }
+
+		.hero { margin: 24px 0 8px; padding: 12px; background: linear-gradient(180deg, rgba(255,255,255,0.0), rgba(255,255,255,0.12)); border-radius: 16px; }
+		.hero h1 { margin-top: 0; }
+		.subtle { color: #666; }
+		.code-caption { font-size: 12px; color: #888; margin-top: -8px; margin-bottom: 12px; }
+		.diagram { margin: 16px 0; }
+		.callout { background: #f7fbff; border: 1px solid #e1f0ff; padding: 12px 14px; border-radius: 12px; }
+
+		/* Stinky hero image */
+		.ac-stinky { position: relative; height: 220px; margin: 16px 0; display: flex; align-items: flex-end; }
+		#stinky { height: 220px; width: auto; filter: drop-shadow(0 12px 28px rgba(0,0,0,0.22)); transform-origin: bottom center; }
+
+		/* Figures and captions */
+		.figure { margin: 14px 0; }
+		.figure img { width: 100%; height: auto; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+		.figure figcaption { font-size: 12px; color: #6a6a6a; margin-top: 6px; }
+	</style>
+</head>
+<body>
+	<div id="header"></div>
+
+	<div class="content">
+		<div class="reveal">
+			<h1>I Replaced Animal Crossing's Dialogue with a Live LLM by Hacking GameCube Memory</h1>
+			<p class="subtle">A bridge from 2001 to today, with no game code changes required.</p>
+		</div>
+
+		<figure class="figure reveal">
+			<img src="/assets/images/ac/Modern%20AI%20in%2024%20Year%20Old%20Game%20Screenshot%20(3).png" alt="Cookie says: 'Oh my gosh, Josh :)! I just had the weirdest dream, like, everything we do is a game! Arfer!'" loading="lazy" />
+			<figcaption>Cookie: "Oh my gosh, Josh :)! I just had the weirdest dream, like, everything we do is a game! Arfer!"</figcaption>
+		</figure>
+
+		<p class="reveal">
+			Animal Crossing. Infamous for its charming but ultimately repetitive dialogue. Having picked up the GameCube classic again, I was shocked (/s) to discover that the villagers still say the same things they did 23 years ago. Let's change that.
+		</p>
+		<p class="reveal">
+			The problem? The game runs on a Nintendo GameCube, a 24-year-old console with a 485 MHz PowerPC processor, 24MB of RAM, and absolutely no internet connectivity. It was fundamentally, physically, and philosophically designed to be an offline island.
+		</p>
+		<p class="reveal">
+			This is the story of how I built a bridge from 2001 to today, making a vintage game console talk to a cloud-based AI without modifying a single line of the original game's code.
+		</p>
+
+		<h2 class="reveal">The First Hurdle: Speaking to the Game 🗣️</h2>
+		<p class="reveal">
+			My first stroke of luck was immense. The week I started this project, a massive effort by the Animal Crossing decompilation community reached completion. Instead of staring at PowerPC assembly, I had access to readable C code.
+		</p>
+		<p class="reveal">
+			Digging through the source, I quickly found the relevant functions under a file named <code>m_msg.c</code>. This was it, the heart of the dialogue system. A simple test confirmed I could hijack the function call and replace the in-game text with my own string.
+		</p>
+
+		<div class="code-caption reveal">C: A glimpse into the decompiled dialogue system</div>
+		<pre class="reveal"><code class="language-c">// A glimpse into the decompiled Animal Crossing source code
+// The function that changes message data in the dialogue system.
+// My initial entry point for hijacking the text.
+
+extern int mMsg_ChangeMsgData(mMsg_Window_c* msg_p, int index) {
+    if (index >= 0 && index < MSG_MAX && mMsg_LoadMsgData(msg_p->msg_data, index, FALSE)) {
+        msg_p->end_text_cursor_idx = 0;
+        mMsg_Clear_CursolIndex(msg_p);
+        mMsg_SetTimer(msg_p, 20.0f);
+        return TRUE;
+    }
+    
+    return FALSE;
+}
+</code></pre>
+
+		<p class="reveal">
+			Easy win, right? But changing static text is one thing. How could I get data from an external AI into the game in real time?
+		</p>
+		<p class="reveal">
+			My first thought was to just add a network call. But that would mean writing an entire network stack for the GameCube from scratch (TCP/IP, sockets, HTTP) and integrating it into a game engine that was never designed for it. That was a non-starter.
+		</p>
+		<p class="reveal">
+			My second thought was to use the Dolphin emulator's features to write to a file on my host machine. The game would write a "request" file with context, and my Python script would see it, call the LLM, and write back a "response" file. Unfortunately, I couldn't get the sandboxed GameCube environment to access the host filesystem. Another dead end.
+		</p>
+
+		<h2 class="reveal">The Breakthrough: The Memory Mailbox 📬</h2>
+		<p class="reveal">
+			The solution came from a classic technique in game modding: Inter-Process Communication (IPC) via shared memory. The idea is to allocate a specific chunk of the GameCube's RAM to act as a "mailbox." My external Python script can write data directly into that memory address, and the game can read from it.
+		</p>
+
+		<div class="diagram reveal">
+			<div class="mermaid">
+				graph TD
+					A[Python Script] -- "Writes LLM response" --> B{Memory Mailbox @ 0x81298360}
+					B -- "Game reads new dialogue" --> C[Animal Crossing on Dolphin Emulator]
+					C -- "Writes current speaker & context" --> B
+			</div>
+		</div>
+
+		<div class="code-caption reveal">Python: The core of the "Memory Mailbox" interface</div>
+		<pre class="reveal"><code class="language-python"># This is the bridge. These functions read from and write to GameCube RAM via Dolphin.
+GAMECUBE_MEMORY_BASE = 0x80000000
+
+def read_from_game(gc_address: int, size: int) -> bytes:
+    """Reads a block of memory from a GameCube virtual address."""
+    real_address = GAMECUBE_MEMORY_BASE + (gc_address - 0x80000000)
+    return dolphin_process.read(real_address, size)
+
+def write_to_game(gc_address: int, data: bytes) -> bool:
+    """Writes a block of data to a GameCube virtual address."""
+    real_address = GAMECUBE_MEMORY_BASE + (gc_address - 0x80000000)
+    return dolphin_process.write(real_address, data)
+</code></pre>
+
+		<p class="reveal">
+			This was the path forward. But it created a new, painstaking task: I had to become a memory archaeologist. I needed to find the exact stable memory addresses for the active dialogue text and the current speaker's name.
+		</p>
+		<p class="reveal">
+			To do this, I wrote my own memory scanner in Python. The process was a tedious loop:
+		</p>
+		<ul class="list reveal">
+			<li><b>Talk to a villager.</b> The moment their dialogue box appeared, I'd freeze the emulator.</li>
+			<li><b>Scan.</b> I'd run my script to scan all 24 million bytes of the GameCube's RAM for the string of text on screen (e.g., "Hey, how's it going?").</li>
+			<li><b>Cross-Reference.</b> This often returned multiple addresses. So, I'd unfreeze, talk to a different villager, and scan for their name to figure out which memory block belonged to the active speaker.</li>
+		</ul>
+		<p class="reveal">
+			After hours of talking, freezing, and scanning, I finally nailed down the key addresses: <code>0x8129A3EA</code> for the speaker's name and <code>0x81298360</code> for the dialogue buffer. I could now reliably read who was talking and, more importantly, write data back to the dialogue box.
+		</p>
+
+		<h2 class="reveal">What About the GameCube Broadband Adapter? 🌐</h2>
+		<p class="reveal">
+			Yes, the GameCube had an official Broadband Adapter (BBA). But <i>Animal Crossing</i> shipped without networking primitives, sockets, or any game-layer protocol to use it. Using the BBA here would have required building a tiny networking stack and patching the game to call it. That means: hooking engine callsites, scheduling async I/O, and handling retries/timeouts, all inside a codebase that never expected the network to exist.
+		</p>
+		<ul class="list reveal">
+			<li><b>Engine hooks:</b> Hijack safe points in the message loop to send/receive packets.</li>
+			<li><b>Driver/protocol:</b> Provide a minimal UDP/RPC interface over BBA.</li>
+			<li><b>Robustness:</b> Handle timeouts, retries, and partial reads without stalling animations/UI.</li>
+		</ul>
+		<div class="diagram reveal">
+			<div class="mermaid">
+				graph LR
+					subgraph Option A: BBA Network Shim
+						AC[Animal Crossing] --> Hooks[Net Shim Hooks]
+						Hooks --> BBA[BBA Driver]
+						BBA --> LAN[(LAN)]
+						LAN --> Host[Host Bridge Server]
+					end
+					subgraph Option B: RAM Mailbox
+						AC2[Animal Crossing] --> Mailbox[RAM Mailbox]
+						Mailbox --> Py[Python Watcher]
+						Py --> LLM[LLM]
+					end
+			</div>
+		</div>
+		<p class="reveal">
+			I chose the RAM mailbox because it's deterministic, requires zero kernel/driver work, and stays entirely within the emulator boundary, with no binary network stack needed. That said, a BBA shim is absolutely possible (and a fun future project for real hardware via Swiss + homebrew).
+		</p>
+
+		<div class="code-caption reveal">C: Minimal RPC envelope for a hypothetical BBA shim</div>
+		<pre class="reveal"><code class="language-c">#include &lt;stdint.h&gt;
+
+/* Minimal RPC envelope for a hypothetical BBA shim */
+typedef struct {
+    uint32_t magic;    // 'ACRP'
+    uint16_t type;     // 1=Request, 2=Response
+    uint16_t length;   // payload length
+    uint8_t  payload[512];
+} RpcMsg;
+
+int ac_net_send(const RpcMsg* msg);         // sends via BBA
+int ac_net_recv(RpcMsg* out, int timeoutMs); // polls with timeout
+</code></pre>
+
+		<div class="code-caption reveal">Python: Host-side UDP bridge (very simplified)</div>
+		<pre class="reveal"><code class="language-python">import socket, json
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+sock.bind(("0.0.0.0", 19135))
+while True:
+    data, addr = sock.recvfrom(2048)
+    msg = json.loads(data.decode("utf-8", "ignore"))
+    # ... call Writer/Director LLMs ...
+    reply = json.dumps({"ok": True, "text": "Hi from the cloud!"}).encode()
+    sock.sendto(reply, addr)
+</code></pre>
+
+		<h2 class="reveal">Speaking the Game's Secret Language 🤫</h2>
+		<p class="reveal">
+			I eagerly tried writing "Hello World" to the dialogue address and... the game froze. The character animations kept playing, but the dialogue wouldn't advance. I was so close, yet so far.
+		</p>
+		<p class="reveal">
+			The problem was that I was sending plain text. Animal Crossing doesn't speak plain text. It speaks its own encoded language filled with control codes.
+		</p>
+		<p class="reveal">
+			Think of it like HTML. Your browser doesn't just display words; it interprets tags like <code>&lt;b&gt;</code> to make text bold. Animal Crossing does the same. A special prefix byte, <code>CHAR_CONTROL_CODE</code>, tells the game engine, "The next byte isn't a character, it's a command!"
+		</p>
+		<p class="reveal">
+			These commands control everything: text color, pauses, sound effects, character emotions, and even the end of a conversation. If you don't send the <code>&lt;End Conversation&gt;</code> control code, the game simply waits forever for a command that never comes. That's why it was freezing.
+		</p>
+		<p class="reveal">
+			Once again, the decompilation community saved me. They had already documented most of these codes. I just needed to build the tools to use them.
+		</p>
+		<p class="reveal">
+			I wrote an encoder and a decoder in Python. The decoder could read raw game memory and translate it into a human-readable format, and the encoder could take my text with custom tags and convert it back into the exact sequence of bytes the GameCube understood.
+		</p>
+		<div class="code-caption reveal">Python: A small sample of the control codes I had to encode/decode</div>
+		<pre class="reveal"><code class="language-python"># A small sample of the control codes I had to encode/decode
+CONTROL_CODES = {
+    0x00: "&lt;End Conversation&gt;",
+    0x03: "&lt;Pause [{:02X}]&gt;",        # e.g., &lt;Pause [0A]&gt; for a short pause
+    0x05: "&lt;Color Line [{:06X}]&gt;",  # e.g., &lt;Color Line [FF0000]&gt; for red
+    0x09: "&lt;NPC Expression [Cat:{:02X}] [{}]&gt;", # Trigger an emotion
+    0x59: "&lt;Play Sound Effect [{}]&gt;",  # e.g., &lt;Play Sound Effect [Happy]&gt;
+    0x1A: "&lt;Player Name&gt;",
+    0x1C: "&lt;Catchphrase&gt;",
+}
+
+# The magic byte that signals a command is coming
+PREFIX_BYTE = 0x7F
+</code></pre>
+
+		<p class="reveal">
+			With my new encoder, I tried again. This time, I wasn't just sending text. I was speaking the game's language. And it worked. The hardest part of the hack was done.
+		</p>
+
+		<h2 class="reveal">Building the AI Brain 🧠</h2>
+		<p class="reveal">
+			With the communication channel established, it was time for the fun part: building the AI.
+		</p>
+		<p class="reveal">
+			My initial approach was to have a single LLM do everything: write dialogue, stay in character, and insert the technical control codes. The results were a mess. The AI was trying to be a creative writer and a technical programmer simultaneously and was bad at both.
+		</p>
+		<p class="reveal">
+			The solution was to split the task into a two-model pipeline: a <b>Writer</b> and a <b>Director</b>.
+		</p>
+		<ul class="list reveal">
+			<li><b>The Writer AI:</b> This model's only job is to be creative. It receives a detailed character sheet (which I generated by scraping the Animal Crossing Fan Wiki) and focuses on writing dialogue that is funny, in-character, and relevant to the context.</li>
+			<li><b>The Director AI:</b> This model receives the pure text from the Writer. Its job is purely technical. It reads the dialogue and decides how to "shoot the scene." It adds pauses for dramatic effect, emphasizes words with color, and chooses the perfect facial expression or sound effect to match the mood.</li>
+		</ul>
+		<p class="reveal">
+			This separation of concerns worked perfectly.
+		</p>
+
+		<div class="diagram reveal">
+			<div class="mermaid">
+				graph LR
+					subgraph Game World
+						Dolphin(Dolphin Emulator)
+					end
+
+					subgraph Python Bridge
+						Watcher(watch_dialogue.py)
+						Encoder(Encoder/Decoder)
+					end
+
+					subgraph AI Core
+						Writer(Writer LLM)
+						Director(Director LLM)
+					end
+
+					subgraph External Data
+						Wiki(Fan Wiki)
+						News(RSS Feeds)
+					end
+
+					Dolphin <--> |IPC via RAM| Watcher
+					Watcher --> |Context| Writer
+					Wiki --> |Character Sheets| Writer
+					News --> |Current Events| Writer
+
+					Writer --> |Raw Dialogue| Director
+					Director --> |Decorated Dialogue| Encoder
+					Encoder --> |Encoded Bytes| Watcher
+			</div>
+		</div>
+
+		<h2 class="reveal">Emergent Behavior 🤪</h2>
+		<p class="reveal">
+			First I piped in a lightweight news feed. Within minutes, villagers began weaving headlines into small talk, no prompts, just context.
+		</p>
+
+		<figure class="figure reveal">
+			<img src="/assets/images/ac/Modern%20AI%20in%2024%20Year%20Old%20Game%20Screenshot%20(2).png" alt="Mitzi mentions European leaders meeting Trump and Zelenskyy" loading="lazy" />
+			<figcaption>Mitzi: "About the news? European leaders are planning to meet with Trump and Zelenskyy!"</figcaption>
+		</figure>
+
+		<p class="reveal">
+			Then I gave them a tiny shared memory for gossip, who said what, to whom, and how they felt. Predictably, it escalated into an anti-Tom Nook movement.
+		</p>
+
+		<figure class="figure reveal">
+			<img src="/assets/images/ac/Modern%20AI%20in%2024%20Year%20Old%20Game%20Screenshot%20(1).png" alt="Cookie says Tom Nook is taking all the bells" loading="lazy" />
+			<figcaption>Cookie: "Everything's going great in town, but sometimes I feel like Tom Nook is, like, taking all the bells!"</figcaption>
+		</figure>
+
+		<p class="reveal">
+			And I was reminded that I used Fox News as the news feed.
+		</p>
+
+		<figure class="figure reveal">
+			<img src="/assets/images/ac/Modern%20AI%20in%2024%20Year%20Old%20Game%20Screenshot.png" alt="Cookie says a woman was killed in a robbery in a blue city" loading="lazy" />
+			<figcaption>Cookie: "A woman was killed in a robbery in a blue city!"</figcaption>
+		</figure>
+
+		<p class="reveal">
+			Now the game is a strange, hilarious, and slightly unsettling :)
+		</p>
+		<p class="reveal">
+			All the code for this project, including the memory interface, dialogue encoder, and AI prompting logic, is available on GitHub. It was one of the most challenging and rewarding projects I've ever tackled, blending reverse engineering, AI, and a deep love for a classic game.<br><br>
+			<i>Watch the full video:</i> <a href="https://youtu.be/7AyEzA5ziE0?si=_SADxbdz650nyCnP" target="_blank" rel="noopener">Modern AI in a 24-Year-Old Game</a>
+		</p>
+	</div>
+
+	<div id="footer"></div>
+
+	<!-- Page interactions: scroll reveals, sprite bobbing, rotating villager chatter -->
+	<script>
+		(function(){
+			// Reveal on scroll
+			const observer = new IntersectionObserver((entries)=>{
+				for (const entry of entries) {
+					if (entry.isIntersecting) entry.target.classList.add('visible');
+				}
+			},{ threshold: 0.12 });
+			document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+			// Simple bob for Stinky based on scroll
+			const stinky = document.getElementById('stinky');
+			function onScroll(){
+				const y = window.scrollY || 0;
+				if (stinky) {
+					const bob = Math.sin(y / 260) * 6;
+					const scale = 1 + Math.sin(y / 520) * 0.01;
+					stinky.style.transform = `translateY(${bob}px) scale(${scale})`;
+				}
+			}
+			onScroll();
+			window.addEventListener('scroll', onScroll, { passive: true });
+
+			// Villager chatter rotator
+			const lines = [
+				"Did you water your flowers today? ✿",
+				"Saharah's in town... carpets for days! 🧶",
+				"I heard Tom Nook wants a second loan... again. 🦝",
+				"Meteor shower tonight, bring a wish! ✨",
+				"Fishing tourney practice? I'll bring bait! 🎣"
+			];
+			const bubble = document.getElementById('villager-bubble');
+			let idx = 0;
+			setInterval(()=>{ idx = (idx+1) % lines.length; bubble.textContent = lines[idx]; }, 3600);
+		})();
+	</script>
+</body>
+</html>

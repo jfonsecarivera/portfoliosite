@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!-- Metadata -->
+	<title>I trained an AI to write my YouTube titles</title>
+	<meta charset="UTF-8">
+	<meta name="description" content="I spent way too much time fine-tuning an LLM to write YouTube titles. It tripled my CTR from 5% to 15%. Here's how I did it.">
+	<meta name="keywords" content="LLM, Fine-tuning, YouTube, CTR, GPT-4, Gemini, Machine Learning">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Main Styling -->
+	<link rel="stylesheet" href="/css/index.css">
+
+	<!-- Google Font: Roboto -->
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+	<!-- Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-5B4GFEFWRJ"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-5B4GFEFWRJ');
+	</script>
+
+	<!-- JQuery + Templates -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="/js/loadTemplates.js"></script>
+
+	<!-- Highlight.js for code blocks -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+	<script>document.addEventListener('DOMContentLoaded', function(){ if (window.hljs) { hljs.highlightAll(); }});</script>
+
+	<!-- Page-specific styles -->
+	<style>
+		.reveal { opacity: 0; transform: translateY(24px); transition: opacity 600ms ease, transform 600ms ease; }
+		.reveal.visible { opacity: 1; transform: translateY(0); }
+
+		.tldr { background: #1e1e1e; border: 1px solid #444; padding: 16px 20px; border-radius: 12px; margin: 24px 0; }
+		.tldr h2 { margin-top: 0; color: var(--primary-color); }
+		.tldr ul { margin: 12px 0; padding-left: 24px; }
+		.tldr li { margin: 8px 0; }
+
+		.code-caption { font-size: 12px; color: #bbb; margin-top: -8px; margin-bottom: 12px; }
+		.callout { background: #2a2a2a; border: 1px solid #555; padding: 12px 14px; border-radius: 12px; margin: 16px 0; }
+		.metric { font-weight: bold; color: var(--primary-color); }
+		.subtle { color: #bbb; }
+	</style>
+</head>
+<body>
+	<div id="header"></div>
+
+	<div class="content">
+		<div class="reveal">
+			<h1>I trained an AI to write my YouTube titles</h1>
+		</div>
+
+		<div class="tldr reveal">
+			<h2>TL;DR</h2>
+			<ul>
+				<li>Fine-tuned GPT-4.1-mini on 734 science & tech YouTube videos with clever titles (filtered from 48k trending videos using Gemini)</li>
+				<li>Training cost: ~$11.56. Filtering cost: ~$2.80</li>
+				<li>Tripled CTR from 5% to 15% on first test video</li>
+				<li>Consistently improved CTR on every video I've updated with model-generated titles</li>
+				<li>Key insight: Used another LLM to filter out corporate fluff and focus on titles that work for independent creators</li>
+			</ul>
+		</div>
+
+		<p class="reveal">
+			I have a science & tech YouTube channel with 23k subscribers. That's pretty cool! But here's the thing—my click-through rate has been stuck at around 5% for months. 
+		</p>
+		<p class="reveal">
+			I'd spend hours brainstorming titles. I'd ask GPT-4 for help. I'd read every "title formula" blog post on the internet. And I'd get suggestions like:
+		</p>
+		<blockquote class="reveal" style="font-style: italic; color: #bbb; margin: 16px 0; padding-left: 16px; border-left: 3px solid #444;">
+			"10 Mind-Blowing Facts About Quantum Computers"
+		</blockquote>
+		<p class="reveal">
+			They sound fine. They're fine. But they're not great. And I was tired of fine.
+		</p>
+		<p class="reveal">
+			So I did what any reasonable person would do: I spent way too much time fine-tuning an LLM to write better titles for me. And it actually worked! My latest video got <span class="metric">15% CTR</span> in the first 24 hours—triple my baseline.
+		</p>
+
+		<h2 class="reveal">Why Titles Are So Hard</h2>
+		<p class="reveal">
+			Anybody who's tried to create content will tell you: creating the thing is difficult, but titling it is even harder. Because titles have consequences.
+		</p>
+		<p class="reveal">
+			You can spend weeks filming, editing, perfecting every frame. But if your title doesn't work? Nobody clicks. And as Mr. Beast put it: <strong>"if nobody clicks, nobody watches your video. It's that simple."</strong>
+		</p>
+		<p class="reveal">
+			The pressure is real. A bad title can tank weeks of work. A good one can make an average video perform like a great one. 
+		</p>
+		<p class="reveal">
+			That's why I built this thing.
+		</p>
+
+		<h2 class="reveal">The Problem: YouTube Datasets Are Full of Crap</h2>
+		<p class="reveal">
+			I thought I was being clever. I'd train a model on trending YouTube videos! What could go wrong?
+		</p>
+		<p class="reveal">
+			I grabbed a Kaggle dataset with 48,000 trending videos. I was pumped. This was going to be amazing.
+		</p>
+		<p class="reveal">
+			Then I looked at the top rows:
+		</p>
+		<ul class="list reveal">
+			<li>Apple Event — October 13</li>
+			<li>Starlink Mission</li>
+			<li>Introducing Windows 11</li>
+		</ul>
+		<p class="reveal">
+			Oh. These didn't trend because their titles were clever. They trended because they're Apple, SpaceX, Microsoft. Of course they trended!
+		</p>
+		<p class="reveal">
+			If I trained a model on that, it would learn to write boring corporate press releases. That's not what I wanted. I wanted titles that actually worked for independent creators—the ones that spark curiosity, highlight absurd engineering feats, or create conflict. The stuff that gets clicks even when you don't have brand power behind you.
+		</p>
+
+		<h2 class="reveal">The Solution: Make Another LLM Do the Filtering</h2>
+		<p class="reveal">
+			I needed a way to filter out all the corporate fluff. But how do you teach a computer to recognize "curiosity" vs "brand power"? 
+		</p>
+		<p class="reveal">
+			I decided to use Gemini Pro 1.5 as a ruthless curator. I'd feed it each video and ask it to decide: did this trend because of a clever title, or because of brand power?
+		</p>
+		<p class="reveal">
+			Here's the prompt I gave it:
+		</p>
+
+		<div class="code-caption reveal">The Gemini filtering prompt</div>
+		<pre class="reveal"><code class="language-text">You are a hard-ass content strategist.  
+
+Output only: KEEP or REMOVE + 5-word reason.
+
+REMOVE:
+- Corporate keynote, live-stream, product drop, deal list, music video, trailer.
+
+KEEP:
+- Small channel (&lt;1M) BUT high view-to-sub ratio.
+- Title contains curiosity, stakes, controversy, superlative engineering.</code></pre>
+
+		<p class="reveal">
+			It took around 7 minutes and cost me $2.80 total. Not bad! It filtered out the corporate fluff, keeping only videos that actually had clever titles worth learning from.
+		</p>
+		<p class="reveal">
+			Now I had my dataset. But wait—I still needed transcripts! You can't train a model to write titles from transcripts without... you know... transcripts.
+		</p>
+
+		<h2 class="reveal">The Process: How I Actually Built This Thing</h2>
+		<p class="reveal">
+			Here's what I actually did, step by step:
+		</p>
+		
+		<h3 class="reveal">Step 1: Filter for Science & Tech</h3>
+		<p class="reveal">
+			First, I filtered the Kaggle dataset to only include Science & Technology videos (category 28). I used pandas in chunks because I didn't want to crash my laptop trying to load 48k rows at once:
+		</p>
+
+		<div class="code-caption reveal">Python: Filtering category 28 (Science & Technology)</div>
+		<pre class="reveal"><code class="language-python">df = pd.read_csv('US_youtube_trending_data.csv', chunksize=100_000)
+cat28 = pd.concat([c[c.categoryId==28] for c in df]).drop_duplicates('video_id')
+cat28.to_csv('category_28_videos.csv', index=False)   # 1,425 unique videos</code></pre>
+
+		<h3 class="reveal">Step 2: Let Gemini Filter Out the Corporate Fluff</h3>
+		<p class="reveal">
+			I wrote a script that fed each video to Gemini and asked it to decide: KEEP or REMOVE? It looked for titles with curiosity, conflict, or absurd engineering feats—the stuff that works for independent creators.
+		</p>
+		<p class="reveal">
+			Here's the actual function I used:
+		</p>
+
+		<div class="code-caption reveal">Python: Gemini filtering logic</div>
+		<pre class="reveal"><code class="language-python">def should_keep_video(title: str, channel_title: str, tags: str) -> Tuple[bool, str]:
+    """Uses Gemini to determine if a video should be kept."""
+    tags_str = tags if tags and tags != "[None]" else "No tags"
+    
+    prompt = f"""
+{FILTERING_CRITERIA}
+
+Video Title: "{title}"
+Channel: {channel_title}
+Tags: {tags_str}
+
+Should this video be KEPT or REMOVED?
+"""
+    
+    try:
+        response = get_text_response(prompt)
+        response_upper = response.upper()
+        if "REMOVE" in response_upper:
+            return False, response
+        elif "KEEP" in response_upper:
+            return True, response
+        else:
+            return True, f"UNCLEAR: {response}"
+    except Exception as e:
+        return True, f"ERROR: {e}"</code></pre>
+
+		<h3 class="reveal">Step 3: Get the Transcripts (This Was Annoying)</h3>
+		<p class="reveal">
+			Now I needed transcripts. I wrote a script that spawned 10 threads, rotated through proxies (because YouTube doesn't like too many requests from one IP), and fetched transcripts for all the videos that passed Gemini's filter.
+		</p>
+		<p class="reveal">
+			Some videos didn't have captions. Some had captions in other languages. After filtering, I had 734 videos with clean English transcripts. Good enough!
+		</p>
+
+		<div class="code-caption reveal">Python: Concurrent transcript fetching</div>
+		<pre class="reveal"><code class="language-python">def fetch_transcripts(youtube_urls: list[str]) -> list[dict]:
+    """Fetches video data concurrently using a thread pool."""
+    all_videos_data = []
+    
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+        future_to_url = {executor.submit(process_single_url, url): url 
+                        for url in youtube_urls}
+        
+        for future in tqdm(as_completed(future_to_url), 
+                          total=len(youtube_urls), desc="Processing Videos"):
+            result = future.result()
+            if result:
+                all_videos_data.append(result)
+                
+    return all_videos_data</code></pre>
+
+		<h3 class="reveal">Step 4: Actually Train the Model</h3>
+		<p class="reveal">
+			Now for the fun part! I formatted everything into OpenAI's fine-tuning format. I used gpt-4.1-mini because it's way cheaper than GPT-4, and honestly, I wasn't sure if this would even work.
+		</p>
+		<p class="reveal">
+			Here's how I structured the training data:
+		</p>
+
+		<div class="code-caption reveal">Python: Training data preparation</div>
+		<pre class="reveal"><code class="language-python">BASE_MODEL = 'gpt-4.1-mini-2025-04-14'
+
+system_message = {
+    "role": "system",
+    "content": """You are an expert YouTube title generator. Your task is to 
+create compelling, accurate titles that capture the essence of video content 
+based on transcripts.
+
+Guidelines:
+1. Be accurate and truthful
+2. Make it compelling and click-worthy while staying honest
+3. Keep titles concise (ideally 50-80 characters, max 100)
+4. Use natural language that viewers would search for
+5. Highlight the most interesting or valuable aspect
+6. Capture curiosity gaps
+
+Generate only the title itself, nothing else."""
+}
+
+# Format as JSONL for OpenAI fine-tuning
+messages_list = [system_message, user_message, assistant_message]
+json_line = json.dumps({"messages": messages_list})</code></pre>
+
+		<p class="reveal">
+			I ran it for 3 epochs with a learning rate multiplier of 2.0 (I tested a bunch of values and this worked best). The whole training job finished in 11 minutes and cost me $11.56 total. That's... actually pretty reasonable?
+		</p>
+		<p class="reveal">
+			I named the model "title-gen" because I'm creative like that.
+		</p>
+
+		<h2 class="reveal">Baseline vs Fine-Tuned: See the Difference</h2>
+		<p class="reveal">
+			Here's what the difference actually looks like. I tested both models on the same video transcript (a review of a humanoid robot called Neo). Here are some real examples:
+		</p>
+		<p class="reveal">
+			<strong>Baseline model (GPT-4.1-mini, no fine-tuning):</strong> Produces descriptive, factual titles like "Why the $20,000 Humanoid Robot Neo Is More Hype Than Help" or "The Truth About the $20K Humanoid Robot Neo: Promises, Privacy Risks & Limitations"
+		</p>
+		<p class="reveal">
+			<strong>Fine-tuned model:</strong> Generates more personal, clickable titles like "Neo Is NOT the Robot I Wanted (Kinda)" or "I'm not Impressed by this Robot..."
+		</p>
+		<p class="reveal">
+			The fine-tuned version learned to write titles that feel more human—less like a Wikipedia article, more like something you'd actually click on. Here are some real side-by-side comparisons from my testing interface:
+		</p>
+
+		<div class="reveal" style="background: #1e1e1e; border: 1px solid #444; border-radius: 8px; padding: 20px; margin: 24px 0;">
+			<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+				<div>
+					<h3 style="margin-top: 0; color: #bbb; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">Baseline (GPT-4.1-mini)</h3>
+					<div style="background: #2a2a2a; padding: 16px; border-radius: 6px; border-left: 3px solid #555;">
+						"Why the $20,000 Humanoid Robot Neo Is More Hype Than Help"
+					</div>
+				</div>
+				<div>
+					<h3 style="margin-top: 0; color: var(--primary-color); font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">Fine-Tuned Model</h3>
+					<div style="background: #2a2a2a; padding: 16px; border-radius: 6px; border-left: 3px solid var(--primary-color);">
+						"Neo Is NOT the Robot I Wanted (Kinda)"
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="reveal" style="background: #1e1e1e; border: 1px solid #444; border-radius: 8px; padding: 20px; margin: 24px 0;">
+			<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+				<div>
+					<h3 style="margin-top: 0; color: #bbb; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">Baseline (GPT-4.1-mini)</h3>
+					<div style="background: #2a2a2a; padding: 16px; border-radius: 6px; border-left: 3px solid #555;">
+						"Why the $20,000 Neo Humanoid Robot Might Be More Hype Than Help"
+					</div>
+				</div>
+				<div>
+					<h3 style="margin-top: 0; color: var(--primary-color); font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">Fine-Tuned Model</h3>
+					<div style="background: #2a2a2a; padding: 16px; border-radius: 6px; border-left: 3px solid var(--primary-color);">
+						"The truth behind this robot NEO..."
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="reveal" style="background: #1e1e1e; border: 1px solid #444; border-radius: 8px; padding: 20px; margin: 24px 0;">
+			<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+				<div>
+					<h3 style="margin-top: 0; color: #bbb; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">Baseline (GPT-4.1-mini)</h3>
+					<div style="background: #2a2a2a; padding: 16px; border-radius: 6px; border-left: 3px solid #555;">
+						"The Truth About the $20K Humanoid Robot Neo: Promises, Privacy Risks & Limitations"
+					</div>
+				</div>
+				<div>
+					<h3 style="margin-top: 0; color: var(--primary-color); font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">Fine-Tuned Model</h3>
+					<div style="background: #2a2a2a; padding: 16px; border-radius: 6px; border-left: 3px solid var(--primary-color);">
+						"I'm not Impressed by this Robot..."
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<p class="reveal">
+			The fine-tuned model consistently produces titles that are more conversational, personal, and curiosity-driven. It's matching the tone that actually works for independent creators on YouTube. You can see more examples on <a href="https://www.youtube.com/@joshycodes" target="_blank">my channel</a>.
+		</p>
+
+		<h2 class="reveal">Did It Actually Work?</h2>
+		<p class="reveal">
+			My baseline CTR has been hovering around 5%. My worst recent video got 3.4%. I was stuck.
+		</p>
+		<p class="reveal">
+			I made a video about a humanoid robot called Neo. I fed the transcript to my fine-tuned model and got 10 title suggestions. One of them caught my eye:
+		</p>
+		<blockquote class="reveal" style="font-weight: bold; color: var(--primary-color); margin: 16px 0; padding-left: 16px; border-left: 3px solid var(--primary-color);">
+			"This $20,000 robot can't do anything"
+		</blockquote>
+		<p class="reveal">
+			I went with it. 
+		</p>
+		<p class="reveal">
+			First 24 hours: <span class="metric">15% CTR</span>. That's triple my baseline! Watch time from subscribers was up 38% compared to my average. TubeBuddy estimates I'll get about 9,000 extra views in the first week.
+		</p>
+		<p class="reveal">
+			So yeah, it actually worked! I'm pretty pumped about it.
+		</p>
+		<p class="reveal">
+			Since then, I've updated several more videos with titles generated by the model. The results have been <span class="metric">extremely consistent</span>—every single video I've changed has seen a CTR increase. Some got modest bumps of 1-2%, others saw bigger jumps like the robot video. But across the board? It's working. This isn't just luck—the model actually learned something useful.
+		</p>
+		<p class="reveal">
+			I wanted to see what titles it would suggest for my entire channel. So I wrote a script that:
+		</p>
+		<ul class="list reveal">
+			<li>Fetched all 17 videos from my channel</li>
+			<li>Got transcripts for each one</li>
+			<li>Fed them to my fine-tuned model to generate better titles</li>
+			<li>Processed everything concurrently with 5 workers</li>
+		</ul>
+		<p class="reveal">
+			The whole thing took about 39 seconds and cost me maybe $0.50. Here are some of the recommendations it generated:
+		</p>
+
+		<div class="reveal" style="background: #1e1e1e; border: 1px solid #444; border-radius: 8px; padding: 20px; margin: 24px 0;">
+			<div style="font-family: monospace; font-size: 14px; line-height: 1.6;">
+				<div style="margin-bottom: 16px;"><strong>Original:</strong> "I Visualized My Brainwaves While Listening to Music"<br>
+				<strong>Recommended:</strong> <span style="color: var(--primary-color);">"Visualizing My Brain Waves In Real Time"</span></div>
+				
+				<div style="margin-bottom: 16px;"><strong>Original:</strong> "AI Orders a Pizza in 17:32 [any% glitchless]"<br>
+				<strong>Recommended:</strong> <span style="color: var(--primary-color);">"AI vs Human Pizza Speedrun"</span></div>
+				
+				<div style="margin-bottom: 16px;"><strong>Original:</strong> "I Can't Believe How Bad This AI Actually Is"<br>
+				<strong>Recommended:</strong> <span style="color: var(--primary-color);">"I let ChatGPT control my browser."</span></div>
+				
+				<div style="margin-bottom: 16px;"><strong>Original:</strong> "Half the Internet Broke Because of This"<br>
+				<strong>Recommended:</strong> <span style="color: var(--primary-color);">"One person pushed one bug and the whole internet went down"</span></div>
+				
+				<div style="margin-bottom: 16px;"><strong>Original:</strong> "I Made an AI Girlfriend"<br>
+				<strong>Recommended:</strong> <span style="color: var(--primary-color);">"I programmed an AI girlfriend."</span></div>
+				
+				<div style="margin-bottom: 16px;"><strong>Original:</strong> "I Built an AI Mirror. I Regret It."<br>
+				<strong>Recommended:</strong> <span style="color: var(--primary-color);">"I built a smart mirror that insults you if you're feeling too confident"</span></div>
+			</div>
+		</div>
+
+		<p class="reveal">
+			Some of these are genuinely better. The fine-tuned model learned to add specificity ("One person pushed one bug"), and write in a more conversational tone ("I let ChatGPT control my browser" vs "I Can't Believe How Bad This AI Actually Is").
+		</p>
+		<p class="reveal">
+			The script saved all the recommendations to a JSON file, so I can review them and update titles whenever I want. Pretty cool for something that took 39 seconds to run.
+		</p>
+		<p class="reveal">
+			But here's the thing: I'm only solving half the problem.
+		</p>
+
+		<h2 class="reveal">The Thing I'm Not Talking About (But Should)</h2>
+		<p class="reveal">
+			Titles are important. But thumbnails? Thumbnails are JUST as important, if not more.
+		</p>
+		<p class="reveal">
+			Think about it—when you're scrolling through YouTube, you see the thumbnail before you even read the title. Your brain processes the image in milliseconds. Bright colors, faces, dramatic visuals—they all matter way more than we give them credit for.
+		</p>
+		<p class="reveal">
+			The best-performing videos have titles and thumbnails that work together. They create a cohesive click-bait package. But right now, I'm only generating titles. I'm ignoring half the equation.
+		</p>
+		<p class="reveal">
+			Sure, I could manually create thumbnails that match my generated titles. But that's not scalable. And honestly? I'm lazy. I want a system that generates both as a package.
+		</p>
+
+		<h2 class="reveal">What I Learned</h2>
+		<p class="reveal">
+			The biggest thing I learned? Fine-tuning isn't just about the model. It's about the dataset. 
+		</p>
+		<p class="reveal">
+			If I had just trained on all those trending videos without filtering, my model would have learned to write boring corporate titles. Instead, I used another LLM to filter for videos that actually had clever titles—ones that worked because of curiosity, conflict, or absurd engineering, not because of brand power.
+		</p>
+		<p class="reveal">
+			That filtering step was the key. It's what made the difference between "fine" and "actually good."
+		</p>
+
+		<h2 class="reveal">What I'll Do Next</h2>
+		<p class="reveal">
+			I'm already thinking about improvements:
+		</p>
+		<ul class="list reveal">
+			<li>Try LoRA instead of full fine-tuning—cheaper to iterate</li>
+			<li>Use YouTube's Experiments feature for A/B testing once I get access (we don't have it yet). When we do, we can actually see if my human mind is better than this model</li>
+		</ul>
+		<p class="reveal">
+			But the big one? The thing I'm really excited about? Building a system that generates titles AND thumbnails together as a package.
+		</p>
+		<p class="reveal">
+			Here's my plan: I'll use a vision model (probably GPT-4V or Claude) to analyze thumbnails from those same 734 "viral-by-design" videos. It'll describe what makes them work—bright colors, facial expressions, text placement, visual hierarchy, that kind of thing.
+		</p>
+		<p class="reveal">
+			Then I'll fine-tune a model that takes a transcript and outputs both:
+		</p>
+		<ul class="list reveal">
+				<li>A title (like I'm doing now)</li>
+				<li>A detailed thumbnail description that can be fed to an image generation model</li>
+			</ul>
+		<p class="reveal">
+			The key insight? Titles and thumbnails need to work together. They need to tell the same story. Right now I'm generating titles in isolation, but I should be generating them as part of a cohesive click package.
+		</p>
+		<p class="reveal">
+			Will it work? I don't know! But that's half the fun. Sometimes you spend way too much time on something and it turns out to be worth it.
+		</p>
+		<p class="reveal">
+			Oh, and by the way—if you clicked on this blog post, this same fine-tuned model came up with the title for this blog post too. So yeah, it's working on YouTube titles AND blog post titles now. Meta, right?
+		</p>
+		<p class="reveal">
+			If you liked this, <a href="https://X.com/joshycodes">follow me on X</a>! I'll probably write more about this stuff as I experiment with it.
+		</p>
+	</div>
+
+	<div id="footer"></div>
+
+	<!-- Page interactions: scroll reveals -->
+	<script>
+		(function(){
+			const observer = new IntersectionObserver((entries)=>{
+				for (const entry of entries) {
+					if (entry.isIntersecting) entry.target.classList.add('visible');
+				}
+			},{ threshold: 0.12 });
+			document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+		})();
+	</script>
+</body>
+</html>
+

@@ -1,0 +1,78 @@
+I trained an AI to write my YouTube titles. It tripled my CTR from 5% to 15%.
+
+Here's how I did it 🧵
+
+1/11
+
+I thought I'd train on trending YouTube videos. Grabbed a Kaggle dataset with 48k videos.
+
+Then I looked at the top rows: "Apple Event — October 13", "Starlink Mission", "Introducing Windows 11"
+
+Oh. These didn't trend because their titles were clever—they trended because they're Apple, SpaceX, Microsoft.
+
+2/11
+
+The problem: YouTube datasets are full of corporate fluff.
+
+If I trained on that unfiltered data, it would learn to write boring corporate press releases. I wanted titles that work for independent creators—ones that spark curiosity, highlight absurd engineering feats, or create conflict.
+
+3/11
+
+The solution: Make another LLM do the filtering.
+
+I used Gemini Pro 1.5 as a ruthless curator. Fed it each video and asked: did this trend because of a clever title, or because of brand power?
+
+Cost: $2.80. Time: 7 minutes. Result: 734 videos worth learning from.
+
+4/11
+
+Then I fine-tuned GPT-4.1-mini on those 734 videos.
+
+Training cost: $11.56. Time: 11 minutes. 3 epochs.
+
+5/11
+
+The results: Baseline vs fine-tuned
+
+Baseline: "Why the $20,000 Humanoid Robot Neo Is More Hype Than Help"
+Fine-tuned: "Neo Is NOT the Robot I Wanted (Kinda)"
+
+The fine-tuned version learned to write titles that feel more human—less like Wikipedia, more like something you'd actually click on.
+
+6/11
+
+Did it actually work?
+
+My baseline CTR was stuck at ~5%. I tested the model on a video about a humanoid robot. One suggestion: "This $20,000 robot can't do anything"
+
+First 24 hours: 15% CTR. That's triple my baseline. Watch time from subscribers was up 38%.
+
+7/11
+
+Since then, I've updated several more videos with model-generated titles. Every single video I've changed has seen a CTR increase. Across the board? It's working.
+
+8/11
+
+The key insight: Fine-tuning isn't just about the model. It's about the dataset.
+
+If I had just trained on all those trending videos without filtering, my model would have learned to write boring corporate titles. Instead, I used another LLM to filter for videos that actually had clever titles—ones that worked because of curiosity, conflict, or absurd engineering, not because of brand power.
+
+9/11
+
+That filtering step was the key. It's what made the difference between "fine" and "actually good."
+
+10/11
+
+What's next? I'm building a system that generates titles AND thumbnails together as a package. Titles and thumbnails need to work together—they need to tell the same story.
+
+11/11
+
+The full blog post is here: [your blog URL]
+
+Full details:
+- Training cost: ~$11.56
+- Filtering cost: ~$2.80  
+- Dataset: 734 science & tech videos (filtered from 48k trending)
+- Model: GPT-4.1-mini fine-tuned
+- Results: Consistent CTR improvements across all tested videos
+
