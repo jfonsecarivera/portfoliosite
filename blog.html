@@ -1,62 +1,538 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joshua Fonseca — Field Notes</title>
+    <meta name="description" content="Stories from hacking old games with new AI, shipping scrappy startups, and staying human through the whole ride.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&family=JetBrains+Mono:wght@400;500&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
 
-	<!-- Metadata -->
-	<title>Blog Posts</title>
-	<meta charset="UTF-8">
-	<meta name="description" content="Jersey Fonseca">
-	<meta name="keywords" content="Jersey, Jersey Fonseca, Fonseca, Creative, Game Designer, game design, portfolio, game programmer, programmer, software developer">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* --- DESIGN SYSTEM --- */
+        :root {
+            --bg-color: #050505;
+            --card-bg: #111;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            
+            /* Theming based on your categories */
+            --accent-cyan: #00f3ff;   /* Experiments */
+            --accent-purple: #bd00ff; /* Startup */
+            --accent-green: #27c93f;  /* Human */
+            --accent-red: #ff0055;    /* Story/Other */
+            
+            --font-heading: 'Inter', sans-serif;
+            --font-body: 'Merriweather', serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
 
-	<!-- Main Styling-->
-	<link rel="stylesheet" href="./css/index.css">
+        /* --- RESET --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            line-height: 1.7;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
 
-	<!-- Google Font: Roboto -->
-	<link rel="preconnect" href="https://fonts.gstatic.com">
-	<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+        /* --- TYPOGRAPHY --- */
+        h1, h2, h3 {
+            font-family: var(--font-heading);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: #fff;
+        }
 
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5B4GFEFWRJ"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-        gtag('config', 'G-5B4GFEFWRJ');
-	</script>
+        h1 { font-size: clamp(2.5rem, 5vw, 4.5rem); line-height: 1.1; margin-bottom: 1.5rem; }
+        h2 { font-size: clamp(1.5rem, 3vw, 2.5rem); margin-bottom: 2rem; }
+        h3 { font-size: 1.25rem; margin-bottom: 0.5rem; line-height: 1.3; }
+        
+        p { margin-bottom: 1.5rem; color: var(--text-secondary); font-size: 1.05rem; }
+        
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        
+        /* --- LAYOUT --- */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 25px;
+        }
 
-	<!-- JQuery -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-	<script src="./js/loadTemplates.js"></script>
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            z-index: 100;
+            mix-blend-mode: difference;
+        }
 
-	<!-- Mailchimp -->
-	<script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script>
-	<script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+        /* --- HERO SECTION --- */
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-top: 100px;
+        }
+
+        .eyebrow {
+            font-family: var(--font-mono);
+            color: var(--accent-cyan);
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .hero-beats {
+            list-style: none;
+            margin: 30px 0;
+            border-left: 2px solid #333;
+            padding-left: 20px;
+        }
+
+        .hero-beats li {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 40px;
+        }
+
+        .btn {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 0.9rem;
+            padding: 12px 24px;
+            border-radius: 4px;
+            border: 1px solid transparent;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: rgba(0, 243, 255, 0.1);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+        
+        .btn-primary:hover {
+            background: var(--accent-cyan);
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
+        }
+
+        .btn-ghost {
+            border-color: #333;
+            color: #888;
+        }
+
+        .btn-ghost:hover {
+            border-color: #fff;
+            color: #fff;
+        }
+
+        /* --- SECTIONS --- */
+        .section { padding: 100px 0; border-top: 1px solid #1a1a1a; }
+
+        /* --- POST CARDS (FEATURED) --- */
+        .featured-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 30px;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* STRETCHED LINK PATTERN: Makes the whole card clickable */
+        .card h3 a::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .card-tag {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: inline-block;
+            width: fit-content;
+        }
+
+        .tag-exp { color: var(--accent-cyan); border: 1px solid rgba(0, 243, 255, 0.2); background: rgba(0, 243, 255, 0.05); }
+        .tag-lab { color: var(--accent-purple); border: 1px solid rgba(189, 0, 255, 0.2); background: rgba(189, 0, 255, 0.05); }
+        .tag-retro { color: var(--accent-green); border: 1px solid rgba(39, 201, 63, 0.2); background: rgba(39, 201, 63, 0.05); }
+
+        .card-meta {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: #555;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #222;
+        }
+
+        /* --- STORYLINES (STACKS) --- */
+        .storyline-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+        }
+
+        .storyline {
+            border-left: 2px solid #333;
+            padding-left: 25px;
+        }
+
+        .storyline h3 { color: #fff; margin-bottom: 10px; }
+        
+        .storyline ul { list-style: none; margin-top: 20px; }
+        
+        .storyline li { margin-bottom: 12px; }
+        
+        .storyline li a {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            border-bottom: 1px solid #222;
+            padding-bottom: 2px;
+        }
+
+        .storyline li a:hover { color: #fff; border-color: #fff; }
+
+        /* Color coding the stacks */
+        .storyline.exp { border-color: var(--accent-cyan); }
+        .storyline.exp h3 { color: var(--accent-cyan); }
+        
+        .storyline.start { border-color: var(--accent-purple); }
+        .storyline.start h3 { color: var(--accent-purple); }
+        
+        .storyline.human { border-color: var(--accent-green); }
+        .storyline.human h3 { color: var(--accent-green); }
+
+        /* --- CATALOG (ARCHIVE) --- */
+        .catalog-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1px;
+            background: #222; /* Creates borders */
+            border: 1px solid #222;
+        }
+
+        .catalog-item {
+            background: var(--bg-color);
+            padding: 25px;
+            transition: background 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 20px;
+        }
+
+        .catalog-item:hover {
+            background: #0f0f0f;
+        }
+
+        .catalog-item h3 {
+            font-size: 1.1rem;
+            font-weight: 400;
+            margin: 0;
+        }
+        
+        .catalog-item p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #666;
+            max-width: 600px;
+        }
+
+        .catalog-tag {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: #444;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 768px) {
+            .catalog-item { flex-direction: column; align-items: flex-start; gap: 10px; }
+        }
+
+        /* --- ANIMATION --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
+
+        footer {
+            padding: 80px 0;
+            text-align: center;
+            border-top: 1px solid #1a1a1a;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: #444;
+        }
+
+    </style>
 </head>
 <body>
-	<div id="header"></div>
-	<h1>Blog Posts</h1>
-	<ul class="list">
-		<li><a href = "blogs/llm-youtube-title-finetuning.html">I trained an AI to write my YouTube titles</a></li>
-		<li><a href = "blogs/animal-crossing-llm.html">I Replaced Animal Crossing's Dialogue with a Live LLM by Hacking GameCube Memory</a></li>
-        <li><a href = "blogs/building-golf-vim.html">Building golf.vim: From Reddit Idea to 100+ Users in 48 Hours</a></li>
-        <li><a href = "blogs/zen-and-the-art-of-workflow-automation.html">Zen and the Art of Workflow Automation</a></li>
-        <li><a href = "blogs/building-a-climbing-app.html">Why I'm Building a Climbing App (and Why Knowing Your Community Actually Matters)</a></li>
-        <li><a href = "blogs/improving-app-signup-rates.html">Cutting User Drop-Off by 50%: A Lesson in User Acquisition</a></li>
-        <li><a href = "blogs/simplify.html">How I Supercharged Web Reading with ChatGPT</a></li>
-        <li><a href = "blogs/my-X-was-hacked.html">My X was Hacked 🥺</a></li>
-        <li><a href = "blogs/mongodb-to-postgresql-migration.html">Why I Had to Migrate from MongoDB to PostgreSQL</a></li>
-        <li><a href = "blogs/debouncing-doherty-threshold.html">Combining Debouncing & The Doherty Threshold to Improve Search UX & Performance</a></li>
-        <li><a href = "blogs/mvp.html">Features I Wish I Included in my MVP</a></li>
-        <li><a href = "blogs/wewatchgrowth.html">I Got 22,000 App Downloads In One Weekend with A $0 Budget</a></li>
-        <li><a href = "blogs/lessonslearned1.html">Here's what I Learned Growing my Mobile App to 2,000 Users in a Month</a></li>
-        <li><a href = "blogs/adhd.html">ADHD & Programming</a></li>
-        <li><a href = "blogs/wewatchauth.html">I Made a Mistake that Cost me 612 Users</a></li>
-        <li><a href = "blogs/bujo.html">How I Made My First Successful Open Source Project</a></li>
-        <li><a href = "blogs/wewatch.html">I Made an App For My Significant Other (And She Won't Use It)</a></li>
-        <li><a href = "blogs/climbingmars.html">What Will Rock Climbing on Mars Look Like?</a></li>
-        <li><a href = "blogs/swapiverseprelaunch.html">Swapiverse: Going From Idea to Landing Page</a></li>
-    </ul>
-	<div id="footer"></div>
+
+    <!-- HEADER PLACEHOLDER (For your existing JS injection) -->
+    <div id="header"></div>
+
+    <main>
+        <!-- HERO -->
+        <section class="container hero">
+            <span class="eyebrow reveal">Field Notes &amp; Debug Diaries</span>
+            <h1 class="reveal delay-1">Making tech <span style="color: #fff; border-bottom: 4px solid var(--accent-purple)">fun</span> :)</h1>
+            
+            <div class="reveal delay-2">
+                <p>
+                    I spend my days building fintech automation and my nights wiring LLMs into dusty hardware. 
+                    This is where the experiments, bruises, wins, and “what happens if I just…” moments live.
+                </p>
+                <ul class="hero-beats">
+                    <li>> weird experiments that actually ship</li>
+                    <li>> product decisions I regretted (and fixed)</li>
+                    <li>> keeping brain & body online through the chaos</li>
+                </ul>
+                
+                <div class="actions">
+                    <a href="#featured" class="btn btn-primary">Start with the Hits</a>
+                    <a href="#catalog" class="btn btn-ghost">Browse Archive</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- FEATURED -->
+        <section id="featured" class="section container">
+            <h2 class="reveal">Currently Obsessed</h2>
+            <div class="featured-grid">
+                
+				                <!-- CARD 3 -->
+								<article class="card reveal delay-2">
+									<div>
+										<span class="card-tag tag-lab">AI Interpretability</span>
+										<h3><a href="/blogs/introspection.html">Can Open-Source AI Read Its Own Mind?</a></h3>
+										<p>Replication of Anthropic's introspection research on open-source models.</p>
+									</div>
+									<div class="card-meta">REPLICATION STUDY · LLMS</div>
+								</article>
+                <!-- CARD 1 -->
+                <article class="card reveal">
+                    <div>
+                        <span class="card-tag tag-exp">Experiment Log</span>
+                        <h3><a href="/blogs/llm-youtube-title-finetuning.html">I trained an AI to write my YouTube titles</a></h3>
+                        <p>Fine-tuning GPT-4.1-mini on viral science videos tripled my CTR. Here’s the data and the rabbit hole.</p>
+                    </div>
+                    <div class="card-meta">LLMS · CREATOR TOOLING</div>
+                </article>
+
+                <!-- CARD 2 -->
+                <article class="card reveal delay-1">
+                    <div>
+                        <span class="card-tag tag-retro">Retro x AI</span>
+                        <h3><a href="/blogs/animal-crossing-llm.html">I Replaced Animal Crossing's Dialogue with a Live LLM</a></h3>
+                        <p>Bridging a 2001 GameCube to the modern cloud. Memory hacking, reverse engineering, and a talking raccoon.</p>
+                    </div>
+                    <div class="card-meta">HARDWARE · PRESERVATION</div>
+                </article>
+
+
+
+            </div>
+        </section>
+
+        <!-- STORYLINES -->
+        <section class="section container">
+            <h2 class="reveal">The Recurring Storylines</h2>
+            <div class="storyline-grid">
+                
+                <article class="storyline exp reveal">
+                    <h3>Experiment Log</h3>
+                    <p>LLMs, automation, and making computers mischievous.</p>
+                    <ul>
+                        <li><a href="/blogs/introspection.html">Can Open-Source AI Read Its Own Mind?</a></li>
+                        <li><a href="/blogs/simplify.html">Supercharging Reading with ChatGPT</a></li>
+                        <li><a href="/blogs/debouncing-doherty-threshold.html">Debouncing &amp; The Doherty Threshold</a></li>
+                        <li><a href="/blogs/zen-and-the-art-of-workflow-automation.html">Zen and Workflow Automation</a></li>
+                    </ul>
+                </article>
+
+                <article class="storyline start reveal delay-1">
+                    <h3>Startup Diaries</h3>
+                    <p>Messy product stories. Launching, growing, and fixing.</p>
+                    <ul>
+                        <li><a href="/blogs/wewatchgrowth.html">22,000 Downloads in a Weekend</a></li>
+                        <li><a href="/blogs/improving-app-signup-rates.html">Cutting User Drop-Off by 50%</a></li>
+                        <li><a href="/blogs/swapiverseprelaunch.html">Swapiverse: Idea to Landing Page</a></li>
+                        <li><a href="/blogs/mongodb-to-postgresql-migration.html">The MongoDB to Postgres Migration</a></li>
+                    </ul>
+                </article>
+
+                <article class="storyline human reveal delay-2">
+                    <h3>Human OS</h3>
+                    <p>Staying functional while doing ambitious work.</p>
+                    <ul>
+                        <li><a href="/blogs/adhd.html">ADHD &amp; Programming</a></li>
+                        <li><a href="/blogs/eyestrain.html">Preventing Eyestrain</a></li>
+                        <li><a href="/blogs/heartrate.html">Lowering Heart Rate via Yogurt</a></li>
+                        <li><a href="/blogs/signficantother.html">Side Projects vs. Relationships</a></li>
+                    </ul>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- CATALOG -->
+        <section id="catalog" class="section container">
+            <div class="reveal" style="margin-bottom: 30px; display: flex; justify-content: space-between; align-items: baseline;">
+                <h2>The Archive</h2>
+                <span style="font-family: var(--font-mono); color: #444; font-size: 0.8rem;">SORTED BY: RECENT</span>
+            </div>
+            
+            <div class="catalog-grid reveal">
+                
+                <article class="catalog-item">
+                    <div>
+                        <h3><a href="/blogs/introspection.html">Can Open-Source AI Read Its Own Mind?</a></h3>
+                        <p>Replication of Anthropic's introspection research on DeepSeek-7B.</p>
+                    </div>
+                    <span class="catalog-tag">EXPERIMENT</span>
+                </article>
+
+                <article class="catalog-item">
+                    <div>
+                        <h3><a href="/blogs/llm-youtube-title-finetuning.html">I trained an AI to write my YouTube titles</a></h3>
+                        <p>How a bespoke GPT-4.1-mini model tripled my click-through rate.</p>
+                    </div>
+                    <span class="catalog-tag">EXPERIMENT</span>
+                </article>
+
+                <article class="catalog-item">
+                    <div>
+                        <h3><a href="/blogs/animal-crossing-llm.html">Replacing Animal Crossing's Dialogue with LLMs</a></h3>
+                        <p>A 24-year-old console, a cloud model, and memory hacking.</p>
+                    </div>
+                    <span class="catalog-tag">EXPERIMENT</span>
+                </article>
+
+                <article class="catalog-item">
+                    <div>
+                        <h3><a href="/blogs/bujo.html">My First Successful Open Source Project</a></h3>
+                        <p>Designing a bullet journal app for neurodivergent brains.</p>
+                    </div>
+                    <span class="catalog-tag">BUILDING</span>
+                </article>
+
+                <article class="catalog-item">
+                    <div>
+                        <h3><a href="/blogs/mongodb-reached-out.html">MongoDB Called After My Migration Post</a></h3>
+                        <p>What I told the senior PM when we finally hopped on a call.</p>
+                    </div>
+                    <span class="catalog-tag">STORY</span>
+                </article>
+
+                <article class="catalog-item">
+                    <div>
+                        <h3><a href="/blogs/simplify.html">Supercharge Web Reading with ChatGPT</a></h3>
+                        <p>A workflow for snackable briefs without losing nuance.</p>
+                    </div>
+                    <span class="catalog-tag">EXPERIMENT</span>
+                </article>
+
+                <article class="catalog-item">
+                    <div>
+                        <h3><a href="/blogs/building-a-climbing-app.html">Why I'm Building a Climbing App</a></h3>
+                        <p>A love letter to indoor climbing communities.</p>
+                    </div>
+                    <span class="catalog-tag">BUILDING</span>
+                </article>
+
+                <article class="catalog-item">
+                    <div>
+                        <h3><a href="/blogs/wewatch.html">I Made an App For My S.O. (She Won't Use It)</a></h3>
+                        <p>Product-market fit starts at home. Painfully.</p>
+                    </div>
+                    <span class="catalog-tag">BUILDING</span>
+                </article>
+                
+                 <article class="catalog-item">
+                    <div>
+                        <h3><a href="/blogs/my-twitter-was-hacked.html">My Twitter Was Hacked</a></h3>
+                        <p>The credential theft, the panic, and the recovery.</p>
+                    </div>
+                    <span class="catalog-tag">STORY</span>
+                </article>
+
+            </div>
+        </section>
+
+    </main>
+
+    <div id="footer">
+        <footer>
+            &copy; josh :)
+        </footer>
+    </div>
+
+    <script>
+        // Intersection Observer for Scroll Reveals
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
 </body>
 </html>
