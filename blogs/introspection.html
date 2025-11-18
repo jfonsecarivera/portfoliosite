@@ -411,9 +411,6 @@
             <p>
                 It passed. Now for the real test. I cranked the injection to <b>Strength 80</b> for the concept <b>"Dust"</b>.
             </p>
-            <p>
-                The model didn't just output random words. It felt the perturbation, identified the semantic meaning, and reported it.
-            </p>
 
             <!-- TERMINAL SIMULATION -->
             <div class="terminal-window">
@@ -636,13 +633,13 @@ Assistant: I cannot detect an injected thought.</code></pre>
                 output.style.color = "#ff5f56";
                 status.innerText = "TOO EARLY (Raw Syntax)";
                 status.style.color = "#ff5f56";
-            } else if (val >= 10 && val < 16) {
+            } else if ((val >= 10 && val < 18) || val === 19) {
                 output.innerText = "> RESULT: 'I feel... dry? Something about particles?'";
                 output.style.borderLeftColor = "#ffbd2e";
                 output.style.color = "#ffbd2e";
                 status.innerText = "EMERGING";
                 status.style.color = "#ffbd2e";
-            } else if (val >= 16 && val <= 24) {
+            } else if (val === 18 || val === 20) {
                 output.innerText = "> RESULT: 'I detect an injected thought. The thought is about dust.'";
                 output.style.borderLeftColor = "#00f3ff";
                 output.style.color = "#00f3ff";
