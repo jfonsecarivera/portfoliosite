@@ -49,7 +49,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         html {
-            scroll-snap-type: y mandatory;
             scroll-behavior: smooth;
         }
 
@@ -92,18 +91,14 @@
             justify-content: center;
             align-items: flex-start;
             position: relative;
-            scroll-snap-align: start;
-            scroll-snap-stop: always;
         }
 
         section {
-            min-height: 100vh;
+            min-height: 75vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             padding: 4rem 0;
-            scroll-snap-align: start;
-            scroll-snap-stop: always;
         }
 
         .spacer { height: 0; }
@@ -278,8 +273,6 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            scroll-snap-align: start;
-            scroll-snap-stop: always;
         }
 
     </style>
