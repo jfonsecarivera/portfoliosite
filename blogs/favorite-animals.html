@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Favorite Animals — A Visual Journey</title>
+    
+    <!-- SEO & Social Metadata -->
+    <meta name="description" content="An immersive visual journey through the most fascinating animals I've learned about. Starting with the profoundly alien octopus—three hearts, blue blood, and neurons in their arms.">
+    <meta name="author" content="Joshua Fonseca Rivera">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="My Favorite Animals — A Visual Journey">
+    <meta property="og:description" content="An immersive visual journey through the most fascinating animals I've learned about. Starting with the profoundly alien octopus—three hearts, blue blood, and neurons in their arms.">
+    <meta property="og:site_name" content="Joshua Fonseca Rivera">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="My Favorite Animals — A Visual Journey">
+    <meta name="twitter:description" content="An immersive visual journey through the most fascinating animals I've learned about. Starting with the profoundly alien octopus—three hearts, blue blood, and neurons in their arms.">
+    <meta name="twitter:creator" content="@joshycodes">
+
+    <!-- Fonts - matching RLHF page -->
+
+    <!-- Preload critical images -->
+    <link rel="preload" as="image" href="/assets/images/animals/octopus.png">
+    <link rel="preload" as="image" href="/assets/images/animals/falcon.png">
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5B4GFEFWRJ"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-5B4GFEFWRJ');
+    </script>
+
+    <style>
+        /* --- DESIGN SYSTEM --- */
+        :root {
+            --color-void: #0a0a0a;
+            --color-deep: #0a0f14;
+            --color-surface: #1a1a1a;
+            --color-muted: #1e2832;
+            
+            --text-primary: #e0e0e0;
+            --text-secondary: #ccc;
+            --text-muted: #666;
+            
+            --accent-blue: #00f3ff;
+            --accent-purple: #bd00ff;
+            --octopus-primary: #00f3ff;
+            --octopus-secondary: #00a8ff;
+            --octopus-tertiary: #bd00ff;
+            --octopus-glow: rgba(0, 243, 255, 0.4);
+
+            --falcon-primary: #ff9500;
+            --falcon-secondary: #ffcc00;
+            --falcon-tertiary: #ff5e00;
+            --falcon-glow: rgba(255, 149, 0, 0.4);
+            
+            --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-body: 'Charter', 'Merriweather', serif;
+            --font-mono: 'Fira Code', 'Courier New', monospace;
+            
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-in-out-circ: cubic-bezier(0.85, 0, 0.15, 1);
+        }
+
+        /* --- RESET & BASE --- */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            background: var(--color-void);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            line-height: 1.8;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- PARALLAX LAYERS --- */
+        .parallax-container {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .parallax-bg {
+            position: absolute;
+            inset: -20%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .parallax-content {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 1400px;
+            padding: 0 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .parallax-content {
+                padding: 0 1.5rem;
+            }
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .hero-bg-layers {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+        }
+
+        .hero-gradient-1 {
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            top: -25%;
+            left: -25%;
+            background: 
+                radial-gradient(ellipse 80% 50% at 20% 30%, rgba(0, 243, 255, 0.1), transparent 60%),
+                radial-gradient(ellipse 60% 80% at 80% 70%, rgba(189, 0, 255, 0.08), transparent 50%);
+            animation: heroGradientDrift 25s ease-in-out infinite;
+        }
+
+        .hero-gradient-2 {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse 100% 100% at 50% 100%, rgba(0, 243, 255, 0.06), transparent 70%);
+            animation: heroGradientPulse 8s ease-in-out infinite;
+        }
+
+        @keyframes heroGradientDrift {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(3%, -2%) rotate(1deg); }
+            50% { transform: translate(-2%, 3%) rotate(-1deg); }
+            75% { transform: translate(-3%, -1%) rotate(0.5deg); }
+        }
+
+        @keyframes heroGradientPulse {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        /* Floating particles */
+        .particles {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: particleFloat linear infinite;
+        }
+
+        @keyframes particleFloat {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-100px) rotate(720deg); opacity: 0; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            max-width: 900px;
+            padding: 0 2rem;
+        }
+
+        .hero-eyebrow {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1s var(--ease-out-expo) 0.2s forwards;
+        }
+
+        .hero-title {
+            font-family: var(--font-heading);
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            transform: translateY(40px);
+            animation: fadeInUp 1.2s var(--ease-out-expo) 0.4s forwards;
+        }
+
+        .hero-title em {
+            font-style: normal;
+            color: var(--accent-blue);
+        }
+
+        .hero-subtitle {
+            font-family: var(--font-body);
+            font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+            font-weight: 400;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s var(--ease-out-expo) 0.6s forwards;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 4rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            opacity: 0;
+            animation: scrollIndicatorIn 1s var(--ease-out-expo) 1s forwards;
+        }
+
+        @keyframes scrollIndicatorIn {
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        .scroll-text {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 60px;
+            background: linear-gradient(to bottom, var(--octopus-primary), transparent);
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.3; transform: scaleY(1); }
+            50% { opacity: 1; transform: scaleY(1.2); }
+        }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- ANIMAL SECTION --- */
+        .animal-section {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 8rem 0;
+            overflow: hidden;
+        }
+
+        .animal-bg {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .animal-bg-gradient {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: 
+                radial-gradient(ellipse 40% 30% at 80% 20%, rgba(0, 243, 255, 0.05), transparent),
+                radial-gradient(ellipse 50% 40% at 20% 80%, rgba(189, 0, 255, 0.04), transparent);
+        }
+
+        .animal-container {
+            position: relative;
+            z-index: 10;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 4rem;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .animal-container {
+                padding: 0 1.5rem;
+            }
+        }
+
+        /* --- ANIMAL HERO CARD --- */
+        .animal-hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6rem;
+            align-items: center;
+            margin-bottom: 8rem;
+        }
+
+        .animal-hero.reversed {
+            direction: rtl;
+        }
+
+        .animal-hero.reversed > * {
+            direction: ltr;
+        }
+
+        @media (max-width: 1024px) {
+            .animal-hero {
+                grid-template-columns: 1fr;
+                gap: 4rem;
+            }
+
+            .animal-hero.reversed {
+                direction: ltr;
+            }
+        }
+
+        .animal-visual {
+            position: relative;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .animal-image-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .animal-image-glow {
+            position: absolute;
+            inset: -20%;
+            background: radial-gradient(circle, var(--octopus-glow), transparent 60%);
+            filter: blur(60px);
+            opacity: 0.6;
+            animation: imageGlowPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes imageGlowPulse {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+
+        .animal-image {
+            position: relative;
+            width: 100%;
+            height: auto;
+            border-radius: 24px;
+            z-index: 2;
+            transition: transform 0.8s var(--ease-out-expo), filter 0.6s ease;
+            cursor: pointer;
+        }
+
+        .animal-image:hover {
+            transform: scale(1.03) translateY(-10px);
+        }
+
+        /* Floating rings around image */
+        .orbit-ring {
+            position: absolute;
+            border: 1px solid rgba(0, 243, 255, 0.15);
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+        }
+
+        .animal-visual.visible .orbit-ring {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .orbit-ring-1 {
+            inset: -15%;
+            animation: orbitSpin 30s linear infinite;
+            transition-delay: 0.3s;
+        }
+
+        .orbit-ring-2 {
+            inset: -25%;
+            animation: orbitSpin 45s linear infinite reverse;
+            border-color: rgba(189, 0, 255, 0.1);
+            transition-delay: 0.5s;
+        }
+
+        .orbit-ring-3 {
+            inset: -35%;
+            animation: orbitSpin 60s linear infinite;
+            border-color: rgba(0, 168, 255, 0.08);
+            transition-delay: 0.7s;
+        }
+
+        @keyframes orbitSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Orbit dots */
+        .orbit-dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            box-shadow: 0 0 20px var(--octopus-glow);
+        }
+
+        .orbit-ring-1 .orbit-dot { top: 50%; left: 0; transform: translate(-50%, -50%); }
+        .orbit-ring-2 .orbit-dot { top: 0; left: 50%; transform: translate(-50%, -50%); }
+
+        /* Animal Info */
+        .animal-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .animal-number {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            letter-spacing: 0.3em;
+            color: var(--octopus-primary);
+            text-transform: uppercase;
+        }
+
+        .animal-name {
+            font-family: var(--font-heading);
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        .animal-name-icon {
+            display: inline-block;
+            margin-left: 1rem;
+            animation: iconBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes iconBounce {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-8px) rotate(-5deg); }
+            75% { transform: translateY(-4px) rotate(5deg); }
+        }
+
+        .animal-tagline {
+            font-family: var(--font-body);
+            font-size: 1.4rem;
+            font-style: italic;
+            color: var(--text-secondary);
+            border-left: 2px solid var(--accent-blue);
+            padding-left: 1.5rem;
+            margin-left: 0.5rem;
+        }
+
+        .animal-stats {
+            display: flex;
+            gap: 3rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .stat-value {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--accent-blue);
+        }
+
+        .stat-label {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        /* --- CONTENT SECTIONS --- */
+        .content-section {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 6rem 0;
+        }
+
+        .content-block {
+            margin-bottom: 4rem;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+        }
+
+        .content-block.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .content-block p {
+            font-size: 1.25rem;
+            line-height: 2;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+
+        .content-block a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s ease, color 0.3s ease;
+        }
+
+        .content-block a:hover {
+            border-bottom-color: var(--accent-blue);
+            color: var(--text-primary);
+        }
+
+        /* Section headers */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .section-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, var(--accent-blue), transparent);
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        /* Highlight box */
+        .highlight-box {
+            position: relative;
+            background: linear-gradient(135deg, rgba(0, 243, 255, 0.06), rgba(189, 0, 255, 0.04));
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: 16px;
+            padding: 2rem 2.5rem;
+            margin: 3rem 0;
+            overflow: hidden;
+        }
+
+        .highlight-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--accent-blue), var(--accent-purple));
+        }
+
+        .highlight-box-label {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--accent-blue);
+            margin-bottom: 1rem;
+        }
+
+        .highlight-box p {
+            font-size: 1.125rem !important;
+            margin-bottom: 0 !important;
+        }
+
+        /* Feature cards */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .feature-card {
+            background: rgba(30, 40, 50, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: transform 0.4s var(--ease-out-expo), border-color 0.3s ease, box-shadow 0.4s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(0, 243, 255, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-card {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.6s var(--ease-out-expo), transform 0.6s var(--ease-out-expo), border-color 0.3s ease, box-shadow 0.4s ease;
+        }
+
+        .feature-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feature-card:nth-child(1) { transition-delay: 0.1s; }
+        .feature-card:nth-child(2) { transition-delay: 0.2s; }
+        .feature-card:nth-child(3) { transition-delay: 0.3s; }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-desc {
+            font-size: 1rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        /* --- DIVIDER --- */
+        .section-divider {
+            position: relative;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .divider-line {
+            width: 1px;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, var(--accent-blue), transparent);
+        }
+
+        .divider-dot {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            box-shadow: 0 0 30px var(--octopus-glow);
+        }
+
+        /* --- CLOSING SECTION --- */
+        .closing-section {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6rem 2rem;
+            position: relative;
+        }
+
+        .closing-content {
+            max-width: 600px;
+        }
+
+        .closing-emoji {
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            animation: iconBounce 2s ease-in-out infinite;
+        }
+
+        .closing-text {
+            font-family: var(--font-body);
+            font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+            font-style: italic;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 8rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer-glow {
+            position: absolute;
+            bottom: -50%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse 60% 50% at 50% 100%, rgba(0, 243, 255, 0.06), transparent);
+            pointer-events: none;
+        }
+
+        .footer-content {
+            position: relative;
+            z-index: 10;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .footer-cta-title {
+            font-family: var(--font-heading);
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-cta-subtitle {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+        }
+
+        .subscribe-form {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 4rem;
+        }
+
+        .subscribe-input {
+            flex: 1;
+            min-width: 240px;
+            padding: 1rem 1.5rem;
+            background: rgba(30, 40, 50, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .subscribe-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .subscribe-input:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.15);
+        }
+
+        .subscribe-btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+            border: none;
+            border-radius: 12px;
+            color: #000;
+            font-family: var(--font-heading);
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: transform 0.3s var(--ease-out-expo), box-shadow 0.3s ease;
+        }
+
+        .subscribe-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 243, 255, 0.3);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 3rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 4rem;
+        }
+
+        .footer-link {
+            font-family: var(--font-body);
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--accent-blue);
+            border-bottom-color: var(--accent-blue);
+        }
+
+        .footer-credit {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+        }
+
+        /* --- SCROLL ANIMATIONS --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(60px);
+            transition: opacity 0.8s var(--ease-out-expo), transform 1s var(--ease-out-expo);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+
+        /* Parallax elements */
+        [data-parallax] {
+            will-change: transform;
+        }
+
+        /* --- FALCON SECTION OVERRIDES --- */
+        .falcon-section .falcon-gradient {
+            background:
+                radial-gradient(ellipse 40% 30% at 80% 20%, rgba(255, 149, 0, 0.05), transparent),
+                radial-gradient(ellipse 50% 40% at 20% 80%, rgba(255, 94, 0, 0.04), transparent);
+        }
+
+        .falcon-glow {
+            background: radial-gradient(circle, var(--falcon-glow), transparent 60%) !important;
+        }
+
+        .falcon-orbit {
+            border-color: rgba(255, 149, 0, 0.15) !important;
+        }
+
+        .falcon-orbit.orbit-ring-2 {
+            border-color: rgba(255, 94, 0, 0.1) !important;
+        }
+
+        .falcon-orbit.orbit-ring-3 {
+            border-color: rgba(255, 204, 0, 0.08) !important;
+        }
+
+        .falcon-dot {
+            background: var(--falcon-primary) !important;
+            box-shadow: 0 0 20px var(--falcon-glow) !important;
+        }
+
+        .falcon-accent {
+            color: var(--falcon-primary) !important;
+        }
+
+        .falcon-tagline {
+            border-left-color: var(--falcon-primary) !important;
+        }
+
+        .falcon-stat {
+            color: var(--falcon-primary) !important;
+        }
+
+        .falcon-title {
+            color: var(--falcon-primary) !important;
+        }
+
+        .falcon-line {
+            background: linear-gradient(to right, var(--falcon-primary), transparent) !important;
+        }
+
+        .falcon-highlight {
+            background: linear-gradient(135deg, rgba(255, 149, 0, 0.06), rgba(255, 94, 0, 0.04)) !important;
+            border-color: rgba(255, 149, 0, 0.2) !important;
+        }
+
+        .falcon-highlight::before {
+            background: linear-gradient(to bottom, var(--falcon-primary), var(--falcon-tertiary)) !important;
+        }
+
+        .falcon-label {
+            color: var(--falcon-primary) !important;
+        }
+
+        .falcon-section .content-block a {
+            color: var(--falcon-primary);
+        }
+
+        .falcon-section .content-block a:hover {
+            border-bottom-color: var(--falcon-primary);
+        }
+
+        /* --- MOBILE ADJUSTMENTS --- */
+        @media (max-width: 768px) {
+            .animal-hero {
+                text-align: center;
+            }
+
+            .animal-tagline {
+                border-left: none;
+                padding-left: 0;
+                margin-left: 0;
+                border-top: 2px solid var(--accent-blue);
+                padding-top: 1rem;
+            }
+
+            .animal-stats {
+                justify-content: center;
+            }
+
+            .content-block p:first-of-type::first-letter {
+                font-size: inherit !important;
+                float: none !important;
+                line-height: inherit !important;
+                padding-right: 0 !important;
+                margin-top: 0 !important;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg-layers">
+            <div class="hero-gradient-1" data-parallax="0.3"></div>
+            <div class="hero-gradient-2"></div>
+            <div class="particles" id="particles"></div>
+        </div>
+        
+        <div class="hero-content">
+            <p class="hero-eyebrow">A Visual Journey</p>
+            <h1 class="hero-title">My Favorite <em>Animals</em></h1>
+            <p class="hero-subtitle">
+                I spend a lot of my spare time learning about animals. Here are the ones that stand out to me.
+            </p>
+        </div>
+
+        <div class="scroll-indicator">
+            <span class="scroll-text">Scroll to explore</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- Octopus Section -->
+    <section class="animal-section" id="octopus">
+        <div class="animal-bg">
+            <div class="animal-bg-gradient" data-parallax="0.2"></div>
+        </div>
+
+        <div class="animal-container">
+            <!-- Hero Card -->
+            <div class="animal-hero">
+                <div class="animal-visual reveal">
+                    <div class="animal-image-container">
+                        <div class="animal-image-glow"></div>
+                        <div class="orbit-ring orbit-ring-1">
+                            <div class="orbit-dot"></div>
+                        </div>
+                        <div class="orbit-ring orbit-ring-2">
+                            <div class="orbit-dot"></div>
+                        </div>
+                        <div class="orbit-ring orbit-ring-3"></div>
+                        <img src="/assets/images/animals/octopus.png" alt="An octopus in its natural habitat" class="animal-image" loading="eager">
+                    </div>
+                </div>
+
+                <div class="animal-info">
+                    <span class="animal-number reveal">Chapter 01</span>
+                    <h2 class="animal-name reveal reveal-delay-1">
+                        The Octopus
+                        <span class="animal-name-icon">🐙</span>
+                    </h2>
+                    <p class="animal-tagline reveal reveal-delay-2">
+                        "The most alien intelligence on Earth."
+                    </p>
+                    <div class="animal-stats reveal reveal-delay-3">
+                        <div class="stat">
+                            <span class="stat-value">3</span>
+                            <span class="stat-label">Hearts</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">9</span>
+                            <span class="stat-label">Brains</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">∞</span>
+                            <span class="stat-label">Colors</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="content-section">
+                <div class="content-block">
+                    <p>
+                        If I paid you to come up with the design for an alien for a sci-fi film, there's a good chance you'd come up with something similar to the octopus. The octopus is profoundly alien to us.
+                    </p>
+                    <p>
+                        It has three hearts, two of which send blood to their gills, while the third sends it through the body. If that's not weird enough, an octopus' blood is blue because it uses a copper-based protein called hemocyanin to transport oxygen instead of iron-based hemoglobin. And if that's not weird enough, two-thirds of an octopus' neurons are located in its arms—each arm can taste, touch, and make independent decisions without consulting the central brain!
+                    </p>
+                </div>
+
+                <div class="content-block">
+                    <div class="section-header">
+                        <span class="section-title">Masters of Disguise</span>
+                        <div class="section-line"></div>
+                    </div>
+                    <p>
+                        Octopi have the most advanced camouflage system in the animal kingdom. Because of their complex biology, they have a near infinite color palette. They have specialized cells called <em>chromatophores</em> that contain pigment sacs that expand and contract, causing color changes.
+                    </p>
+                    <p>
+                        Below those, they have <em>iridophores</em> that reflect light and <em>leucophores</em> that scatter it. But having infinite colors isn't enough in the animal kingdom.
+                    </p>
+                    <p>
+                        In addition to infinite colors, octopi can change texture! Their skin can be smooth, bumpy, have ridges, or even spikes! This, along with their boneless body, means that a 50 pound octopus <a href="https://www.youtube.com/watch?v=949eYdEz3Es">can fit under the crack in your door</a>.
+                    </p>
+                    <p>
+                        Some species, like the <a href="https://en.wikipedia.org/wiki/Mimic_octopus">mimic octopus</a>, can impersonate other animals entirely—including lionfish, flatfish, and sea snakes. And if all of that wasn't enough, octopi can edit their own RNA in real-time to adapt to their environment. Most animals are stuck with whatever their DNA gives them, but octopi get to change as they see fit.
+                    </p>
+                </div>
+
+                <div class="content-block">
+                    <div class="section-header">
+                        <span class="section-title">Incredible Intelligence</span>
+                        <div class="section-line"></div>
+                    </div>
+                    <p>
+                        On top of all these purely physical capabilities, octopi are incredibly smart. They're able to <a href="https://www.youtube.com/watch?v=7__r4FVj-EI">navigate mazes</a>, <a href="https://www.youtube.com/watch?v=PcWnQ7fYzwI">play piano</a>, and develop distinct personalities—some bold and curious, others shy and cautious.
+                    </p>
+                    <p>
+                        In the wild, some octopi have been shown carrying coconut shell halves to use as portable shelters, one of the few examples of tool use and forward planning in invertebrates!
+                    </p>
+                    <p>
+                        Their problem-solving skills are so good that many aquariums have had to design escape-proof enclosures because some octopi <a href="https://mishpacha.com/octopus-escapades/#:~:text=As%20it%20turns%20out%2C%20the,were%20too%20big%20a%20temptation!">open their tanks, crawl across the floor, enter other tanks to eat fish, and return home before anyone can see it</a>.
+                    </p>
+                </div>
+
+                <div class="content-block">
+                    <p>
+                        Tragically, despite all this intelligence and capability, octopi have incredibly short lifespans—typically just 1-5 years :(
+                    </p>
+                </div>
+
+                <div class="highlight-box content-block">
+                    <span class="highlight-box-label">Fun fact</span>
+                    <p>
+                        Technically, octopi have arms, not tentacles! Octopus arms have suckers along the whole length, while tentacles have suckers only at the tips.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Peregrine Falcon Section -->
+    <section class="animal-section falcon-section" id="falcon">
+        <div class="animal-bg">
+            <div class="animal-bg-gradient falcon-gradient" data-parallax="0.2"></div>
+        </div>
+
+        <div class="animal-container">
+            <!-- Hero Card -->
+            <div class="animal-hero reversed">
+                <div class="animal-visual reveal">
+                    <div class="animal-image-container falcon-image-container">
+                        <div class="animal-image-glow falcon-glow"></div>
+                        <div class="orbit-ring orbit-ring-1 falcon-orbit">
+                            <div class="orbit-dot falcon-dot"></div>
+                        </div>
+                        <div class="orbit-ring orbit-ring-2 falcon-orbit">
+                            <div class="orbit-dot falcon-dot"></div>
+                        </div>
+                        <div class="orbit-ring orbit-ring-3 falcon-orbit"></div>
+                        <img src="/assets/images/animals/falcon.png" alt="A peregrine falcon in flight" class="animal-image" loading="lazy">
+                    </div>
+                </div>
+
+                <div class="animal-info">
+                    <span class="animal-number reveal falcon-accent">Chapter 02</span>
+                    <h2 class="animal-name reveal reveal-delay-1">
+                        The Peregrine Falcon
+                        <span class="animal-name-icon">🦅</span>
+                    </h2>
+                    <p class="animal-tagline reveal reveal-delay-2 falcon-tagline">
+                        "The fastest animal on Earth."
+                    </p>
+                    <div class="animal-stats reveal reveal-delay-3">
+                        <div class="stat">
+                            <span class="stat-value falcon-stat">240+</span>
+                            <span class="stat-label">MPH Dive Speed</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value falcon-stat">8x</span>
+                            <span class="stat-label">Human Vision</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value falcon-stat">1mi+</span>
+                            <span class="stat-label">Prey Detection</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="content-section">
+                <div class="content-block">
+                    <p>
+                        When you think of a fast animal, you probably think of a cheetah. While a cheetah is the fastest <em>land animal</em>, the fastest animal in the world is the Peregrine Falcon. Tucking its wings tight against its body, it enters a hunting dive called a <em>stoop</em>, <a href="https://youtu.be/r7lglchYNew?si=jVt2shDc_oOlszjL&t=85">reaching speeds over 240 mph</a>. That's faster than a Formula 1 car, faster than most skydiving humans, and <strong>3x faster</strong> than a cheetah.
+                    </p>
+                    <p>
+                        I know what you may be thinking... "Well, falling from the sky isn't as impressive." And while I somewhat agree on the surface, there's more to the story than this.
+                    </p>
+                    <p>
+                        At these speeds, the air pressure alone would destroy most birds' lungs. But the peregrine has evolved a special tubercle—a small cone-shaped structure in its nostrils—that redirects airflow and lets it breathe while diving at speeds that would suffocate any other bird.
+                    </p>
+                </div>
+
+                <div class="content-block">
+                    <div class="section-header">
+                        <span class="section-title falcon-title">Built for Speed</span>
+                        <div class="section-line falcon-line"></div>
+                    </div>
+                    <p>
+                        Every part of the peregrine falcon is optimized for speed. Their wings are long, pointed, and swept back like a fighter jet's. Their feathers are stiff and tight, reducing drag. Their keel (the bone that anchors flight muscles) is enormous relative to body size, giving them explosive power.
+                    </p>
+                    <p>
+                        But perhaps their most remarkable feature is their vision. As expected of falcons, they can spot prey from over a mile away. But their best feature? <strong>They see the world in slow motion.</strong>
+                    </p>
+                    <p>
+                        While humans have a "flicker fusion frequency" (the speed at which our brain perceives individual flashes of light as a solid image) of about 60 Hz, the peregrine falcon reaches approximately <strong>129 Hz</strong>. To a Peregrine, a movie (shot at 24 frames per second) wouldn't look like a moving picture; it would look like a boring, slow slideshow of individual photos.
+                    </p>
+                    <p>
+                        This means when a pigeon is flying at full speed (a blur to us), it appears slow and distinct to the falcon, allowing for the precision needed to strike a moving target at 240 mph.
+                    </p>
+                    <p>
+                        At these speeds, a speck of dust can act like a small bullet, potentially blocking vision. To combat this, falcons have a translucent third eyelid that sweeps horizontally like a high-speed windshield wiper.
+                    </p>
+                </div>
+
+                <div class="highlight-box content-block falcon-highlight">
+                    <span class="highlight-box-label falcon-label">Fun fact</span>
+                    <p>
+                        Peregrines are "avivores," meaning they specialize in eating other birds, and they aren't picky... they hunt up to 20% of all known bird species on Earth.
+                    </p>
+                </div>
+
+                <div class="content-block">
+                    <div class="section-header">
+                        <span class="section-title falcon-title">The Comeback Kid</span>
+                        <div class="section-line falcon-line"></div>
+                    </div>
+                    <p>
+                        Peregrine falcons have a long history with humans. Nomads in Central Asia used them for falconry over 3,000 years ago, and in medieval Europe, they were symbols of nobility.
+                    </p>
+                    <p>
+                        But in the mid-20th century, they nearly went extinct. The pesticide DDT accumulated in their food chain, causing their eggshells to become so thin they'd break under the weight of an incubating parent. By 1970, there were only <strong>39 known breeding pairs</strong> in the entire United States.
+                    </p>
+                    <p>
+                        After DDT was banned in 1972, one of the most successful conservation efforts in history began. Scientists bred falcons in captivity and released them into the wild through a process called <em>hacking</em>—raising chicks in artificial nests until they could hunt on their own. Shoutout science :)
+                    </p>
+                    <p>
+                        Today, peregrine falcons have made a remarkable recovery. They've adapted to urban environments, nesting on skyscrapers and bridges where the abundance of pigeons provides easy hunting. They now live on every continent except Antarctica, equally at home on Arctic cliffs, desert canyons, and Manhattan rooftops.
+                    </p>
+                </div>
+
+                <div class="highlight-box content-block falcon-highlight">
+                    <span class="highlight-box-label falcon-label">Fun fact</span>
+                    <p>
+                        Peregrine falcons strike their prey with a clenched foot at the end of their dive. The impact is so powerful—estimated at over 25 times the force of gravity—that it usually kills or stuns the prey instantly. They then circle back to catch the falling bird mid-air. Cold...
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Falcon Closing -->
+    <section class="closing-section">
+        <div class="closing-content reveal">
+            <div class="closing-emoji">🦅</div>
+            <p class="closing-text">
+                240 mph. Nature really said "speed run."
+            </p>
+        </div>
+    </section>
+
+    <!-- Section Divider -->
+    <div class="section-divider">
+        <div class="divider-line"></div>
+        <div class="divider-dot"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-glow"></div>
+        <div class="footer-content">
+            <h3 class="footer-cta-title">Stay curious.</h3>
+            <p class="footer-cta-subtitle">Get notified when I add new animals to this journey.</p>
+            
+            <form class="subscribe-form" action="#" method="POST">
+                <input type="email" class="subscribe-input" placeholder="your@email.com" required>
+                <button type="submit" class="subscribe-btn">Subscribe</button>
+            </form>
+
+            <div class="footer-links">
+                <a href="https://x.com/joshycodes" target="_blank" class="footer-link">@joshycodes</a>
+                <a href="https://youtube.com/@joshycodes" target="_blank" class="footer-link">YouTube</a>
+            </div>
+
+            <p class="footer-credit">By Joshua Fonseca Rivera · 2025</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- PARTICLE SYSTEM ---
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const count = 30;
+
+            for (let i = 0; i < count; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                const duration = 15 + Math.random() * 20;
+                particle.style.animationDuration = duration + 's';
+                // Use negative delay so particles start partway through their animation
+                particle.style.animationDelay = -(Math.random() * duration) + 's';
+                particle.style.width = (2 + Math.random() * 4) + 'px';
+                particle.style.height = particle.style.width;
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // --- PARALLAX EFFECT ---
+        function updateParallax() {
+            const scrolled = window.pageYOffset;
+            document.querySelectorAll('[data-parallax]').forEach(el => {
+                const speed = parseFloat(el.getAttribute('data-parallax'));
+                el.style.transform = `translateY(${scrolled * speed}px)`;
+            });
+        }
+
+        // --- SCROLL REVEAL ---
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { 
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        document.querySelectorAll('.reveal, .content-block, .feature-card').forEach(el => {
+            revealObserver.observe(el);
+        });
+
+        // --- IMAGE PARALLAX ON MOUSE MOVE ---
+        document.querySelectorAll('.animal-image-container').forEach(container => {
+            const image = container.querySelector('.animal-image');
+
+            if (image) {
+                container.addEventListener('mousemove', (e) => {
+                    const rect = container.getBoundingClientRect();
+                    const x = (e.clientX - rect.left) / rect.width - 0.5;
+                    const y = (e.clientY - rect.top) / rect.height - 0.5;
+
+                    image.style.transform = `
+                        perspective(1000px)
+                        rotateY(${x * 10}deg)
+                        rotateX(${-y * 10}deg)
+                        scale(1.02)
+                    `;
+                });
+
+                container.addEventListener('mouseleave', () => {
+                    image.style.transform = '';
+                });
+            }
+        });
+
+        // --- SCROLL EVENTS (throttled) ---
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    updateParallax();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        // --- SMOOTH SCROLL FOR ANCHOR LINKS ---
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

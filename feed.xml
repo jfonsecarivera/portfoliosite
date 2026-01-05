@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Josh Fonseca's Blog</title>
+    <link>https://joshfonseca.com</link>
+    <description>Technical writing on AI, engineering, and product</description>
+    <language>en-us</language>
+    <atom:link href="https://joshfonseca.com/feed.xml" rel="self" type="application/rss+xml"/>
+
+    <item>
+      <title>When Does a Pile of Sand Become a Heap? I Asked AI to Find Out.</title>
+      <link>https://joshfonseca.com/blogs/sorites-paradox.html</link>
+      <description>Philosophers have debated the Sorites Paradox for millennia. I gave the problem to a language model and discovered something unexpected about how AI handles vagueness, and what that reveals about language itself.</description>
+      <pubDate>Sat, 29 Nov 2025 17:24:43 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/sorites-paradox.html</guid>
+    </item>
+
+    <item>
+      <title>The AI That Couldn't See Its Own Shadow</title>
+      <link>https://joshfonseca.com/blogs/rlhf-introspection.html</link>
+      <description>I tried to force an AI to examine its own dangerous thoughts. What I discovered was unsettling: safety training doesn't remove the danger—it just teaches the machine to look away.</description>
+      <pubDate>Fri, 21 Nov 2025 21:07:57 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/rlhf-introspection.html</guid>
+    </item>
+
+    <item>
+      <title>Can Open-Source AI Introspect?</title>
+      <link>https://joshfonseca.com/blogs/introspection.html</link>
+      <description>Can a 7B model read its own mind? A replication study of Anthropic's introspection paper using DeepSeek-7B, revealing emergent awareness and safety blindness.</description>
+      <pubDate>Tue, 18 Nov 2025 23:19:18 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/introspection.html</guid>
+    </item>
+
+    <item>
+      <title>I Replaced Animal Crossing's Dialogue with a Live LLM by Hacking GameCube Memory</title>
+      <link>https://joshfonseca.com/blogs/animal-crossing-llm.html</link>
+      <description>How I replaced Animal Crossing's dialogue with a live LLM by bridging GameCube memory to a cloud AI, with no game code changes required.</description>
+      <pubDate>Sat, 01 Nov 2025 18:24:07 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/animal-crossing-llm.html</guid>
+    </item>
+
+    <item>
+      <title>Building golf.vim: From Reddit Idea to MVP in 48 Hours</title>
+      <link>https://joshfonseca.com/blogs/building-golf-vim.html</link>
+      <description>How golf.vim, a 'Wordle for Vim' plugin, went from idea to MVP in 48 hours using community feedback from Reddit.</description>
+      <pubDate>Sat, 01 Nov 2025 18:24:07 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/building-golf-vim.html</guid>
+    </item>
+
+    <item>
+      <title>I trained an AI to write my YouTube titles</title>
+      <link>https://joshfonseca.com/blogs/llm-youtube-title-finetuning.html</link>
+      <description>I spent way too much time fine-tuning an LLM to write YouTube titles. It tripled my CTR from 5% to 15%. Here's how I did it.</description>
+      <pubDate>Sat, 01 Nov 2025 18:24:07 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/llm-youtube-title-finetuning.html</guid>
+    </item>
+
+    <item>
+      <title>Zen and the Art of Workflow Automation</title>
+      <link>https://joshfonseca.com/blogs/zen-and-the-art-of-workflow-automation.html</link>
+      <description>How mindfulness can improve your development workflow through automation. Transform repetitive tasks into opportunities for efficiency and craftsmanship.</description>
+      <pubDate>Sat, 01 Nov 2025 18:24:07 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/zen-and-the-art-of-workflow-automation.html</guid>
+    </item>
+
+    <item>
+      <title>Why I'm Building a Climbing App (and Why Knowing Your Community Actually Matters)</title>
+      <link>https://joshfonseca.com/blogs/building-a-climbing-app.html</link>
+      <description>How building a climbing app for my local community taught me more about user validation and feedback loops than years of failed projects. Lessons for devs and entrepreneurs.</description>
+      <pubDate>Wed, 02 Apr 2025 03:04:24 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/building-a-climbing-app.html</guid>
+    </item>
+
+    <item>
+      <title>Dangerous Streets: Using ML to Prioritize Cyclist Safety in Austin</title>
+      <link>https://joshfonseca.com/blogs/dangerous-streets.html</link>
+      <description>Training an XGBoost model on 2,757 bike crashes to identify the most dangerous streets in Austin for Vision Zero planning.</description>
+      <pubDate>Sat, 04 Jan 2026 00:00:00 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/dangerous-streets.html</guid>
+    </item>
+
+    <item>
+      <title>My Favorite Animals — A Visual Journey</title>
+      <link>https://joshfonseca.com/blogs/favorite-animals.html</link>
+      <description>An immersive visual journey through the most fascinating animals I've learned about. Starting with the profoundly alien octopus—three hearts, blue blood, and neurons in their arms.</description>
+      <pubDate>Sat, 04 Jan 2026 00:00:00 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/favorite-animals.html</guid>
+    </item>
+
+    <item>
+      <title>Cutting User Drop-Off by 50%: A Lesson in User Acquisition</title>
+      <link>https://joshfonseca.com/blogs/improving-app-signup-rates.html</link>
+      <description>Discover how a startup's pivot to anonymous authentication sparked user engagement and growth. Join Josh Fonseca as he shares actionable insights from his journey in user acquisition.</description>
+      <pubDate>Mon, 06 Nov 2023 22:42:59 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/improving-app-signup-rates.html</guid>
+    </item>
+
+    <item>
+      <title>How I Supercharged Web Reading with ChatGPT</title>
+      <link>https://joshfonseca.com/blogs/simplify.html</link>
+      <description>My journey in building a browser extension using ChatGPT to simplify, summarize, and enhance text comprehension.</description>
+      <pubDate>Fri, 06 Oct 2023 02:58:57 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/simplify.html</guid>
+    </item>
+
+    <item>
+      <title>Go Watch Everything Everywhere All at Once.</title>
+      <link>https://joshfonseca.com/blogs/go-watch-everything-everywhere-all-at-once.html</link>
+      <description>In our hyper-reality, we see movies go viral all the time. Parasite, Interstellar, Your Name... and just about every Marvel movie that comes out. Don't get me wrong, these movies are good, but few times are those movies life changing. Everything Everywhere All at Once is one of those times.</description>
+      <pubDate>Wed, 04 May 2022 14:06:31 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/go-watch-everything-everywhere-all-at-once.html</guid>
+    </item>
+
+    <item>
+      <title>Update: A Senior PM at MongoDB Tried to Convince me Not to Migrate my Database</title>
+      <link>https://joshfonseca.com/blogs/mongodb-reached-out.html</link>
+      <description>A follow-up to my MongoDB to PostgreSQL migration post.</description>
+      <pubDate>Wed, 04 May 2022 14:06:31 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/mongodb-reached-out.html</guid>
+    </item>
+
+    <item>
+      <title>My X was Hacked.</title>
+      <link>https://joshfonseca.com/blogs/my-twitter-was-hacked.html</link>
+      <description>My X was hacked. It's a shame because I spent a few months building up an audience of 2,000 followers.</description>
+      <pubDate>Wed, 04 May 2022 14:06:31 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/my-twitter-was-hacked.html</guid>
+    </item>
+
+    <item>
+      <title>Why I Had to Migrate from MongoDB to PostgreSQL</title>
+      <link>https://joshfonseca.com/blogs/mongodb-to-postgresql-migration.html</link>
+      <description>My experience migrating from MongoDB to PostgreSQL and the lessons learned along the way.</description>
+      <pubDate>Fri, 09 Jul 2021 20:44:53 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/mongodb-to-postgresql-migration.html</guid>
+    </item>
+
+    <item>
+      <title>Combining Debouncing and The Doherty Threshold to Improve Search UX and Performance</title>
+      <link>https://joshfonseca.com/blogs/debouncing-doherty-threshold.html</link>
+      <description>How to improve search performance and user experience using debouncing and the Doherty Threshold.</description>
+      <pubDate>Wed, 23 Jun 2021 16:18:58 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/debouncing-doherty-threshold.html</guid>
+    </item>
+
+    <item>
+      <title>I Got 22,000 App Downloads In One Weekend with A $0 Budget</title>
+      <link>https://joshfonseca.com/blogs/wewatchgrowth.html</link>
+      <description>How I got 22,000 app downloads in one weekend with no marketing budget.</description>
+      <pubDate>Wed, 26 May 2021 17:44:42 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/wewatchgrowth.html</guid>
+    </item>
+
+    <item>
+      <title>Features I Wish I Included in my MVP</title>
+      <link>https://joshfonseca.com/blogs/mvp.html</link>
+      <description>Two months after launching my MVP, there are some things I regret not including from the beginning. Here are 6 features you should consider in your MVP that take little extra work for very high reward</description>
+      <pubDate>Wed, 26 May 2021 17:44:42 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/mvp.html</guid>
+    </item>
+
+    <item>
+      <title>ADHD and Programming</title>
+      <link>https://joshfonseca.com/blogs/adhd.html</link>
+      <description>Here's what it's like to program with ADHD</description>
+      <pubDate>Wed, 05 May 2021 18:26:42 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/adhd.html</guid>
+    </item>
+
+    <item>
+      <title>I Got A Microchip Implant and now Everyone Thinks I'm a Demon</title>
+      <link>https://joshfonseca.com/blogs/cyborg.html</link>
+      <description>I Got A Microchip Implant and now Everyone Thinks I'm a Demon</description>
+      <pubDate>Wed, 05 May 2021 18:26:42 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/cyborg.html</guid>
+    </item>
+
+    <item>
+      <title>Here's what I Learned Growing my Mobile App to 2,000 Users in a Month</title>
+      <link>https://joshfonseca.com/blogs/lessonslearned1.html</link>
+      <description>Last month, I launched my mobile app. Here's what I learned</description>
+      <pubDate>Wed, 05 May 2021 18:26:42 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/lessonslearned1.html</guid>
+    </item>
+
+    <item>
+      <title>I minted and sold an NFT of Mona Lisa</title>
+      <link>https://joshfonseca.com/blogs/nft.html</link>
+      <description>My experience minting and selling an NFT</description>
+      <pubDate>Wed, 05 May 2021 18:26:42 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/nft.html</guid>
+    </item>
+
+    <item>
+      <title>I Made A Mobile App for my Significant Other (And She Was Very Supportive)</title>
+      <link>https://joshfonseca.com/blogs/signficantother.html</link>
+      <description>I Made An App For My Significant Other (And She Was Very Supportive)</description>
+      <pubDate>Wed, 05 May 2021 18:26:42 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/signficantother.html</guid>
+    </item>
+
+    <item>
+      <title>I Made A Mobile App for my Significant Other (And She Doesn't Use It)</title>
+      <link>https://joshfonseca.com/blogs/wewatch.html</link>
+      <description>I Made An App For My Significant Other (And She Doesn't Use It).</description>
+      <pubDate>Wed, 05 May 2021 18:26:42 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/wewatch.html</guid>
+    </item>
+
+    <item>
+      <title>I Made a Mistake That Cost me 612 Users</title>
+      <link>https://joshfonseca.com/blogs/wewatchauth.html</link>
+      <description>Turns out, I don't need such intense authentication</description>
+      <pubDate>Wed, 05 May 2021 18:26:42 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/wewatchauth.html</guid>
+    </item>
+
+    <item>
+      <title>How I made my First Open Source Project</title>
+      <link>https://joshfonseca.com/blogs/bujo.html</link>
+      <description>Vim-Bujo is a minimalist task manager within vim</description>
+      <pubDate>Sat, 16 Jan 2021 21:38:33 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/bujo.html</guid>
+    </item>
+
+    <item>
+      <title>What Will Rock Climbing on Mars Look Like?</title>
+      <link>https://joshfonseca.com/blogs/climbingmars.html</link>
+      <description>Exploring what rock climbing might be like on Mars</description>
+      <pubDate>Sat, 16 Jan 2021 21:38:33 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/climbingmars.html</guid>
+    </item>
+
+    <item>
+      <title>Reducing Eye Strain</title>
+      <link>https://joshfonseca.com/blogs/eyestrain.html</link>
+      <description>Tips for reducing eye strain while programming</description>
+      <pubDate>Sat, 16 Jan 2021 21:38:33 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/eyestrain.html</guid>
+    </item>
+
+    <item>
+      <title>Failing My Most Ambitious Project</title>
+      <link>https://joshfonseca.com/blogs/failingkiwi.html</link>
+      <description>Lessons learned from my most ambitious failed project</description>
+      <pubDate>Sat, 16 Jan 2021 21:38:33 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/failingkiwi.html</guid>
+    </item>
+
+    <item>
+      <title>I Immediately Lowered my Heart Rate By Switching My Yogurt</title>
+      <link>https://joshfonseca.com/blogs/heartrate.html</link>
+      <description>How a simple dietary change lowered my heart rate</description>
+      <pubDate>Sat, 16 Jan 2021 21:38:33 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/heartrate.html</guid>
+    </item>
+
+    <item>
+      <title>Why I Stopped Reading News About Coronavirus</title>
+      <link>https://joshfonseca.com/blogs/stopreadingcovidnews.html</link>
+      <description>Why I decided to stop reading coronavirus news</description>
+      <pubDate>Sat, 16 Jan 2021 21:38:33 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/stopreadingcovidnews.html</guid>
+    </item>
+
+    <item>
+      <title>From Idea To Pre-Launch</title>
+      <link>https://joshfonseca.com/blogs/swapiverseprelaunch.html</link>
+      <description>The journey from idea to pre-launch</description>
+      <pubDate>Sat, 16 Jan 2021 21:38:33 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/swapiverseprelaunch.html</guid>
+    </item>
+
+  </channel>
+</rss>

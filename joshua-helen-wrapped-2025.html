@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joshua & Helen Wrapped 2025</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #0a0a0a;
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .wrapped-container {
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: all;
+        }
+
+        /* Slide backgrounds - romantic/warm colors */
+        .slide-intro { background: linear-gradient(135deg, #1a1a2e 0%, #2d1b4e 50%, #4a1942 100%); }
+        .slide-total { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 50%, #c94b4b 100%); }
+        .slide-balance { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); color: #333; }
+        .slide-daily { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .slide-peak { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .slide-reactions { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+        .slide-late-night { background: linear-gradient(135deg, #0c1445 0%, #1a1b4b 50%, #2d1b4e 100%); }
+        .slide-sweet { background: linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%); color: #333; }
+        .slide-funny { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: #333; }
+        .slide-busiest { background: linear-gradient(135deg, #fc4a1a 0%, #f7b733 100%); }
+        .slide-months { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .slide-finale { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 30%, #f093fb 70%, #667eea 100%); }
+
+        .pre-title {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+        }
+
+        .big-number {
+            font-size: clamp(4rem, 15vw, 10rem);
+            font-weight: 900;
+            line-height: 1;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .stat-label {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.7;
+            margin-top: 30px;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .title {
+            font-size: clamp(2rem, 8vw, 4rem);
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .message-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 25px 30px;
+            margin: 15px 0;
+            max-width: 500px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            animation: popIn 0.5s ease forwards;
+            opacity: 0;
+        }
+
+        .message-card:nth-child(1) { animation-delay: 0.2s; }
+        .message-card:nth-child(2) { animation-delay: 0.4s; }
+        .message-card:nth-child(3) { animation-delay: 0.6s; }
+        .message-card:nth-child(4) { animation-delay: 0.8s; }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.8) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .message-sender {
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .message-sender.you { color: #667eea; }
+        .message-sender.helen { color: #f5576c; }
+
+        .message-text {
+            font-size: 1.1rem;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        .reactions-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+            max-width: 400px;
+        }
+
+        .reaction-item {
+            text-align: center;
+            animation: bounceIn 0.5s ease forwards;
+            opacity: 0;
+        }
+
+        .reaction-item:nth-child(1) { animation-delay: 0.1s; }
+        .reaction-item:nth-child(2) { animation-delay: 0.2s; }
+        .reaction-item:nth-child(3) { animation-delay: 0.3s; }
+        .reaction-item:nth-child(4) { animation-delay: 0.4s; }
+        .reaction-item:nth-child(5) { animation-delay: 0.5s; }
+        .reaction-item:nth-child(6) { animation-delay: 0.6s; }
+
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: scale(0); }
+            60% { transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .reaction-emoji {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .reaction-count {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .nav-dots {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .nav-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-dot.active {
+            background: white;
+            transform: scale(1.3);
+        }
+
+        .nav-arrows {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .nav-arrow {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-arrow:hover {
+            background: rgba(255,255,255,0.4);
+            transform: scale(1.1);
+        }
+
+        .intro-logo {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .click-hint {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.9rem;
+            opacity: 0.6;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        .balance-bar {
+            display: flex;
+            width: 100%;
+            max-width: 400px;
+            height: 60px;
+            border-radius: 30px;
+            overflow: hidden;
+            margin: 30px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .balance-you {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .balance-helen {
+            background: linear-gradient(90deg, #f5576c, #f093fb);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .chart-container {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            height: 180px;
+            margin-top: 30px;
+            max-width: 100%;
+        }
+
+        .chart-bar {
+            flex: 1;
+            background: rgba(255,255,255,0.9);
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 8px 4px;
+            min-width: 35px;
+            animation: growUp 0.8s ease forwards;
+            transform-origin: bottom;
+        }
+
+        @keyframes growUp {
+            from { transform: scaleY(0); }
+            to { transform: scaleY(1); }
+        }
+
+        .chart-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #333;
+            margin-top: 5px;
+        }
+
+        .chart-value {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            max-width: 600px;
+            margin-top: 40px;
+        }
+
+        .mini-stat {
+            text-align: center;
+        }
+
+        .mini-stat-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+        }
+
+        .mini-stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .heart-float {
+            position: absolute;
+            font-size: 2rem;
+            animation: floatUp 4s ease-in-out infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes floatUp {
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.6; }
+            50% { transform: translateY(-20px) rotate(10deg); opacity: 1; }
+        }
+
+        .glow {
+            text-shadow: 0 0 20px rgba(255,255,255,0.5), 0 0 40px rgba(255,255,255,0.3);
+        }
+
+        .vs-container {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .vs-person {
+            text-align: center;
+        }
+
+        .vs-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .vs-count {
+            font-size: 3rem;
+            font-weight: 900;
+        }
+
+        .vs-divider {
+            font-size: 2rem;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapped-container" onclick="nextSlide()">
+        <!-- Slide 0: Intro -->
+        <div class="slide slide-intro active" data-slide="0">
+            <div class="intro-logo">💕</div>
+            <div class="title">Joshua & Helen</div>
+            <div class="pre-title">WRAPPED 2025</div>
+            <div class="subtitle">A year of texts, love, and "I miss you"s</div>
+        </div>
+
+        <!-- Slide 1: Total Messages -->
+        <div class="slide slide-total" data-slide="1">
+            <div class="pre-title">This year, you two sent each other...</div>
+            <div class="big-number glow">18,248</div>
+            <div class="stat-label">messages</div>
+            <div class="subtitle">That's about 50 messages every single day. You really can't stop talking to each other.</div>
+        </div>
+
+        <!-- Slide 2: Balance -->
+        <div class="slide slide-balance" data-slide="2">
+            <div class="title">The Perfect Balance</div>
+            <div class="pre-title">Who texts more?</div>
+            <div class="balance-bar">
+                <div class="balance-you" style="width: 50.7%">You: 9,257</div>
+                <div class="balance-helen" style="width: 49.3%">Helen: 8,991</div>
+            </div>
+            <div class="subtitle">Almost perfectly 50/50. This is what healthy communication looks like. 💪</div>
+        </div>
+
+        <!-- Slide 3: Daily Average -->
+        <div class="slide slide-daily" data-slide="3">
+            <div class="pre-title">On average, you exchanged...</div>
+            <div class="big-number">55.3</div>
+            <div class="stat-label">messages per day</div>
+            <div class="subtitle">That's a message every 26 minutes you're awake. Obsessed much? (Yes. The answer is yes.)</div>
+        </div>
+
+        <!-- Slide 4: Peak Hour -->
+        <div class="slide slide-peak" data-slide="4">
+            <div class="pre-title">Your favorite time to talk...</div>
+            <div class="big-number">5 PM</div>
+            <div class="stat-label">1,510 messages at this hour</div>
+            <div class="subtitle">End of workday = time for Helen. Priorities: correct.</div>
+        </div>
+
+        <!-- Slide 5: Reactions -->
+        <div class="slide slide-reactions" data-slide="5">
+            <div class="title">❤️ The Love Languages ❤️</div>
+            <div class="pre-title">936 reactions exchanged</div>
+            <div class="reactions-grid">
+                <div class="reaction-item">
+                    <span class="reaction-emoji">❤️</span>
+                    <span class="reaction-count">415</span>
+                </div>
+                <div class="reaction-item">
+                    <span class="reaction-emoji">‼️</span>
+                    <span class="reaction-count">244</span>
+                </div>
+                <div class="reaction-item">
+                    <span class="reaction-emoji">👍</span>
+                    <span class="reaction-count">136</span>
+                </div>
+                <div class="reaction-item">
+                    <span class="reaction-emoji">😂</span>
+                    <span class="reaction-count">130</span>
+                </div>
+                <div class="reaction-item">
+                    <span class="reaction-emoji">👎</span>
+                    <span class="reaction-count">6</span>
+                </div>
+                <div class="reaction-item">
+                    <span class="reaction-emoji">❓</span>
+                    <span class="reaction-count">5</span>
+                </div>
+            </div>
+            <div class="subtitle">415 hearts. You two are disgustingly cute.</div>
+        </div>
+
+        <!-- Slide 6: Late Night -->
+        <div class="slide slide-late-night" data-slide="6">
+            <div class="title">🌙 The Night Owls 🌙</div>
+            <div class="pre-title">Messages sent between 1-5 AM</div>
+            <div class="vs-container">
+                <div class="vs-person">
+                    <div class="vs-name">Helen</div>
+                    <div class="vs-count">554</div>
+                </div>
+                <div class="vs-divider">vs</div>
+                <div class="vs-person">
+                    <div class="vs-name">You</div>
+                    <div class="vs-count">535</div>
+                </div>
+            </div>
+            <div class="subtitle">1,089 texts after midnight. Go to sleep, you two. (But also, cute.)</div>
+        </div>
+
+        <!-- Slide 7: Sweet Messages -->
+        <div class="slide slide-sweet" data-slide="7">
+            <div class="title">💕 The Sweet Stuff 💕</div>
+            <div class="pre-title">Messages that made our hearts melt</div>
+            <div class="message-card">
+                <div class="message-sender helen">Helen</div>
+                <div class="message-text">"i love you!! cant wait to be back in your arms in four days 🥰"</div>
+            </div>
+            <div class="message-card">
+                <div class="message-sender helen">Helen</div>
+                <div class="message-text">"thank you for coming my love, i loved cuddling with you all night"</div>
+            </div>
+            <div class="message-card">
+                <div class="message-sender you">You</div>
+                <div class="message-text">"So close to seeing you!!"</div>
+            </div>
+        </div>
+
+        <!-- Slide 8: More Sweet -->
+        <div class="slide slide-funny" data-slide="8">
+            <div class="title">The "I Miss You" Counter</div>
+            <div class="pre-title">A scientifically accurate tally</div>
+            <div class="message-card">
+                <div class="message-sender helen">Helen</div>
+                <div class="message-text">"i miss you" ×∞</div>
+            </div>
+            <div class="message-card">
+                <div class="message-sender helen">Helen</div>
+                <div class="message-text">"i miss you so much"</div>
+            </div>
+            <div class="message-card">
+                <div class="message-sender helen">Helen</div>
+                <div class="message-text">"i miss you my love"</div>
+            </div>
+            <div class="message-card">
+                <div class="message-sender you">You</div>
+                <div class="message-text">"I miss you"</div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Random Moments -->
+        <div class="slide slide-balance" data-slide="9">
+            <div class="title">💬 Random Moments 💬</div>
+            <div class="pre-title">The messages that capture your vibe</div>
+            <div class="message-card">
+                <div class="message-sender you">You</div>
+                <div class="message-text">"Horny"</div>
+            </div>
+            <div class="message-card">
+                <div class="message-sender helen">Helen</div>
+                <div class="message-text">"did you think peru was gentrified?"</div>
+            </div>
+            <div class="message-card">
+                <div class="message-sender helen">Helen</div>
+                <div class="message-text">"life is good!!!"</div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Busiest Day -->
+        <div class="slide slide-busiest" data-slide="10">
+            <div class="pre-title">Your most intense texting day...</div>
+            <div class="big-number" style="font-size: clamp(2rem, 8vw, 5rem);">April 27</div>
+            <div class="stat-label">282 messages in one day</div>
+            <div class="subtitle">That's a message every 5 minutes. What happened that day?? 👀</div>
+        </div>
+
+        <!-- Slide 11: Monthly Breakdown -->
+        <div class="slide slide-months" data-slide="11">
+            <div class="title">📈 Your Year in Motion</div>
+            <div class="pre-title">Messages by month</div>
+            <div class="chart-container">
+                <div class="chart-bar" style="height: 73%"><span class="chart-value">1776</span><span class="chart-label">Jan</span></div>
+                <div class="chart-bar" style="height: 64%"><span class="chart-value">1575</span><span class="chart-label">Feb</span></div>
+                <div class="chart-bar" style="height: 74%"><span class="chart-value">1804</span><span class="chart-label">Mar</span></div>
+                <div class="chart-bar" style="height: 100%"><span class="chart-value">2445</span><span class="chart-label">Apr</span></div>
+                <div class="chart-bar" style="height: 82%"><span class="chart-value">2006</span><span class="chart-label">May</span></div>
+                <div class="chart-bar" style="height: 57%"><span class="chart-value">1395</span><span class="chart-label">Jun</span></div>
+                <div class="chart-bar" style="height: 51%"><span class="chart-value">1254</span><span class="chart-label">Jul</span></div>
+                <div class="chart-bar" style="height: 43%"><span class="chart-value">1056</span><span class="chart-label">Aug</span></div>
+                <div class="chart-bar" style="height: 50%"><span class="chart-value">1214</span><span class="chart-label">Sep</span></div>
+                <div class="chart-bar" style="height: 44%"><span class="chart-value">1073</span><span class="chart-label">Oct</span></div>
+                <div class="chart-bar" style="height: 37%"><span class="chart-value">909</span><span class="chart-label">Nov</span></div>
+                <div class="chart-bar" style="height: 71%"><span class="chart-value">1741</span><span class="chart-label">Dec</span></div>
+            </div>
+            <div class="subtitle">April was INTENSE. Summer calmed down. December picked back up. 💕</div>
+        </div>
+
+        <!-- Slide 12: Peak Day of Week -->
+        <div class="slide slide-peak" data-slide="12">
+            <div class="title">Your Day</div>
+            <div class="pre-title">Busiest day of the week...</div>
+            <div class="big-number">Tuesday</div>
+            <div class="stat-label">3,226 messages</div>
+            <div class="subtitle">Tuesday hits different when you have someone to text all day.</div>
+        </div>
+
+        <!-- Slide 13: Finale -->
+        <div class="slide slide-finale" data-slide="13">
+            <div class="intro-logo">💕</div>
+            <div class="title">That's a Wrap!</div>
+            <div class="pre-title">JOSHUA & HELEN 2025</div>
+            <div class="stat-row">
+                <div class="mini-stat">
+                    <div class="mini-stat-value">18,248</div>
+                    <div class="mini-stat-label">messages</div>
+                </div>
+                <div class="mini-stat">
+                    <div class="mini-stat-value">936</div>
+                    <div class="mini-stat-label">reactions</div>
+                </div>
+                <div class="mini-stat">
+                    <div class="mini-stat-value">365</div>
+                    <div class="mini-stat-label">days together</div>
+                </div>
+            </div>
+            <div class="subtitle" style="margin-top: 40px;">Here's to another year of "I miss you"s, late night texts, and everything in between. 💕</div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-dots">
+        <div class="nav-dot active" onclick="goToSlide(0)"></div>
+        <div class="nav-dot" onclick="goToSlide(1)"></div>
+        <div class="nav-dot" onclick="goToSlide(2)"></div>
+        <div class="nav-dot" onclick="goToSlide(3)"></div>
+        <div class="nav-dot" onclick="goToSlide(4)"></div>
+        <div class="nav-dot" onclick="goToSlide(5)"></div>
+        <div class="nav-dot" onclick="goToSlide(6)"></div>
+        <div class="nav-dot" onclick="goToSlide(7)"></div>
+        <div class="nav-dot" onclick="goToSlide(8)"></div>
+        <div class="nav-dot" onclick="goToSlide(9)"></div>
+        <div class="nav-dot" onclick="goToSlide(10)"></div>
+        <div class="nav-dot" onclick="goToSlide(11)"></div>
+        <div class="nav-dot" onclick="goToSlide(12)"></div>
+        <div class="nav-dot" onclick="goToSlide(13)"></div>
+    </div>
+
+    <div class="nav-arrows">
+        <button class="nav-arrow" onclick="prevSlide(event)">←</button>
+        <button class="nav-arrow" onclick="nextSlide(event)">→</button>
+    </div>
+
+    <div class="click-hint">Click anywhere or use arrows to continue →</div>
+
+    <script>
+        let currentSlide = 0;
+        const totalSlides = 14;
+
+        function goToSlide(n) {
+            event?.stopPropagation();
+            const slides = document.querySelectorAll('.slide');
+            const dots = document.querySelectorAll('.nav-dot');
+
+            slides.forEach(s => s.classList.remove('active'));
+            dots.forEach(d => d.classList.remove('active'));
+
+            currentSlide = n;
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
+
+            document.querySelector('.click-hint').style.opacity = '0';
+        }
+
+        function nextSlide(event) {
+            event?.stopPropagation();
+            if (currentSlide < totalSlides - 1) {
+                goToSlide(currentSlide + 1);
+            }
+        }
+
+        function prevSlide(event) {
+            event?.stopPropagation();
+            if (currentSlide > 0) {
+                goToSlide(currentSlide - 1);
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+
+        let touchStartX = 0;
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            const touchEndX = e.changedTouches[0].clientX;
+            const diff = touchStartX - touchEndX;
+
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) {
+                    nextSlide();
+                } else {
+                    prevSlide();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

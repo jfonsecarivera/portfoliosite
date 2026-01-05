@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dangerous Streets: Using ML to Prioritize Cyclist Safety in Austin</title>
+    
+    <meta name="description" content="Training an XGBoost model on 2,757 bike crashes to identify the most dangerous streets in Austin for Vision Zero planning.">
+    <meta name="author" content="Joshua Fonseca Rivera">
+    
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Dangerous Streets: Using ML to Prioritize Cyclist Safety">
+    <meta property="og:description" content="A data-driven approach to Vision Zero: How machine learning can help city planners prioritize infrastructure investments.">
+    <meta property="og:site_name" content="Joshua Fonseca Rivera">
+    <meta property="og:image" content="https://joshfonseca.com/assets/images/vision-zero-og.png">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Dangerous Streets: Using ML to Prioritize Cyclist Safety">
+    <meta name="twitter:description" content="Analyzing Austin's bike crash data to find actionable infrastructure improvements.">
+    <meta name="twitter:creator" content="@joshycodes">
+    
+    <!-- Prism.js for Syntax Highlighting (Atom Dark Theme) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <style>
+        /* --- CORE DESIGN VARIABLES --- */
+        :root {
+            --bg-color: #0a0a0a;
+            --text-color: #e0e0e0;
+            --accent-blue: #00f3ff;
+            --accent-purple: #bd00ff;
+            --accent-red: #ff4444; 
+            --accent-orange: #ffaa00;
+            --accent-green: #10b981;
+            --code-bg: #111;
+            --card-bg: #1a1a1a;
+            --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-body: 'Charter', 'Merriweather', serif;
+            --font-mono: 'Fira Code', 'Courier New', monospace;
+        }
+
+        /* --- RESET & BASE --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-body);
+            line-height: 1.8;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- PROGRESS BAR --- */
+        .progress-container {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 4px;
+            background: transparent; z-index: 1000;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            width: 0%;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 10px var(--accent-blue);
+        }
+
+        /* --- TOC --- */
+        .toc-sidebar {
+            position: fixed; left: 2rem; top: 50%; transform: translateY(-50%);
+            z-index: 10; opacity: 0; visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        
+        .toc-sidebar.visible { opacity: 1; visibility: visible; }
+        
+        @media(min-width: 1400px) { .toc-sidebar { display: block; } }
+        @media(max-width: 1399px) { .toc-sidebar { display: none; } }
+        
+        .toc-link {
+            display: block; margin-bottom: 0.8rem; color: #444; font-size: 0.8rem;
+            transition: 0.3s; border-left: 2px solid transparent; padding-left: 15px;
+            font-family: var(--font-heading); text-transform: uppercase; letter-spacing: 0.05em;
+        }
+        
+        .toc-link:hover, .toc-link.active {
+            color: var(--accent-blue);
+            border-left-color: var(--accent-blue);
+        }
+
+        /* --- TYPOGRAPHY --- */
+        h1, h2, h3 {
+            font-family: var(--font-heading); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 1rem;
+        }
+
+        h1 { font-size: clamp(2.5rem, 5vw, 4.5rem); line-height: 1.1; }
+        h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); color: var(--accent-blue); margin-top: 3rem; }
+        h3 { font-size: 1.5rem; color: #fff; }
+        
+        p { font-size: 1.125rem; margin-bottom: 1.5rem; color: #ccc; max-width: 700px; }
+        li { margin-bottom: 0.5rem; max-width: 700px; margin-left: 1.5rem; color: #ccc; }
+        
+        a { color: var(--accent-blue); text-decoration: none; border-bottom: 1px solid transparent; transition: 0.3s; }
+        a:hover { border-bottom-color: var(--accent-blue); }
+
+        /* --- LAYOUT UTILITIES --- */
+        .container {
+            max-width: 1000px; margin: 0 auto; padding: 0 20px;
+            position: relative; z-index: 2;
+        }
+
+        .hero-section {
+            min-height: 90vh; display: flex; flex-direction: column;
+            justify-content: center; align-items: flex-start;
+            position: relative; overflow: hidden; width: 100%;
+        }
+        
+        /* Dynamic Background */
+        .hero-bg {
+            position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 243, 255, 0.05), transparent 40%),
+                        radial-gradient(circle at 80% 20%, rgba(189, 0, 255, 0.05), transparent 40%);
+            animation: drift 20s infinite linear;
+            z-index: 1; pointer-events: none;
+        }
+        
+        @keyframes drift {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        section {
+            min-height: 60vh; display: flex; flex-direction: column;
+            justify-content: center; padding: 4rem 0;
+        }
+
+        /* --- CODE & LOGS --- */
+        .code-container {
+            position: relative;
+            margin: 2rem 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border-left: 3px solid var(--accent-purple);
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ccc;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: var(--font-heading);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            z-index: 5;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border-color: #fff;
+        }
+
+        pre {
+            background: var(--code-bg) !important; /* Override Prism default if needed */
+            padding: 20px; 
+            margin: 0; /* Container handles margin */
+            border-radius: 0; /* Container handles radius */
+            overflow-x: auto;
+            font-family: var(--font-mono); 
+            font-size: 0.9rem;
+            border: none; /* Container handles border */
+            box-shadow: none; /* Container handles shadow */
+        }
+        
+        /* Prism overrides for cleaner look */
+        code[class*="language-"], pre[class*="language-"] {
+            text-shadow: none !important;
+            font-family: var(--font-mono) !important;
+        }
+
+        code { 
+            color: #a5b3ce; background: rgba(255,255,255,0.08); padding: 0.15rem 0.4rem;
+            border-radius: 6px; font-size: 0.9em; border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        pre code { background: transparent; padding: 0; border: none; color: inherit; }
+
+        .log-wrapper {
+            background: var(--code-bg); border: 1px solid #333; border-radius: 8px;
+            padding: 1.5rem; font-family: var(--font-mono); font-size: 0.9rem;
+            color: #a5b3ce; margin: 2rem 0; border-left: 3px solid var(--accent-blue);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .log-meta { color: #5c6370; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 10px; }
+
+        /* --- VISUALIZATIONS --- */
+        .chart-wrapper {
+            position: relative; width: 100%; height: 400px;
+            background: var(--card-bg); border: 1px solid #333; border-radius: 8px;
+            margin: 2rem 0; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            overflow: hidden;
+        }
+
+        .chart-title {
+            position: absolute; top: 20px; left: 20px;
+            font-family: var(--font-mono); color: #666; font-size: 0.8rem;
+            text-transform: uppercase; letter-spacing: 0.05em;
+        }
+
+        .chart-svg { width: 100%; height: 100%; overflow: visible; }
+
+        /* Quote Block */
+        .quote-block {
+            background: var(--card-bg); border-left: 4px solid var(--accent-purple);
+            padding: 1.5rem; margin: 2rem 0; font-style: italic;
+            font-family: var(--font-body); color: #ccc; border-radius: 4px;
+        }
+
+        /* Formula Container */
+        .formula-container {
+            display: flex; align-items: center; justify-content: center; gap: 1rem;
+            flex-wrap: wrap; margin: 2rem 0; padding: 2rem;
+            background: var(--code-bg); border: 1px solid #333; border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .formula-box {
+            background: rgba(255,255,255,0.05); padding: 0.8rem 1.2rem;
+            border-radius: 6px; border: 1px solid rgba(255,255,255,0.1);
+            text-align: center; font-family: var(--font-mono); font-size: 0.9rem;
+        }
+        
+        .formula-box.highlight { border-color: var(--accent-blue); color: var(--accent-blue); background: rgba(0, 243, 255, 0.1); }
+        
+        .typing-cursor::after {
+            content: '▋'; display: inline-block; color: var(--accent-blue);
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        .reveal {
+            opacity: 0; transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            will-change: opacity, transform;
+        }
+
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        
+        .drop-cap::first-letter {
+            float: left; font-size: 4rem; line-height: 0.8; padding-right: 0.15em;
+            font-weight: bold; color: var(--accent-blue); font-family: var(--font-heading);
+        }
+
+        /* --- MOBILE --- */
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem !important; }
+            h2 { font-size: 1.5rem !important; margin-top: 2rem; }
+            .container { padding: 0 15px; }
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            border-top: 1px solid #333; padding: 50px 0; text-align: center;
+            color: #666; font-size: 0.9rem; min-height: 100vh;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <nav class="toc-sidebar">
+        <a href="#intro" class="toc-link active">00 Motivation</a>
+        <a href="#problem" class="toc-link">01 The Data</a>
+        <a href="#model" class="toc-link">02 The Model</a>
+        <a href="#results" class="toc-link">03 Findings</a>
+        <a href="#map" class="toc-link">04 Danger Zones</a>
+        <a href="#equity" class="toc-link">05 Equity</a>
+        <a href="#conclusion" class="toc-link">06 Conclusion</a>
+    </nav>
+
+    <header class="hero-section" id="intro">
+        <div class="hero-bg"></div>
+        <div class="container">
+            <div class="reveal">
+                <span style="font-family: var(--font-mono); color: #666; font-size: 0.8rem; letter-spacing: 0.1em;">ML / URBAN PLANNING / VISION ZERO</span>
+            </div>
+            <h1 class="reveal">
+                Dangerous Streets: <br>
+                <span style="color: var(--accent-blue)">Using ML to Prioritize Cyclist Safety</span>
+            </h1>
+            <p class="reveal subhead" style="margin-top: 2rem; font-size: 1.2rem; color: #aaa;">
+                I recently sold my car to bike in Austin. It didn't take long to realize that some streets feel much safer than others. To understand why, I analyzed 10 years of crash data using machine learning.
+            </p>
+        </div>
+    </header>
+
+    <section class="container" id="problem">
+        <h2 class="reveal">The Vision Zero Challenge</h2>
+        <div class="reveal">
+            <p class="drop-cap">
+                Austin, like many cities, has committed to Vision Zero, the goal of eliminating traffic fatalities. But with limited budgets, city planners face a difficult question: <em>Which streets should we fix first?</em>
+            </p>
+            <p>
+                Aggregate statistics tell us that high-speed roads are dangerous, but that's not granular enough for planning. I wanted to build a system that could rank specific corridors based on their predicted risk, helping to prioritize infrastructure investments where they are needed most.
+            </p>
+            <p>
+                I started by pulling data from the Texas Department of Transportation’s Crash Records Information System (CRIS). The dataset included 2,757 crashes involving bikes from 2015 to 2025.
+            </p>
+            <div class="log-wrapper">
+                <span class="log-meta">[Dataset Statistics]</span>
+                <span class="type-text">Total Crashes: 2,757 | Severe Injuries: 12.1% | Timeframe: 2015 to 2025</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="container" id="model">
+        <h2 class="reveal">Designing an Actionable Model</h2>
+        <div class="reveal">
+            <p>
+                When building a predictive model, it's easy to include every variable you have. But for public policy, "explainability" and "actionability" are key.
+            </p>
+            <p>
+                I deliberately excluded features like cyclist age or gender. While highly predictive, they aren't actionable—you can't redesign a street to exclude certain demographics. Instead, I forced the model to learn only from infrastructure and environmental factors.
+            </p>
+            
+            <div style="background: var(--code-bg); border-left: 3px solid var(--accent-green); padding: 1.5rem; margin: 2rem 0; border-radius: 8px;">
+                <h3 style="color: var(--accent-green); font-size: 1.1rem; margin-bottom: 0.5rem; margin-top: 0;">Model Performance (Held-out Test Set)</h3>
+                <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+                    <div>
+                        <span style="display: block; font-size: 0.8rem; color: #888; text-transform: uppercase;">Recall (Severe)</span>
+                        <span style="font-size: 1.5rem; color: #fff; font-weight: bold;">56.8%</span>
+                    </div>
+                    <div>
+                        <span style="display: block; font-size: 0.8rem; color: #888; text-transform: uppercase;">ROC-AUC</span>
+                        <span style="font-size: 1.5rem; color: #fff; font-weight: bold;">0.670</span>
+                    </div>
+                    <div>
+                        <span style="display: block; font-size: 0.8rem; color: #888; text-transform: uppercase;">Strategy</span>
+                        <span style="font-size: 1rem; color: #ccc; margin-top: 5px; display: block;">Prioritized Recall over Precision</span>
+                    </div>
+                </div>
+                <p style="margin-top: 1rem; margin-bottom: 0; font-size: 0.9rem; color: #aaa;">
+                    Using only infrastructure features, the model successfully identifies over half of all severe crash locations. Given the class imbalance (only 12% of crashes were severe), this validates that the built environment is a strong signal for safety risk.
+                </p>
+            </div>
+
+            <p>
+                I used a <strong>Stacking Ensemble</strong> combining XGBoost, LightGBM, and Gradient Boosting, optimized with Bayesian hyperparameter tuning. Here is a snippet of the training pipeline:
+            </p>
+
+            <div class="code-container">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<pre><code class="language-python">def train_stacking_ensemble(X_train, y_train):
+    # Handle Class Imbalance
+    pos_weight = (y_train == 0).sum() / (y_train == 1).sum()
+    
+    # Base estimators
+    estimators = [
+        ('xgb', xgb.XGBClassifier(
+            scale_pos_weight=pos_weight,
+            learning_rate=0.05,
+            max_depth=4,
+            eval_metric='auc'
+        )),
+        ('lgb', LGBMClassifier(class_weight='balanced')),
+        ('gb', GradientBoostingClassifier(max_depth=4))
+    ]
+    
+    # Meta-learner
+    meta_learner = LogisticRegression(class_weight='balanced')
+    
+    # Stacking classifier
+    clf = StackingClassifier(
+        estimators=estimators,
+        final_estimator=meta_learner,
+        cv=5,
+        n_jobs=-1
+    )
+    
+    clf.fit(X_train, y_train)
+    return clf</code></pre>
+            </div>
+
+            <p>
+                To interpret the "black box" of the ensemble, I used <strong>SHAP (SHapley Additive exPlanations)</strong>, which breaks down the contribution of each infrastructure feature to the final risk score.
+            </p>
+        </div>
+    </section>
+
+    <section class="container" id="results">
+        <h2 class="reveal">What Actually Matters?</h2>
+        <div class="reveal">
+            <p>
+                The SHAP analysis revealed a clear hierarchy of risk factors. While we often focus on bike lanes, the data shows that <strong>Speed Limit</strong> is the single most important actionable predictor of crash severity.
+            </p>
+            
+            <div class="chart-wrapper reveal">
+                <div class="chart-title">Feature Importance (Mean |SHAP| Value)</div>
+                <div class="chart-tooltip" id="tooltipSHAP"></div>
+                <svg class="chart-svg" id="chartSHAP"></svg>
+            </div>
+
+            <p>
+                The model suggests that:
+            </p>
+            <ul>
+                <li><strong>Speed Limit (0.311):</strong> This is nearly 3x more predictive than the presence of a bike lane. Higher speeds exponentially increase kinetic energy, making crashes far more likely to be severe.</li>
+                <li><strong>Intersection Complexity (0.260):</strong> Complex intersections are major conflict points.</li>
+                <li><strong>Lack of Traffic Control (0.189):</strong> Uncontrolled intersections significantly raise risk.</li>
+            </ul>
+            <p>
+                This doesn't mean bike lanes don't work. They do (SHAP -0.104, indicating a protective effect), but they are part of a larger system. A painted lane on a 45mph road is less effective than slowing the cars down to 30mph.
+            </p>
+        </div>
+    </section>
+
+    <section class="container" id="map">
+        <h2 class="reveal">The Most Dangerous Corridors</h2>
+        <div class="reveal">
+            <p>
+                By aggregating crash-level predictions to the street level, I identified the top "High Risk Gaps." I calculated a <strong>Composite Danger Score</strong> for each corridor using the following weighted criteria:
+            </p>
+            
+            <div class="formula-container">
+                <div class="formula-box highlight">40% Severe Count</div>
+                <div style="color: #666">+</div>
+                <div class="formula-box">30% Risk Score</div>
+                <div style="color: #666">+</div>
+                <div class="formula-box">20% Speed Limit</div>
+                <div style="color: #666">+</div>
+                <div class="formula-box">10% Infra Gaps</div>
+            </div>
+
+            <p>
+                This formula ensures we prioritize streets that are not just historically dangerous (high crash counts), but also structurally dangerous (high predicted risk and speed) and neglected (high infrastructure gaps).
+            </p>
+            <p>
+                These are the top 5 most dangerous streets for cyclists in Austin:
+            </p>
+
+            <div class="chart-wrapper reveal" style="height: 350px;">
+                <div class="chart-title">Top 5 Dangerous Corridors (Composite Score)</div>
+                <div class="chart-tooltip" id="tooltipMap"></div>
+                <svg class="chart-svg" id="chartMap"></svg>
+            </div>
+
+            <p>
+                <strong>IH-35</strong> leads the list with 21 severe crashes and a 16% severe crash rate. Notably, 100% of these crashes occurred at locations with <em>no bike infrastructure</em>. 
+            </p>
+            <p>
+                Other major corridors like <strong>US-183</strong> and <strong>S Congress Ave</strong> also appear, sharing a common profile: high speeds, complex intersections, and a lack of protected facilities.
+            </p>
+        </div>
+    </section>
+
+    <section class="container" id="equity">
+        <h2 class="reveal">The Equity Dimension</h2>
+        <div class="reveal">
+            <p>
+                Mapping these dangerous streets reveals a troubling pattern. The risks are not evenly distributed; they are concentrated in East and South Austin.
+            </p>
+            <p>
+                For example, on <strong>S Pleasant Valley Rd</strong>, 55% of crashes occurred in dark conditions. This suggests a simple but critical intervention: better street lighting.
+            </p>
+            <p>
+                Historically underinvested neighborhoods often have the high speed arterials with the poorest lighting and least infrastructure.
+            </p>
+            <p>
+                This aligns with previous research on "mobility related environmental injustice." The data confirms that equity must be a core component of safety planning.
+            </p>
+        </div>
+    </section>
+
+    <section class="container" id="conclusion">
+        <h2 class="reveal">From Data to Action</h2>
+        <div class="reveal">
+            <p>
+                This project demonstrates that we can move beyond simple crash counts to a more proactive, risk-based approach to safety.
+            </p>
+            <p>
+                Based on the model's findings, the priorities for Austin's Vision Zero plan should include:
+            </p>
+            <ol style="margin-left: 2rem; color: #ccc; margin-bottom: 2rem;">
+                <li style="margin-bottom: 10px;"><strong>Speed Management:</strong> Lowering limits on arterials is the most effective lever we have.</li>
+                <li style="margin-bottom: 10px;"><strong>Protected Intersections:</strong> Addressing the complexity of major crossings.</li>
+                <li style="margin-bottom: 10px;"><strong>Basic Infrastructure:</strong> Filling gaps in lighting and traffic signals, especially in East/South Austin.</li>
+            </ol>
+            <p>
+                Data science can point the way, but it's up to policy makers and citizens to push for the concrete changes that save lives.
+            </p>
+        </div>
+    </section>
+
+    <footer>
+        <div style="margin-bottom: 3rem; max-width: 600px;">
+            <h3 style="font-family: var(--font-heading); font-size: 1.8rem; color: var(--text-color); margin-bottom: 0.5rem;">Join the Journey</h3>
+            <p style="color: #ccc; font-size: 1.1rem; margin-bottom: 1.5rem;">
+                I make videos about the intersection of code, AI, and creativity. Whether it's hacking Animal Crossing or fine-tuning LLMs, I document the messy, real-world process of engineering.
+            </p>
+            <div style="margin-bottom: 2rem; display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center;">
+                <a href="https://x.com/joshycodes" target="_blank" style="font-size: 1.2rem; font-weight: bold; color: var(--text-color); border-bottom: 2px solid var(--accent-blue);">
+                    Follow me on X @joshycodes
+                </a>
+                <a href="https://youtube.com/@joshycodes" target="_blank" style="font-size: 1.2rem; font-weight: bold; color: var(--text-color); border-bottom: 2px solid var(--accent-red);">
+                    Subscribe on YouTube
+                </a>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 3rem; max-width: 450px; width: 100%;">
+            <h3 style="font-family: var(--font-heading); font-size: 1.5rem; color: var(--text-color); margin-bottom: 0.5rem;">Stay Updated</h3>
+            <p style="color: #888; font-size: 1rem; margin-bottom: 1.5rem;">Get notified when I publish new experiments.</p>
+            
+            <form action="https://jerseyfonseca.us7.list-manage.com/subscribe/post?u=e02638cca0e762daacde2f6e1&amp;id=1c8c57addb" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+                <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_e02638cca0e762daacde2f6e1_1c8c57addb" tabindex="-1" value=""></div>
+                <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="your@email.com" required style="
+                    flex: 1;
+                    min-width: 200px;
+                    padding: 12px 16px;
+                    background: var(--card-bg);
+                    border: 1px solid #333;
+                    border-radius: 6px;
+                    color: var(--text-color);
+                    font-family: var(--font-mono);
+                    font-size: 0.9rem;
+                    outline: none;
+                    transition: border-color 0.3s;
+                " onfocus="this.style.borderColor='var(--accent-blue)'" onblur="this.style.borderColor='#333'">
+                <button type="submit" name="subscribe" id="mc-embedded-subscribe" style="
+                    padding: 12px 24px;
+                    background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+                    border: none;
+                    border-radius: 6px;
+                    color: #000;
+                    font-family: var(--font-heading);
+                    font-weight: 700;
+                    font-size: 0.9rem;
+                    cursor: pointer;
+                    transition: transform 0.2s, box-shadow 0.2s;
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
+                " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 20px rgba(0, 243, 255, 0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">Subscribe</button>
+            </form>
+        </div>
+        
+        <div style="margin-top: 3rem; opacity: 0.6;">
+            <p>&copy; 2025 Joshua Fonseca Rivera</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- SCROLL PROGRESS & TOC ---
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("progressBar").style.width = scrolled + "%";
+        });
+
+        const tocSidebar = document.querySelector('.toc-sidebar');
+        const heroSection = document.getElementById('intro');
+        const footerSection = document.querySelector('footer');
+        const sections = document.querySelectorAll('section[id], header[id]');
+        const tocLinks = document.querySelectorAll('.toc-link');
+
+        function updateTOCVisibility() {
+            const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
+            const footerTop = footerSection.offsetTop;
+            const scrollY = window.scrollY || window.pageYOffset;
+            const windowHeight = window.innerHeight;
+            
+            if (scrollY > heroBottom - 100 && scrollY + windowHeight < footerTop + 200) {
+                tocSidebar.classList.add('visible');
+            } else {
+                tocSidebar.classList.remove('visible');
+            }
+        }
+
+        function updateActiveSection() {
+            const scrollY = window.scrollY || window.pageYOffset;
+            let currentSection = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                if (scrollY >= sectionTop - 200 && scrollY < sectionTop + sectionHeight) {
+                    currentSection = section.id;
+                }
+            });
+            tocLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${currentSection}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        let ticking = false;
+        function onScroll() {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    updateTOCVisibility();
+                    updateActiveSection();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }
+        window.addEventListener('scroll', onScroll);
+        updateTOCVisibility();
+        updateActiveSection();
+
+        // --- TYPING EFFECT ---
+        function typeWriter(element, text, speed = 30) {
+            element.innerHTML = '';
+            element.classList.add('typing-cursor');
+            let i = 0;
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed + (Math.random() * 20));
+                } else {
+                    element.classList.remove('typing-cursor');
+                }
+            }
+            type();
+        }
+
+        // --- SCROLL REVEAL ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    const typeElements = entry.target.querySelectorAll('.type-text');
+                    typeElements.forEach(el => {
+                        if (!el.dataset.typed) {
+                            el.dataset.typed = "true";
+                            typeWriter(el, el.innerText);
+                        }
+                    });
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // --- CHARTS (Custom Bar Charts) ---
+        
+        // 1. SHAP Feature Importance Chart
+        function drawShapChart() {
+            const svg = document.getElementById('chartSHAP');
+            if(!svg) return;
+            svg.innerHTML = ''; // Clear
+            
+            const data = [
+                { label: "Speed Limit", value: 0.311, color: "var(--accent-red)" },
+                { label: "Intersection Cmplx", value: 0.260, color: "var(--accent-orange)" },
+                { label: "No Traffic Control", value: 0.189, color: "var(--accent-orange)" },
+                { label: "Marked Lanes", value: 0.171, color: "var(--accent-blue)" },
+                { label: "City Street", value: 0.169, color: "var(--accent-purple)" },
+                { label: "Has Bike Lane", value: 0.104, color: "var(--accent-green)" },
+                { label: "Dark Conditions", value: 0.049, color: "#666" }
+            ];
+
+            const width = svg.clientWidth;
+            const height = svg.clientHeight;
+            const margin = { top: 30, right: 50, bottom: 20, left: 140 };
+            const chartW = width - margin.left - margin.right;
+            const rowH = (height - margin.top - margin.bottom) / data.length;
+            const maxVal = 0.35; // Scale
+
+            // X Axis Grid
+            for(let i=0; i<=5; i++) {
+                const x = margin.left + (chartW * (i/5));
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute("x1", x); line.setAttribute("y1", margin.top);
+                line.setAttribute("x2", x); line.setAttribute("y2", height - margin.bottom);
+                line.setAttribute("stroke", "#333"); line.setAttribute("stroke-dasharray", "4 4");
+                svg.appendChild(line);
+                
+                const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                text.setAttribute("x", x); text.setAttribute("y", margin.top - 10);
+                text.setAttribute("text-anchor", "middle");
+                text.setAttribute("fill", "#666"); text.setAttribute("font-size", "10px");
+                text.textContent = (maxVal * (i/5)).toFixed(2);
+                svg.appendChild(text);
+            }
+
+            // Bars
+            data.forEach((d, i) => {
+                const y = margin.top + (i * rowH) + 10;
+                const barW = (d.value / maxVal) * chartW;
+                
+                // Label
+                const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                label.setAttribute("x", margin.left - 10); label.setAttribute("y", y + 15);
+                label.setAttribute("text-anchor", "end"); label.setAttribute("fill", "#ccc");
+                label.setAttribute("font-family", "var(--font-mono)"); label.setAttribute("font-size", "11px");
+                label.textContent = d.label;
+                svg.appendChild(label);
+
+                // Bar Rect
+                const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                rect.setAttribute("x", margin.left); rect.setAttribute("y", y);
+                rect.setAttribute("height", 20); rect.setAttribute("width", 0); // Animate width
+                rect.setAttribute("fill", d.color);
+                rect.setAttribute("rx", 3);
+                
+                // Animation
+                const anim = document.createElementNS("http://www.w3.org/2000/svg", "animate");
+                anim.setAttribute("attributeName", "width");
+                anim.setAttribute("from", "0"); anim.setAttribute("to", barW);
+                anim.setAttribute("dur", "1s"); anim.setAttribute("fill", "freeze");
+                anim.setAttribute("begin", (0.5 + i*0.1) + "s");
+                rect.appendChild(anim);
+                
+                svg.appendChild(rect);
+                
+                // Value Text
+                const valText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                valText.setAttribute("x", margin.left + barW + 5); valText.setAttribute("y", y + 15);
+                valText.setAttribute("fill", d.color); valText.setAttribute("font-size", "11px");
+                valText.setAttribute("font-weight", "bold");
+                valText.setAttribute("opacity", 0);
+                valText.textContent = d.value.toFixed(3);
+                
+                const fade = document.createElementNS("http://www.w3.org/2000/svg", "animate");
+                fade.setAttribute("attributeName", "opacity");
+                fade.setAttribute("to", 1); fade.setAttribute("dur", "0.5s");
+                fade.setAttribute("fill", "freeze"); fade.setAttribute("begin", (1.5 + i*0.1) + "s");
+                valText.appendChild(fade);
+                
+                svg.appendChild(valText);
+            });
+        }
+
+        // 2. Dangerous Streets Map Chart
+        function drawMapChart() {
+            const svg = document.getElementById('chartMap');
+            if(!svg) return;
+            svg.innerHTML = '';
+            
+            const data = [
+                { name: "IH-35", score: 0.92, crashes: 21, infra: "None" },
+                { name: "US-183", score: 0.85, crashes: 13, infra: "None" },
+                { name: "S Congress Ave", score: 0.78, crashes: 14, infra: "Low" },
+                { name: "S 1st St", score: 0.72, crashes: 10, infra: "None" },
+                { name: "S Pleasant Valley", score: 0.70, crashes: 9, infra: "None" }
+            ];
+
+            const width = svg.clientWidth;
+            const height = svg.clientHeight;
+            const margin = { top: 20, right: 20, bottom: 20, left: 140 };
+            const chartW = width - margin.left - margin.right;
+            const rowH = (height - margin.top - margin.bottom) / data.length;
+
+            data.forEach((d, i) => {
+                const y = margin.top + (i * rowH);
+                
+                // Street Name
+                const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                text.setAttribute("x", margin.left - 15); text.setAttribute("y", y + 25);
+                text.setAttribute("text-anchor", "end");
+                text.setAttribute("fill", "#fff"); text.setAttribute("font-weight", "bold");
+                text.setAttribute("font-family", "var(--font-heading)");
+                text.textContent = d.name;
+                svg.appendChild(text);
+
+                // Danger Bar (Background)
+                const bg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                bg.setAttribute("x", margin.left); bg.setAttribute("y", y + 10);
+                bg.setAttribute("width", chartW); bg.setAttribute("height", 20);
+                bg.setAttribute("fill", "#222"); bg.setAttribute("rx", 4);
+                svg.appendChild(bg);
+
+                // Danger Bar (Fill)
+                const bar = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                bar.setAttribute("x", margin.left); bar.setAttribute("y", y + 10);
+                bar.setAttribute("height", 20); bar.setAttribute("width", 0);
+                // Gradient color based on score
+                const color = i === 0 ? "var(--accent-red)" : (i === 1 ? "#ff5e00" : "var(--accent-orange)");
+                bar.setAttribute("fill", color); bar.setAttribute("rx", 4);
+                
+                const anim = document.createElementNS("http://www.w3.org/2000/svg", "animate");
+                anim.setAttribute("attributeName", "width");
+                anim.setAttribute("to", chartW * d.score);
+                anim.setAttribute("dur", "1s"); anim.setAttribute("fill", "freeze");
+                anim.setAttribute("begin", "0.5s");
+                bar.appendChild(anim);
+                svg.appendChild(bar);
+
+                // Meta Text
+                const meta = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                meta.setAttribute("x", margin.left + 10); meta.setAttribute("y", y + 24);
+                meta.setAttribute("fill", "#000"); meta.setAttribute("font-size", "10px");
+                meta.setAttribute("font-weight", "bold");
+                meta.setAttribute("opacity", 0);
+                meta.textContent = `${d.crashes} Severe Crashes | Infra: ${d.infra}`;
+                
+                const fade = document.createElementNS("http://www.w3.org/2000/svg", "animate");
+                fade.setAttribute("attributeName", "opacity");
+                fade.setAttribute("to", 1); fade.setAttribute("dur", "0.5s");
+                fade.setAttribute("fill", "freeze"); fade.setAttribute("begin", "1.5s");
+                meta.appendChild(fade);
+                svg.appendChild(meta);
+            });
+        }
+
+        window.addEventListener('load', () => {
+            drawShapChart();
+            drawMapChart();
+        });
+        window.addEventListener('resize', () => {
+            drawShapChart();
+            drawMapChart();
+        });
+
+        // --- COPY TO CLIPBOARD ---
+        function copyCode(btn) {
+            const pre = btn.nextElementSibling;
+            const code = pre.querySelector('code');
+            const text = code.innerText;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = btn.innerText;
+                btn.innerText = 'Copied!';
+                btn.style.borderColor = 'var(--accent-green)';
+                btn.style.color = 'var(--accent-green)';
+                
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                    btn.style.color = '#ccc';
+                }, 2000);
+            });
+        }
+    </script>
+    <!-- Prism.js Script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+</body>
+</html>
