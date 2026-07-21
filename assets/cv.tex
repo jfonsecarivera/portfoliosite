@@ -1,0 +1,146 @@
+\documentclass[letterpaper,10.5pt]{article}
+
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\input{glyphtounicode}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\addtolength{\oddsidemargin}{-0.6in}
+\addtolength{\evensidemargin}{-0.6in}
+\addtolength{\textwidth}{1.2in}
+\addtolength{\topmargin}{-0.6in}
+\addtolength{\textheight}{1.2in}
+
+\urlstyle{same}
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+\titleformat{\section}{\vspace{-5pt}\scshape\raggedright\large}{}{0em}{}[\color{black}\titlerule\vspace{-6pt}]
+
+\pdfgentounicode=1
+
+\newcommand{\resumeItem}[1]{\item\small{#1\vspace{-3pt}}}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-1pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{\small#3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-8pt}
+}
+
+\newcommand{\resumeOneLiner}[4]{
+  \vspace{-1pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} \textit{\small · #3} & #2 \\
+    \end{tabular*}\vspace{-8pt}
+  \ifx\relax#4\relax\else\vspace{2pt}{\small #4}\fi
+}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.0in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}[leftmargin=0.15in]\vspace{2pt}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-4pt}}
+
+\begin{document}
+
+\begin{center}
+    {\Huge \scshape Joshua Fonseca Rivera} \\ \vspace{4pt}
+    \small Berkeley, CA \quad $|$ \quad
+    \href{mailto:josh.fonseca88@gmail.com}{josh.fonseca88@gmail.com} \quad $|$ \quad
+    \href{https://jfr.dev}{jfr.dev} \quad $|$ \quad
+    \href{https://github.com/vuciv}{github.com/vuciv}
+\end{center}
+
+\section{Education}
+\resumeSubHeadingListStart
+  \resumeSubheading
+    {The University of Texas at Austin}{2026}
+    {M.S., Artificial Intelligence}{Austin, TX}
+  \resumeSubheading
+    {The University of Chicago}{2020}
+    {B.S., Computer Science · Dean's List (2016--2020)}{Chicago, IL}
+\resumeSubHeadingListEnd
+
+\section{Publications}
+\begin{itemize}[leftmargin=0.15in]
+  \resumeItem{\textbf{Steering Awareness: Detecting Activation Steering from Within.} \underline{Joshua Fonseca Rivera}, David Demitri Africa. \textit{Conference on Language Modeling (COLM)}, 2026. \href{https://arxiv.org/abs/2511.21399}{arXiv:2511.21399}}
+  \resumeItem{\textbf{Touch\&Fold: A Foldable Haptic Actuator for Rendering Touch in Mixed Reality.} Shan-Yuan Teng, Pengyu Li, Romain Nith, \underline{Joshua Fonseca}, Pedro Lopes. \textit{ACM CHI}, 2021. \textbf{Best Paper Honorable Mention} (top 5\%). \href{https://doi.org/10.1145/3411764.3445099}{doi:10.1145/3411764.3445099}}
+\end{itemize}
+
+\section{Experience}
+\resumeSubHeadingListStart
+
+  \resumeSubheading
+    {Anthropic Fellows Program}{2026 -- Present}
+    {AI Safety Research Fellow}{Berkeley, CA}
+    \resumeItemListStart
+      \resumeItem{Research LLM introspection and intervention detectability. First-author COLM 2026 paper showing models can be fine-tuned to detect and name steering vectors injected into their own activations (95.5\% detection, 71.2\% concept identification, zero false positives across seven models), and that detection dissociates from resistance.}
+    \resumeItemListEnd
+
+  \resumeSubheading
+    {Taekus (fintech)}{Jan 2024 -- 2026}
+    {Software Engineer $\rightarrow$ Lead Mobile Engineer}{Remote}
+    \resumeItemListStart
+      \resumeItem{Led a production cross-platform banking app end-to-end (Expo, React Native, TypeScript): 150+ screens across onboarding, money movement, and disputes; built a native Swift/Kotlin module and Expo config plugin for Apple/Google Wallet card provisioning.}
+      \resumeItem{Cut login p95 latency from ${>}$15s to ${<}$2s by parallelizing authentication requests.}
+      \resumeItem{Shipped check deposit and check mailing 0${\to}$1; rebuilt statement credits as idempotent, self-healing workflows with reconciliation, eliminating double-credit incidents and manual clean-ups.}
+      \resumeItem{Scaled IP telemetry over high-risk operations, enabling fraud analytics and controls that reduced fraud cases.}
+    \resumeItemListEnd
+
+  \resumeSubheading
+    {FairHealth}{Apr -- Sep 2023}
+    {Software Engineer (Contract)}{Remote}
+    \resumeItemListStart
+      \resumeItem{Built a parallelized web-scraping and data pipeline on AWS with CI/CD.}
+    \resumeItemListEnd
+
+  \resumeSubheading
+    {Root16, Technology Consulting}{Jul 2020 -- Apr 2023}
+    {Software Engineer}{Remote}
+    \resumeItemListStart
+      \resumeItem{Led .NET/C\# delivery for clients including Energizer, RSM, and Plante Moran; built a data-migration tool and Azure CI/CD pipelines; mentored junior engineers.}
+    \resumeItemListEnd
+
+  \resumeSubheading
+    {Human--Computer Integration Lab, University of Chicago}{Jan -- Jun 2020}
+    {Research Assistant (Prof.\ Pedro Lopes)}{Chicago, IL}
+    \resumeItemListStart
+      \resumeItem{Built VR/AR demonstrations (Unity, Leap Motion) and ran user studies for an exoskeleton-EMS haptic system; work contributed to Touch\&Fold (CHI 2021, Best Paper Honorable Mention).}
+    \resumeItemListEnd
+
+\resumeSubHeadingListEnd
+
+\section{Invited Talks}
+\begin{itemize}[leftmargin=0.15in]
+  \resumeItem{``Steering Awareness: Detecting Activation Steering from Within,'' BlueDot Impact, 2026.}
+\end{itemize}
+
+\section{Open Source \& Projects}
+\begin{itemize}[leftmargin=0.15in]
+  \resumeItem{\textbf{\href{https://github.com/vuciv/artblock}{Artblock}} (340$\star$) --- browser extension replacing web ads with fine art from public museum and NASA collections.}
+  \resumeItem{\textbf{\href{https://github.com/vuciv/animal-crossing-llm-mod}{animal-crossing-llm-mod}} (319$\star$) --- LLM-driven dialogue injected into a 2001 GameCube game via live memory mapping.}
+  \resumeItem{\textbf{\href{https://github.com/vuciv/golf}{golf.vim}} (295$\star$) / \textbf{\href{https://github.com/vuciv/vim-bujo}{vim-bujo}} (206$\star$) --- a keystroke-golf game and a minimalist task manager for Vim.}
+  \resumeItem{\textbf{\href{https://simplifyextension.com}{Simplify AI}} --- founder; browser extension converting dense text to plain English using fine-tuned GPT models.}
+\end{itemize}
+
+\section{Teaching \& Skills}
+\begin{itemize}[leftmargin=0.15in]
+  \resumeItem{\textbf{Teaching:} TA, Emerging Technologies, University of Chicago (Winter 2020).}
+  \resumeItem{\textbf{ML/Research:} Python, PyTorch, HuggingFace, model evaluation \& interpretability tooling.}
+  \resumeItem{\textbf{Engineering:} TypeScript, React/React Native, Django, Postgres, AWS, C\#/.NET, Swift/Kotlin.}
+\end{itemize}
+
+\end{document}
