@@ -8,6 +8,22 @@
     <atom:link href="https://joshfonseca.com/feed.xml" rel="self" type="application/rss+xml"/>
 
     <item>
+      <title>A Simple Method for Accelerating Grokking</title>
+      <link>https://joshfonseca.com/blogs/accelerating-grokking.html</link>
+      <description>Letting a model overfit first, then applying Frobenius norm regularization, achieves grokking in roughly half the steps of Grokfast on modular arithmetic.</description>
+      <pubDate>Fri, 24 Jan 2026 12:00:00 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/accelerating-grokking.html</guid>
+    </item>
+
+    <item>
+      <title>How to Know What's Worth Learning</title>
+      <link>https://joshfonseca.com/blogs/how-to-know-whats-worth-learning.html</link>
+      <description>In a world drowning in information, how do we distinguish signal from noise? The answer isn't choosing between classics and cutting-edge—it's recognizing what compounds versus what decays.</description>
+      <pubDate>Sun, 19 Jan 2026 13:56:00 GMT</pubDate>
+      <guid>https://joshfonseca.com/blogs/how-to-know-whats-worth-learning.html</guid>
+    </item>
+
+    <item>
       <title>When Does a Pile of Sand Become a Heap? I Asked AI to Find Out.</title>
       <link>https://joshfonseca.com/blogs/sorites-paradox.html</link>
       <description>Philosophers have debated the Sorites Paradox for millennia. I gave the problem to a language model and discovered something unexpected about how AI handles vagueness, and what that reveals about language itself.</description>

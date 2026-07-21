@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Know What's Worth Learning</title>
+
+    <!-- SEO & Social Metadata -->
+    <meta name="description" content="In a world drowning in information, how do we distinguish signal from noise? The answer isn't choosing between classics and cutting-edge—it's recognizing what compounds versus what decays.">
+    <meta name="author" content="Joshua Fonseca Rivera">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="How to Know What's Worth Learning">
+    <meta property="og:description" content="In a world drowning in information, how do we distinguish signal from noise? The answer isn't choosing between classics and cutting-edge—it's recognizing what compounds versus what decays.">
+    <meta property="og:site_name" content="Joshua Fonseca Rivera">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="How to Know What's Worth Learning">
+    <meta name="twitter:description" content="In a world drowning in information, how do we distinguish signal from noise? The answer isn't choosing between classics and cutting-edge—it's recognizing what compounds versus what decays.">
+    <meta name="twitter:creator" content="@joshycodes">
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5B4GFEFWRJ"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-5B4GFEFWRJ');
+    </script>
+
+    <style>
+        /* --- CORE DESIGN VARIABLES --- */
+        :root {
+            --bg-color: #0a0a0a;
+            --text-color: #e0e0e0;
+            --accent-blue: #00f3ff;
+            --accent-purple: #bd00ff;
+            --accent-green: #10b981;
+            --accent-orange: #ffaa00;
+            --code-bg: #111;
+            --card-bg: #1a1a1a;
+            --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-body: 'Charter', 'Merriweather', serif;
+            --font-mono: 'Fira Code', 'Courier New', monospace;
+        }
+
+        /* --- RESET & BASE --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-body);
+            line-height: 1.8;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- PROGRESS BAR --- */
+        .progress-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: transparent;
+            z-index: 1000;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-blue));
+            width: 0%;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 10px var(--accent-green);
+        }
+
+        /* --- TYPOGRAPHY --- */
+        h1, h2, h3 {
+            font-family: var(--font-heading);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+        }
+
+        h1 { font-size: clamp(2.5rem, 5vw, 4.5rem); line-height: 1.1; }
+        h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); color: var(--accent-green); margin-top: 3rem; }
+        h3 { font-size: 1.5rem; color: #fff; }
+
+        p { font-size: 1.125rem; margin-bottom: 1.5rem; color: #ccc; max-width: 700px; }
+        li { margin-bottom: 0.5rem; max-width: 700px; margin-left: 1.5rem; color: #ccc; }
+
+        a { color: var(--accent-green); text-decoration: none; border-bottom: 1px solid transparent; transition: 0.3s; }
+        a:hover { border-bottom-color: var(--accent-green); }
+
+        /* --- LAYOUT UTILITIES --- */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .hero-section .container {
+            width: 100%;
+        }
+
+        /* Dynamic Background */
+        .hero-bg {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.08), transparent 40%),
+                        radial-gradient(circle at 80% 20%, rgba(0, 243, 255, 0.05), transparent 40%);
+            animation: drift 20s infinite linear;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        @keyframes drift {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        section {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 2rem 0;
+        }
+
+        /* Section Divider */
+        .section-divider {
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, var(--accent-green), transparent);
+            margin: 3rem 0;
+        }
+
+        /* --- Quote Block --- */
+        .quote-block {
+            background: var(--card-bg);
+            border-left: 4px solid var(--accent-green);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            font-style: italic;
+            font-family: var(--font-body);
+            color: #ccc;
+            border-radius: 4px;
+        }
+
+        .quote-block.highlight {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(0, 243, 255, 0.05));
+            border-left-color: var(--accent-blue);
+        }
+
+        /* Signal Card */
+        .signal-card {
+            background: var(--card-bg);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-left: 3px solid var(--accent-green);
+        }
+
+        .signal-card h3 {
+            color: var(--accent-green);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .signal-card p {
+            margin-bottom: 0;
+        }
+
+        /* --- SCROLL TRIGGER ANIMATIONS --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            will-change: opacity, transform;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- MOBILE RESPONSIVENESS --- */
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem !important; }
+            h2 { font-size: 1.5rem !important; margin-top: 2rem; }
+
+            .container {
+                padding: 0 15px;
+            }
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            border-top: 1px solid #333;
+            padding: 50px 0;
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Drop Cap */
+        .drop-cap::first-letter {
+            float: left;
+            font-size: 4rem;
+            line-height: 0.8;
+            padding-right: 0.15em;
+            font-weight: bold;
+            color: var(--accent-green);
+            font-family: var(--font-heading);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <header class="hero-section" id="intro">
+        <div class="hero-bg"></div>
+        <div class="container">
+            <div class="reveal">
+                <span style="font-family: var(--font-mono); color: #666; font-size: 0.8rem; letter-spacing: 0.1em;">AN ESSAY ON KNOWLEDGE AND TIME</span>
+            </div>
+            <h1 class="reveal">
+                How to Know What's <br>Worth <span style="color: var(--accent-green)">Learning</span>
+            </h1>
+        </div>
+    </header>
+
+    <section class="container" id="orientations">
+        <div class="reveal">
+            <p class="drop-cap">
+                Somewhere, at this very moment, something important is being said, and we are not hearing it. This is the anxiety that we have been dealt.
+            </p>
+            <p>
+                For most of human history, the problem of knowledge was one of scarcity. Libraries burned, manuscripts rotted, and knowledge was passed through unstructured chains of teacher and student. To have known something is to have gone through a tremendous undertaking.
+            </p>
+            <p>
+                Now, we face the exact opposite problem. We are drowning in signal... which means that we are also drowning in noise.
+            </p>
+            <p>
+                So... how do we navigate it? Let's consider two orientations.
+            </p>
+        </div>
+    </section>
+
+    <section class="container">
+        <div class="section-divider"></div>
+        <div class="reveal">
+            <p>
+                The first looks backwards. It looks for the classics, texts that have passed through centuries of readers, and ideas that have withstood the tests of time. There is great wisdom in this! It teaches trust in consensus, patience with difficulty, and a willingness to believe that if something was important enough to be preserved, it is important enough to be understood. It connects you to the long conversation of the dead, the only conversation that has been going on long enough to develop any real sophistication.
+            </p>
+            <p>
+                But fixating upon the classics can become a belief that nothing truly important can be happening now, that we just live as passive inheritors of what came before. It can produce the person who knows everything about history yet cannot recognize the significance of what is unfolding before their eyes. Worse, it can produce the person who resists change, who refuses to adopt ways of thinking better suited to a world that has moved on.
+            </p>
+        </div>
+    </section>
+
+    <section class="container">
+        <div class="section-divider"></div>
+        <div class="reveal">
+            <p>
+                The second category looks forward. It seeks out what is emerging, the latest research, the newest essay, the conversation happening right now. There is wisdom in this too. The frontier cultivates alertness to change, comfort with incompleteness, acceptance that most of what you learn will be obsolete or wrong. It keeps you relevant. It keeps you in contact with the living. It lets you participate in knowledge rather than just receive it.
+            </p>
+            <p>
+                But the frontier generates enormous noise, and the skills required to navigate it—pattern-matching, trend-following, social proof—are the same skills that make you vulnerable to being captured by ephemera. You can spend a lifetime keeping up and discover that you have been running in place.
+            </p>
+        </div>
+    </section>
+
+    <section class="container" id="distinction">
+        <div class="section-divider"></div>
+        <div class="reveal">
+            <p>
+                Here is what I have come to believe: the distinction between classics and frontier is not the one we should concern ourselves with.
+            </p>
+            <p>
+                <strong>The fundamental distinction is between knowledge that compounds and knowledge that decays.</strong>
+            </p>
+            <p>
+                Some things you learn make other things easier to learn. They provide structure. They reveal patterns that recur across domains and they give you frameworks that new information can attach to. This is knowledge that compounds.
+            </p>
+            <p>
+                Other things you learn are isolated. They do not connect. They are useful for a moment—for a conversation, for a project, for a year—and then they are gone, leaving no residue. This is knowledge that decays.
+            </p>
+            <p>
+                The classics tend to compound because they have been selected for depth. The frontier tends to decay because it has been selected for novelty. But these are tendencies, not laws. There are classic texts that are merely historical curiosities, and there are emerging ideas that will restructure how we think for generations.
+            </p>
+            <p>
+                The skill, then, is not in choosing the right ratio of old to new. It is in developing the taste to recognize what will compound—to sense, in something you have just encountered, whether it has that quality of depth, that relationship to enduring problems, that density of insight suggesting it will still be yielding returns long after you have forgotten what you learned alongside it.
+            </p>
+        </div>
+    </section>
+
+    <section class="container" id="signals">
+        <div class="section-divider"></div>
+        <div class="reveal">
+            <p>
+                This is the hard part, and I don't think there's a formula. But there are signals.
+            </p>
+
+            <p>
+                <strong>It connects to problems that don't go away.</strong> Some problems are permanent: how to think clearly, how to cooperate with others, how to act under uncertainty, how to live with mortality. Knowledge that addresses these problems tends to compound because the problems keep recurring. If something helps you think about coordination, it will be useful when you're managing a team, raising children, navigating a friendship, understanding politics. The problem wears different masks, but it's the same problem. Ask yourself: is this addressing a problem that will still exist in ten years? In a hundred?
+            </p>
+
+            <p>
+                <strong>It changes how you see other things.</strong> Compounding knowledge recontextualizes all that you have learned before it. After you internalize the idea of incentives, you see them everywhere. After you understand selection effects, you can't unsee them. This is different from knowledge that sits unused, useful only for the specific context in which you learned it. When you encounter something new, ask: is this just a fact, or is it a lens?
+            </p>
+
+            <p>
+                <strong>It rewards re-reading.</strong> Things that compound reveal more on the second and third encounter. The first time through, you grasp the surface. Later, with more experience, you see dimensions you missed. If something feels finished after one reading, if you got the point and there's nothing left, it probably won't compound. If you suspect you only understood part of it, that's a good sign.
+            </p>
+
+            <p>
+                <strong>It came from someone who paid a price for it.</strong> Knowledge that compounds often has a quality of hard-won clarity. Someone struggled with a problem, lived inside it, and eventually found a way to articulate what they learned. You can feel this in the writing—a density, a precision, an absence of filler. Compare this to writing that is performative, designed to signal intelligence or to be shared rather than to be true. The latter rarely compounds.
+            </p>
+
+            <p>
+                <strong>It's not optimized for your attention.</strong> The frontier selects for what spreads, and what spreads is what captures attention quickly. But attention-capture and compounding are almost orthogonal. The things that compound often feel demanding, even boring at first. They don't offer immediate payoff. They trust you to do the work. If something feels too easy, too perfectly matched to what you already believe, too satisfying on first encounter, you should be suspicious.
+            </p>
+
+            <p>
+                None of these signals are perfect. You will misjudge. You will spend time on things that feel deep and turn out to be empty, and you will skip things that would have transformed how you think. That's fine. The goal is not perfect filtering. The goal is to shift the odds so that you spend a little more time with what compounds and a little less with what decays, and to let that difference accumulate over years.
+            </p>
+        </div>
+    </section>
+
+    <section class="container" id="cost">
+        <div class="section-divider"></div>
+        <div class="reveal">
+            <p>
+                There is one more thing worth saying, which is that this orientation has a cost.
+            </p>
+            <p>
+                Spending time with what compounds means spending time with what is difficult. You sit with things longer than feels productive. You choose depth over breadth, and breadth is how you stay in contact with other people. There is a loneliness in this.
+            </p>
+            <p>
+                But the anxiety we started with—that somewhere, right now, something important is being said and we are not hearing it—is not quite right. The real danger is filling your mind so completely with fleeting noise that enduring ideas have nowhere to land.
+            </p>
+            <p>
+                You will miss most things. Accept this. The question is whether what you do not miss will still be with you in ten years.
+            </p>
+            <p>
+                <strong>Choose for that. Let the rest go.</strong>
+            </p>
+        </div>
+    </section>
+
+    <footer>
+        <div style="margin-bottom: 3rem; max-width: 450px;">
+            <h3 style="font-family: var(--font-heading); font-size: 1.8rem; color: var(--text-color); margin-bottom: 0.5rem;">Stay curious.</h3>
+            <p style="color: #888; font-size: 1rem; margin-bottom: 1.5rem;">Get notified when I publish new essays on learning, technology, and craft.</p>
+            <form action="#" method="POST" style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+                <input type="email" placeholder="your@email.com" required style="
+                    flex: 1;
+                    min-width: 200px;
+                    padding: 12px 16px;
+                    background: var(--card-bg);
+                    border: 1px solid #333;
+                    border-radius: 6px;
+                    color: var(--text-color);
+                    font-family: var(--font-mono);
+                    font-size: 0.9rem;
+                    outline: none;
+                    transition: border-color 0.3s;
+                " onfocus="this.style.borderColor='var(--accent-green)'" onblur="this.style.borderColor='#333'">
+                <button type="submit" style="
+                    padding: 12px 24px;
+                    background: linear-gradient(135deg, var(--accent-green), var(--accent-blue));
+                    border: none;
+                    border-radius: 6px;
+                    color: #000;
+                    font-family: var(--font-heading);
+                    font-weight: 700;
+                    font-size: 0.9rem;
+                    cursor: pointer;
+                    transition: transform 0.2s, box-shadow 0.2s;
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
+                " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 20px rgba(16, 185, 129, 0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">Subscribe</button>
+            </form>
+        </div>
+
+        <div style="margin-bottom: 2rem; display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center;">
+            <a href="https://x.com/joshycodes" target="_blank" style="font-size: 1.5rem; font-weight: bold; color: var(--text-color); border-bottom: 2px solid var(--accent-green);">
+                Follow me on X @joshycodes
+            </a>
+            <a href="https://youtube.com/@joshycodes" target="_blank" style="font-size: 1.5rem; font-weight: bold; color: var(--text-color); border-bottom: 2px solid var(--accent-blue);">
+                Subscribe on YouTube
+            </a>
+        </div>
+
+        <div style="margin-top: 3rem; opacity: 0.6;">
+            <p>By Joshua Fonseca Rivera | 2026</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- READING PROGRESS BAR ---
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("progressBar").style.width = scrolled + "%";
+        });
+
+        // --- SCROLL REVEAL ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>

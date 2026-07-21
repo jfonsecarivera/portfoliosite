@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Simple Method for Accelerating Grokking</title>
+
+    <!-- SEO & Social Metadata -->
+    <meta name="description" content="Letting a model overfit first, then applying Frobenius norm regularization, achieves grokking in roughly half the steps of Grokfast on modular arithmetic.">
+    <meta name="author" content="Joshua Fonseca Rivera">
+    <meta name="keywords" content="grokking, machine learning, deep learning, regularization, Frobenius norm, Grokfast, neural networks">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="A Simple Method for Accelerating Grokking">
+    <meta property="og:description" content="Letting a model overfit first, then applying Frobenius norm regularization, achieves grokking in roughly half the steps of Grokfast on modular arithmetic.">
+    <meta property="og:site_name" content="Joshua Fonseca Rivera">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="A Simple Method for Accelerating Grokking">
+    <meta name="twitter:description" content="Letting a model overfit first, then applying Frobenius norm regularization, achieves grokking in roughly half the steps of Grokfast on modular arithmetic.">
+    <meta name="twitter:creator" content="@joshycodes">
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5B4GFEFWRJ"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-5B4GFEFWRJ');
+    </script>
+
+    <!-- KaTeX for Math -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Prism.js for Code Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@400;600;800&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- DESIGN VARIABLES --- */
+        :root {
+            --bg-void: #050508;
+            --bg-surface: #0c0c12;
+            --bg-elevated: #14141f;
+            --bg-code: #0a0a10;
+
+            --text-primary: #e8e8f0;
+            --text-secondary: #a0a0b8;
+            --text-muted: #606078;
+
+            --accent-cyan: #00f5ff;
+            --accent-magenta: #ff00aa;
+            --accent-lime: #00ff88;
+            --accent-amber: #ffcc00;
+            --accent-red: #ff4466;
+
+            --glow-cyan: rgba(0, 245, 255, 0.4);
+            --glow-magenta: rgba(255, 0, 170, 0.4);
+            --glow-lime: rgba(0, 255, 136, 0.4);
+
+            --font-display: 'Sora', sans-serif;
+            --font-body: 'Crimson Pro', Georgia, serif;
+            --font-mono: 'Space Mono', 'Fira Code', monospace;
+
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* --- RESET --- */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg-void);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 1.15rem;
+            line-height: 1.85;
+            overflow-x: hidden;
+        }
+
+        /* --- NEURAL NETWORK BACKGROUND --- */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.4;
+        }
+
+        .neural-bg canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* --- PROGRESS BAR --- */
+        .progress-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--bg-surface);
+            z-index: 1000;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-magenta), var(--accent-lime));
+            width: 0%;
+            transition: width 0.15s linear;
+            box-shadow: 0 0 20px var(--glow-cyan), 0 0 40px var(--glow-magenta);
+        }
+
+        /* --- LAYOUT --- */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            padding: 4rem 0;
+        }
+
+        .hero-eyebrow {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--accent-cyan);
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeSlideUp 0.8s var(--ease-out-expo) 0.2s forwards;
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-cyan) 50%, var(--accent-magenta) 100%);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeSlideUp 0.8s var(--ease-out-expo) 0.4s forwards, gradientShift 8s ease infinite;
+            opacity: 0;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- TL;DR BOX --- */
+        .tldr-box {
+            background: var(--bg-elevated);
+            border: 1px solid rgba(0, 245, 255, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeSlideUp 0.8s var(--ease-out-expo) 0.6s forwards;
+        }
+
+        .tldr-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--accent-cyan), var(--accent-magenta));
+        }
+
+        .tldr-label {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--accent-cyan);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tldr-label::before {
+            content: '>';
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        .tldr-text {
+            font-family: var(--font-body);
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .typing-cursor::after {
+            content: '|';
+            color: var(--accent-cyan);
+            animation: blink 0.8s step-end infinite;
+            margin-left: 2px;
+        }
+
+        /* --- SECTIONS --- */
+        section {
+            padding: 4rem 0;
+        }
+
+        h2 {
+            font-family: var(--font-display);
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            margin-top: 3rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-lime), transparent);
+            border-radius: 2px;
+        }
+
+        p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            max-width: 700px;
+        }
+
+        strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        a:hover {
+            border-bottom-color: var(--accent-cyan);
+            text-shadow: 0 0 10px var(--glow-cyan);
+        }
+
+        /* --- CODE BLOCKS --- */
+        .code-block {
+            position: relative;
+            margin: 2rem 0;
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--bg-code);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .code-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .code-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .code-dot.red { background: #ff5f57; }
+        .code-dot.yellow { background: #febc2e; }
+        .code-dot.green { background: #28c840; }
+
+        .code-label {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+        }
+
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .copy-btn:hover {
+            background: rgba(0, 245, 255, 0.1);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        .code-block pre {
+            margin: 0;
+            padding: 1.25rem;
+            overflow-x: auto;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .code-block code {
+            background: none;
+            padding: 0;
+            border: none;
+            font-size: inherit;
+        }
+
+        /* --- MATH FORMULA --- */
+        .formula-container {
+            display: flex;
+            justify-content: center;
+            margin: 3rem 0;
+            padding: 2rem;
+            background: var(--bg-elevated);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 0, 170, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .formula-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(255, 0, 170, 0.1), transparent 70%);
+            pointer-events: none;
+        }
+
+        .formula-container.glow {
+            animation: formulaGlow 2s ease-out;
+        }
+
+        @keyframes formulaGlow {
+            0% {
+                box-shadow: 0 0 0 rgba(255, 0, 170, 0);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(255, 0, 170, 0.4), 0 0 80px rgba(255, 0, 170, 0.2);
+            }
+            100% {
+                box-shadow: 0 0 0 rgba(255, 0, 170, 0);
+            }
+        }
+
+        .katex {
+            font-size: 1.4rem;
+        }
+
+        /* --- CHART VIEWER --- */
+        .chart-viewer {
+            margin: 3rem 0;
+            background: var(--bg-elevated);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+        }
+
+        .chart-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .chart-tab {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .chart-tab:hover {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        .chart-tab.active {
+            background: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+            color: var(--bg-void);
+            font-weight: 700;
+        }
+
+        .chart-display {
+            position: relative;
+            padding: 1.5rem;
+        }
+
+        .chart-image {
+            width: 100%;
+            border-radius: 8px;
+            display: none;
+            opacity: 0;
+            transform: scale(0.98);
+            transition: all 0.4s var(--ease-out-expo);
+        }
+
+        .chart-image.active {
+            display: block;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* --- TOGGLE SWITCH --- */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .toggle-label {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            transition: color 0.3s ease;
+        }
+
+        .toggle-label.active {
+            color: var(--accent-lime);
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 56px;
+            height: 28px;
+            background: var(--bg-surface);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: var(--text-muted);
+            border-radius: 50%;
+            transition: all 0.3s var(--ease-out-back);
+        }
+
+        .toggle-switch.active {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: var(--accent-lime);
+        }
+
+        .toggle-switch.active::after {
+            left: calc(100% - 22px);
+            background: var(--accent-lime);
+            box-shadow: 0 0 12px var(--glow-lime);
+        }
+
+        /* --- RESULTS TABLE --- */
+        .results-table-container {
+            margin: 3rem 0;
+            overflow-x: auto;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+        }
+
+        .results-table th {
+            text-align: left;
+            padding: 1rem;
+            background: var(--bg-elevated);
+            color: var(--text-muted);
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-size: 0.7rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .results-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+        }
+
+        .results-table tr:hover td {
+            background: rgba(0, 245, 255, 0.03);
+        }
+
+        .results-table .winner {
+            color: var(--accent-lime);
+            font-weight: 700;
+        }
+
+        .results-table .speedup {
+            color: var(--accent-amber);
+            font-weight: 700;
+        }
+
+        .results-table .na {
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .checkmark {
+            color: var(--accent-lime);
+            font-size: 1.2rem;
+        }
+
+        .counter {
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* --- SCROLL REVEAL --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- CONCLUSION CTA --- */
+        .cta-box {
+            margin: 4rem 0;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(0, 245, 255, 0.08), rgba(255, 0, 170, 0.08));
+            border: 1px solid rgba(0, 245, 255, 0.2);
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .cta-box p {
+            max-width: none;
+            text-align: center;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 1rem;
+            padding: 1rem 2rem;
+            background: var(--accent-cyan);
+            color: var(--bg-void);
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--glow-cyan);
+            border-bottom: none;
+        }
+
+        .cta-button svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .footer-text {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-link {
+            font-family: var(--font-display);
+            font-weight: 600;
+            color: var(--text-primary);
+            position: relative;
+        }
+
+        .footer-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent-cyan);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .footer-link:hover::after {
+            transform: scaleX(1);
+        }
+
+        /* --- MOBILE RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding: 0 16px;
+            }
+
+            .tldr-box {
+                padding: 1.25rem 1.5rem;
+            }
+
+            .formula-container {
+                padding: 1.5rem 1rem;
+            }
+
+            .katex {
+                font-size: 1rem;
+            }
+
+            .chart-controls {
+                padding: 0.75rem 1rem;
+            }
+
+            .chart-tab {
+                font-size: 0.65rem;
+                padding: 0.4rem 0.75rem;
+            }
+
+            .results-table {
+                font-size: 0.75rem;
+            }
+
+            .results-table th,
+            .results-table td {
+                padding: 0.75rem 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Neural Network Background -->
+    <div class="neural-bg">
+        <canvas id="neuralCanvas"></canvas>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="container">
+            <div class="hero-eyebrow">Machine Learning Research</div>
+            <h1>A Simple Method for Accelerating Grokking</h1>
+
+            <div class="tldr-box">
+                <div class="tldr-label">TL;DR</div>
+                <p class="tldr-text" id="tldrText"></p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <section class="container">
+            <div class="reveal">
+                <p>I learned about grokking fairly recently, and thought it was quite interesting. It sort of shook up how I thought about training. Overfitting to your training data was a cardinal sin for decades, but we're finding it may not be so bad?</p>
+            </div>
+
+            <div class="reveal">
+                <p>I had a pretty poor understanding of what was going on here, so I decided to dig deeper. The intuition from the literature seemed to be that grokking occurs because the model overfits, then as you force the model to compress over time (via weight decay), it begins to find the minimal solution on your training set... And this minimal solution seems to be a good proxy for generalization.</p>
+            </div>
+
+            <div class="reveal">
+                <p>I had a pretty simple idea as I learned about this... What if we just let it overfit then, and then forced the model to compress via its loss function?</p>
+            </div>
+
+            <h2 class="reveal">First Success</h2>
+
+            <div class="reveal">
+                <p>All of the benchmarks for grokking seem to be around modular arithmetic operations, so naturally, I went with that.</p>
+            </div>
+
+            <div class="reveal">
+                <p>At first I tried SVD and forcing the loss function to consider the nuclear norm. To my surprise, the model converged in less steps! Whoa!</p>
+            </div>
+
+            <div class="reveal">
+                <p>But... each step was 258x slower...</p>
+            </div>
+
+            <div class="reveal">
+                <p>Calculating the nuclear norm was <em>O(n<sup>3</sup>)</em>, so I didn't really think it was worth it, but I was still excited about the prospect of grokking faster. I did some research into faster ways of calculating the size of the model as part of its loss function and ended up at... L2 Regularization... A technique that has been around since the 1940s...</p>
+            </div>
+
+            <div class="reveal">
+                <p>I was a bit embarrassed, but nonetheless, continued on. My new loss function became:</p>
+            </div>
+
+            <div class="formula-container reveal" id="formulaBox">
+                <div id="formula"></div>
+            </div>
+
+            <div class="reveal">
+                <p>My embarrassment was pretty quickly offset by the fact that L2 Regularization after overfitting worked pretty well with not much trouble!</p>
+            </div>
+
+            <div class="reveal">
+                <p>I also found it interesting that if I scale the compression up, we can get models that have effective ranks as low as 20 if we bump up the lambda or use log-det penalties! I think this is still worth exploring, but I got too sidetracked by the speed to continue down that path... Perhaps I'll return to it.</p>
+            </div>
+
+            <div class="reveal">
+                <p>At the risk of LLM psychosis, I consulted Claude Opus 4.5 because well... I don't know what I don't know, and don't want to overclaim. To my devastation, I was actually told that my 2x speedup was measly compared to Grokfast's 50x speedup.</p>
+            </div>
+
+            <div class="reveal">
+                <p>I felt pretty defeated, but when I looked into the details of Grokfast, I noticed that the 50x speedup was a nice headline... but it was relative to a baseline with no weight decay at all, which takes ~40,000 steps to grok. My baseline with weight decay was already grokking in ~2,000 steps. We were comparing apples to oranges.</p>
+            </div>
+
+            <div class="reveal">
+                <p>So I decided to run an actual head-to-head comparison using the Grokfast authors' own codebase.</p>
+            </div>
+
+            <h2 class="reveal">The Real Comparison</h2>
+
+            <div class="reveal">
+                <p>I then added my delayed compression code to their codebase:</p>
+            </div>
+
+            <div class="code-block reveal">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <span class="code-dot red"></span>
+                        <span class="code-dot yellow"></span>
+                        <span class="code-dot green"></span>
+                    </div>
+                    <span class="code-label">delayed_compression.py</span>
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                </div>
+                <pre><code class="language-python">def frobenius_norm_loss(model):
+   frob_loss = 0.0
+   for name, param in model.named_parameters():
+       if 'weight' in name and param.requires_grad:
+           frob_loss += torch.norm(param, p='fro') ** 2
+   return frob_loss
+
+# In training loop, after model hits 99% train accuracy:
+if train_acc >= 0.99:
+   loss = ce_loss + 0.01 * frobenius_norm_loss(model)</code></pre>
+            </div>
+
+            <div class="reveal">
+                <p>Then I ran both methods on all four modular arithmetic operations with a limit of 2,000 steps. Here are the results:</p>
+            </div>
+
+            <!-- Initial Results Chart Viewer -->
+            <div class="chart-viewer reveal">
+                <div class="chart-controls">
+                    <button class="chart-tab active" data-chart="add" data-set="clean">Addition (+)</button>
+                    <button class="chart-tab" data-chart="sub" data-set="clean">Subtraction (-)</button>
+                    <button class="chart-tab" data-chart="mul" data-set="clean">Multiplication (*)</button>
+                    <button class="chart-tab" data-chart="div" data-set="clean">Division (/)</button>
+                </div>
+                <div class="chart-display" id="cleanCharts">
+                    <img src="images/grokking/clean_add.png" alt="Addition comparison" class="chart-image active" data-chart="add">
+                    <img src="images/grokking/clean_sub.png" alt="Subtraction comparison" class="chart-image" data-chart="sub">
+                    <img src="images/grokking/clean_mul.png" alt="Multiplication comparison" class="chart-image" data-chart="mul">
+                    <img src="images/grokking/clean_div.png" alt="Division comparison" class="chart-image" data-chart="div">
+                </div>
+            </div>
+
+            <div class="reveal">
+                <p>Now, my method seems to suffer from catastrophic forgetting because of the compression pressure I'm putting it under, but I think there are probably solutions to that, like decreasing compression pressure as time goes on. I did find it especially interesting that Grokfast didn't even reach division!</p>
+            </div>
+
+            <h2 class="reveal">Doubt Creeps In</h2>
+
+            <div class="reveal">
+                <p>I am extremely scared to say I did something faster out of the belief that there's something I must be missing. So, as a final test, I ran a hyperparameter sweep. Turns out I wasn't using optimal Grokfast parameters. Here are the results when I reran the test with the best settings for both methods:</p>
+            </div>
+
+            <!-- Results Table -->
+            <div class="results-table-container reveal">
+                <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Operation</th>
+                            <th>Grokfast EMA</th>
+                            <th>Delayed Compression</th>
+                            <th>Winner</th>
+                            <th>Speedup</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Addition (+)</td>
+                            <td>1300 steps</td>
+                            <td class="winner">720 steps</td>
+                            <td>Delayed Compression <span class="checkmark">✓</span></td>
+                            <td class="speedup counter" data-target="1.81">1.81x</td>
+                        </tr>
+                        <tr>
+                            <td>Subtraction (-)</td>
+                            <td>1190 steps</td>
+                            <td class="winner">1040 steps</td>
+                            <td>Delayed Compression <span class="checkmark">✓</span></td>
+                            <td class="speedup counter" data-target="1.14">1.14x</td>
+                        </tr>
+                        <tr>
+                            <td>Multiplication (*)</td>
+                            <td>710 steps</td>
+                            <td>710 steps</td>
+                            <td>Tie</td>
+                            <td class="counter" data-target="1.00">1.00x</td>
+                        </tr>
+                        <tr>
+                            <td>Division (/)</td>
+                            <td class="na">N/A</td>
+                            <td class="winner">980 steps</td>
+                            <td>Delayed Compression <span class="checkmark">✓</span></td>
+                            <td class="speedup">-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Toggle between initial and optimal results -->
+            <div class="toggle-container reveal">
+                <span class="toggle-label" id="labelInitial">Initial Results</span>
+                <div class="toggle-switch" id="resultToggle"></div>
+                <span class="toggle-label active" id="labelOptimal">Optimal Tuning</span>
+            </div>
+
+            <!-- Optimal Results Chart Viewer -->
+            <div class="chart-viewer reveal" id="optimalViewer">
+                <div class="chart-controls">
+                    <button class="chart-tab active" data-chart="add" data-set="optimal">Addition (+)</button>
+                    <button class="chart-tab" data-chart="sub" data-set="optimal">Subtraction (-)</button>
+                    <button class="chart-tab" data-chart="mul" data-set="optimal">Multiplication (*)</button>
+                    <button class="chart-tab" data-chart="div" data-set="optimal">Division (/)</button>
+                </div>
+                <div class="chart-display" id="optimalCharts">
+                    <img src="images/grokking/optimal_add.png" alt="Optimal addition comparison" class="chart-image active" data-chart="add">
+                    <img src="images/grokking/optimal_sub.png" alt="Optimal subtraction comparison" class="chart-image" data-chart="sub">
+                    <img src="images/grokking/optimal_mul.png" alt="Optimal multiplication comparison" class="chart-image" data-chart="mul">
+                    <img src="images/grokking/optimal_div.png" alt="Optimal division comparison" class="chart-image" data-chart="div">
+                </div>
+            </div>
+
+            <div class="reveal">
+                <p>Even with proper tuning, delayed compression wins on addition and subtraction, ties on multiplication, and Grokfast fails entirely on division. The results are similar across multiple seeds too.</p>
+            </div>
+
+            <div class="reveal">
+                <p>The graphs are still pretty ugly because of the instability after grokking, but... I have to move onto other things for now and was pretty satisfied.</p>
+            </div>
+
+            <h2 class="reveal">Conclusion</h2>
+
+            <div class="reveal">
+                <p>I'm worried that I'm still missing something... It was suspiciously simple. But if the results hold up, there may be even more value than we thought in letting a model overfit first, then compressing.</p>
+            </div>
+
+            <div class="reveal">
+                <p>There are lots of directions to take this... I don't know how well this would scale to other domains, and I'd really like to fix the instability.</p>
+            </div>
+
+            <div class="cta-box reveal">
+                <p>You can find the code here:</p>
+                <a href="https://github.com/vuciv/grokfast" target="_blank" class="cta-button">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    View on GitHub
+                </a>
+            </div>
+
+            <div class="reveal">
+                <p>Let me know what you think :)</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="https://x.com/joshycodes" target="_blank" class="footer-link">@joshycodes</a>
+                <a href="https://youtube.com/@joshycodes" target="_blank" class="footer-link">YouTube</a>
+                <a href="/blog.html" class="footer-link">More Posts</a>
+            </div>
+            <p class="footer-text">By Joshua Fonseca Rivera | 2026</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- NEURAL NETWORK BACKGROUND ---
+        (function() {
+            const canvas = document.getElementById('neuralCanvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            let animationId;
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+
+            function createParticles() {
+                particles = [];
+                const count = Math.min(50, Math.floor((canvas.width * canvas.height) / 25000));
+                for (let i = 0; i < count; i++) {
+                    particles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        vx: (Math.random() - 0.5) * 0.3,
+                        vy: (Math.random() - 0.5) * 0.3,
+                        radius: Math.random() * 2 + 1
+                    });
+                }
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Draw connections
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+
+                        if (dist < 150) {
+                            const alpha = (1 - dist / 150) * 0.15;
+                            ctx.beginPath();
+                            ctx.strokeStyle = `rgba(0, 245, 255, ${alpha})`;
+                            ctx.lineWidth = 1;
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+
+                // Draw and update particles
+                particles.forEach(p => {
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(0, 245, 255, 0.5)';
+                    ctx.fill();
+
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+                });
+
+                animationId = requestAnimationFrame(draw);
+            }
+
+            resize();
+            createParticles();
+            draw();
+
+            window.addEventListener('resize', () => {
+                resize();
+                createParticles();
+            });
+        })();
+
+        // --- PROGRESS BAR ---
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+
+        // --- TYPING EFFECT FOR TL;DR ---
+        (function() {
+            const text = "Letting a model overfit first, then applying Frobenius norm regularization, achieves grokking in roughly half the steps of Grokfast on modular arithmetic.";
+            const element = document.getElementById('tldrText');
+            let index = 0;
+
+            element.classList.add('typing-cursor');
+
+            function type() {
+                if (index < text.length) {
+                    element.textContent = text.substring(0, index + 1);
+                    index++;
+                    setTimeout(type, 25);
+                } else {
+                    element.classList.remove('typing-cursor');
+                }
+            }
+
+            setTimeout(type, 1000);
+        })();
+
+        // --- KATEX FORMULA ---
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.katex) {
+                katex.render("\\mathcal{L} = \\mathcal{L}_{CE} + \\lambda \\sum_W ||W||_F^2", document.getElementById('formula'), {
+                    throwOnError: false,
+                    displayMode: true
+                });
+            }
+        });
+
+        // --- FORMULA GLOW ON SCROLL ---
+        const formulaBox = document.getElementById('formulaBox');
+        let formulaGlowed = false;
+
+        const formulaObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !formulaGlowed) {
+                    formulaBox.classList.add('glow');
+                    formulaGlowed = true;
+                }
+            });
+        }, { threshold: 0.5 });
+
+        formulaObserver.observe(formulaBox);
+
+        // --- CHART TABS ---
+        document.querySelectorAll('.chart-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const chartSet = this.closest('.chart-viewer');
+                const chartType = this.dataset.chart;
+
+                // Update active tab
+                chartSet.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+
+                // Update active chart
+                chartSet.querySelectorAll('.chart-image').forEach(img => {
+                    img.classList.remove('active');
+                    if (img.dataset.chart === chartType) {
+                        img.classList.add('active');
+                    }
+                });
+            });
+        });
+
+        // --- TOGGLE SWITCH ---
+        const toggle = document.getElementById('resultToggle');
+        const labelInitial = document.getElementById('labelInitial');
+        const labelOptimal = document.getElementById('labelOptimal');
+
+        toggle.classList.add('active'); // Start with optimal showing
+
+        toggle.addEventListener('click', function() {
+            this.classList.toggle('active');
+            labelInitial.classList.toggle('active');
+            labelOptimal.classList.toggle('active');
+
+            // Could be used to switch between chart sets if needed
+        });
+
+        // --- SCROLL REVEAL ---
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        // --- COPY CODE ---
+        function copyCode(btn) {
+            const codeBlock = btn.closest('.code-block');
+            const code = codeBlock.querySelector('code').textContent;
+
+            navigator.clipboard.writeText(code).then(() => {
+                btn.textContent = 'Copied!';
+                setTimeout(() => {
+                    btn.textContent = 'Copy';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

@@ -14,7 +14,7 @@ Static HTML portfolio and blog site for Josh Fonseca. Hosted at joshfonseca.com,
 
 ## Key Files
 
-- `home.html` - Landing page with project showcase
+- `index.html` - Landing page with project showcase
 - `blog.html` - Blog hub
 - `project.html` - Projects page
 - `js/loadTemplates.js` - Dynamic template loading + RSS autodiscovery
