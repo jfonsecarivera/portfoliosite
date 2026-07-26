@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-Static HTML portfolio and blog site for Josh Fonseca. Hosted at joshfonseca.com, GitHub repo: vuciv/portfoliosite.
+Static HTML portfolio and blog site for Josh Fonseca. Hosted at jfr.dev, GitHub repo: jfonsecarivera/portfoliosite.
 
 ## Architecture
 
