@@ -4,896 +4,1141 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Joshua Fonseca Rivera | AI Researcher</title>
-    <meta name="description" content="AI researcher in the Anthropic Fellows program studying interpretability, introspection, and activation steering. Author of Steering Awareness (COLM 2026) and co-author of Touch&Fold (CHI 2021 Best Paper Honorable Mention).">
+    <meta name="description" content="AI Safety Research Fellow at the Anthropic Fellows Program, researching character training and model welfare.">
     <meta property="og:title" content="Joshua Fonseca Rivera | AI Researcher">
-    <meta property="og:description" content="Anthropic Fellow trying to figure out what's going on in language models.">
+    <meta property="og:description" content="AI Safety Research Fellow at the Anthropic Fellows Program, researching character training and model welfare.">
+    <meta name="theme-color" content="#0b1a24">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='10.5' fill='none' stroke='%233cc8ff' stroke-width='5'/%3E%3C/svg%3E">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Silkscreen:wght@400;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Saira:wdth,wght@75..125,100..700&family=Spectral:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+
+    <script>document.documentElement.classList.add('js');</script>
 
     <style>
         :root {
-            --ink: #241a4e;
-            --ink-soft: #3f3564;
-            --ink-faint: #7a6f94;
-            --link: #0b6fb8;
-            --purple-hi: #9a7cf0;
-            --purple: #5c38c8;
-            --purple-deep: #3e2390;
-            --purple-dark: #2a1560;
-            --gold: #ffdf66;
-            --magenta: #d43fa4;
-            --cyan: #1697c8;
-            --card: rgba(255, 255, 255, 0.97);
+            --night: #0b1a24;
+            --night-hi: #132c3d;
+            --night-lo: #071219;
+            --node: #0c1c27;
+            --ice: #e6f0f6;
+            --ice-soft: rgba(230, 240, 246, 0.84);
+            --frost: #93aabb;
+            --thirium: #3cc8ff;
+            --line: rgba(230, 240, 246, 0.13);
+            --line-strong: rgba(230, 240, 246, 0.3);
 
-            --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            --font-body: 'Trebuchet MS', 'Segoe UI', Tahoma, Verdana, sans-serif;
-            --font-mono: 'Fira Code', 'Courier New', monospace;
-            --font-pixel: 'Silkscreen', 'Courier New', monospace;
+            --hud: 'Saira', 'Helvetica Neue', Arial, sans-serif;
+            --voice: 'Spectral', Georgia, 'Times New Roman', serif;
+
+            --gutter: 44px;
+            --readout: 170px;
+            --col-gap: 36px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        html { scroll-behavior: smooth; }
+        html { scroll-behavior: smooth; scroll-padding-top: 96px; }
 
         body {
-            font-family: var(--font-body);
-            color: var(--ink-soft);
-            line-height: 1.7;
-            background: #170826;
+            min-height: 100vh;
+            background-color: var(--night);
+            background-image:
+                radial-gradient(120% 70% at 80% -10%, rgba(64, 140, 190, 0.26), transparent 60%),
+                linear-gradient(180deg, var(--night-hi) 0%, var(--night) 36%, var(--night-lo) 100%);
+            color: var(--ice);
+            font-family: var(--voice);
+            font-size: 1.0625rem;
+            line-height: 1.65;
             overflow-x: hidden;
-            padding-bottom: 56px;
             -webkit-font-smoothing: antialiased;
         }
 
-        .sky {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            background: linear-gradient(180deg,
-                #1a1048 0%,
-                #2c1a72 22%,
-                #3a2088 45%,
-                #2b1560 65%,
-                #1f0d40 82%,
-                #170826 100%);
-            pointer-events: none;
+        a { color: inherit; text-decoration: none; }
+
+        button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+
+        :focus-visible { outline: 2px solid var(--thirium); outline-offset: 4px; }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
             overflow: hidden;
-        }
-
-        .sky::before {
-            content: "";
-            position: absolute;
-            left: -20%;
-            right: -20%;
-            bottom: 0;
-            height: 36%;
-            background:
-                repeating-linear-gradient(90deg, rgba(255, 113, 206, 0.34) 0 2px, transparent 2px 80px),
-                repeating-linear-gradient(180deg, rgba(255, 113, 206, 0.34) 0 2px, transparent 2px 52px);
-            transform: perspective(320px) rotateX(58deg);
-            transform-origin: 50% 100%;
-            -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 55%);
-            mask-image: linear-gradient(180deg, transparent 0%, #000 55%);
-        }
-
-        .sky::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background-image:
-                repeating-conic-gradient(rgba(30, 8, 55, 0.85) 0% 25%, transparent 0% 50%),
-                repeating-conic-gradient(rgba(255, 240, 255, 0.6) 0% 25%, transparent 0% 50%);
-            background-size: 3px 3px, 5px 5px;
-            background-position: 0 0, 1px 2px;
-            opacity: 0.09;
-        }
-
-        .sun {
-            position: absolute;
-            top: 56px;
-            right: 8%;
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            background: linear-gradient(180deg, #ffe9a0 0%, #ffb56b 32%, #ff71ce 68%, #e04fb0 100%);
-            -webkit-mask-image: repeating-linear-gradient(180deg, #000 0 22px, transparent 22px 30px);
-            mask-image: repeating-linear-gradient(180deg, #000 0 22px, transparent 22px 30px);
-            filter: drop-shadow(0 0 55px rgba(255, 130, 200, 0.75));
-            opacity: 0.95;
-        }
-
-        .cloud {
-            position: absolute;
-            background: #ff9ade;
-            border-radius: 50%;
-            filter: blur(10px);
-            opacity: 0.32;
-        }
-        .cloud.c1 { width: 440px; height: 110px; top: 9%;  left: -6%;  animation: drift 130s linear infinite alternate; }
-        .cloud.c2 { width: 340px; height: 90px;  top: 26%; left: 58%;  animation: drift 170s linear infinite alternate-reverse; }
-        .cloud.c3 { width: 520px; height: 120px; top: 55%; left: 22%;  opacity: 0.24; animation: drift 200s linear infinite alternate; }
-
-        @keyframes drift {
-            from { transform: translateX(0); }
-            to   { transform: translateX(28vw); }
-        }
-
-        .chrome {
-            position: fixed;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 6px;
-            padding: 6px 12px;
-            background: linear-gradient(180deg, var(--purple-hi) 0%, var(--purple) 46%, var(--purple-deep) 54%, #5432b8 100%);
-            border-top: 2px solid #23104e;
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55), 0 -2px 12px rgba(30, 12, 70, 0.55);
-            font-family: var(--font-pixel);
-            font-size: 0.7rem;
-        }
-
-        .chrome-cell {
-            padding: 3px 10px;
-            border-radius: 3px;
-            background: #2c1560;
-            border: 1px solid;
-            border-color: #1a0a3a #7a5ae0 #7a5ae0 #1a0a3a;
-            color: var(--gold);
-            letter-spacing: 0.08em;
+            clip: rect(0 0 0 0);
             white-space: nowrap;
         }
 
-        .chrome-btn {
+        .snow {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .hud {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            padding: 22px clamp(20px, 4vw, 44px);
+            font-family: var(--hud);
+            border-bottom: 1px solid transparent;
+            transition: background-color 0.3s, border-color 0.3s, padding 0.3s;
+        }
+
+        .hud.is-stuck {
+            padding-block: 13px;
+            background-color: rgba(7, 18, 25, 0.84);
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+            border-bottom-color: var(--line);
+        }
+
+        .hud-home {
             display: grid;
             place-items: center;
-            width: 24px;
-            height: 24px;
-            border-radius: 3px;
-            background: linear-gradient(180deg, #e8e0ff, #b3a3ee);
-            border: 1px solid;
-            border-color: #f4efff #3a1f7e #3a1f7e #f4efff;
+            width: 34px;
+            height: 34px;
+            margin: -10px;
+            border-radius: 50%;
+        }
+
+        .led {
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            border: 2.5px solid var(--thirium);
+            border-top-color: #c9f1ff;
+            box-shadow: 0 0 9px rgba(60, 200, 255, 0.75), inset 0 0 3px rgba(60, 200, 255, 0.5);
+            animation: led-spin 3.2s linear infinite;
+        }
+
+        .hud-home:hover .led { animation-duration: 1.2s; box-shadow: 0 0 14px rgba(60, 200, 255, 0.95), inset 0 0 3px rgba(60, 200, 255, 0.5); }
+
+        @keyframes led-spin { to { transform: rotate(1turn); } }
+
+        .hud nav { display: flex; gap: clamp(16px, 2.6vw, 34px); }
+
+        .hud nav a {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 6px 0;
+            font-stretch: 112%;
+            font-weight: 500;
             font-size: 0.72rem;
-            text-decoration: none;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--frost);
+            transition: color 0.2s;
         }
 
-        .chrome-spacer { flex: 1; }
-
-        .chrome-nav { display: flex; gap: 5px; }
-
-        .chrome-nav a {
-            padding: 4px 12px;
-            border-radius: 3px;
-            background: linear-gradient(180deg, #5c38c8, #3e2390);
-            border: 1px solid;
-            border-color: #b3a3ee #2a1560 #2a1560 #b3a3ee;
-            color: #ffffff;
-            text-decoration: none;
-            letter-spacing: 0.05em;
+        .hud nav a::before {
+            content: "";
+            width: 5px;
+            height: 5px;
+            border: 1px solid currentColor;
+            transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
         }
 
-        .chrome-nav a:hover {
-            background: linear-gradient(180deg, #3e2390, #23104e);
-            color: var(--gold);
+        .hud nav a:hover,
+        .hud nav a[aria-current] { color: var(--ice); }
+
+        .hud nav a[aria-current]::before {
+            background: var(--thirium);
+            border-color: var(--thirium);
+            box-shadow: 0 0 8px rgba(60, 200, 255, 0.9);
         }
 
         .page {
             position: relative;
-            z-index: 2;
-            max-width: 980px;
+            z-index: 1;
+            max-width: 1120px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 clamp(20px, 4vw, 40px) 160px;
         }
-
-        a { color: var(--link); text-decoration: none; transition: 0.2s; }
 
         .hero {
-            padding: 72px 4px 46px;
-            max-width: 880px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            gap: 44px;
-        }
-
-        .hero-text { flex: 1; min-width: 0; }
-
-        .me-window {
-            flex-shrink: 0;
-            width: 264px;
-            background: #fff;
-            border-radius: 12px;
-            border: 1px solid rgba(90, 40, 150, 0.4);
-            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.85), 0 16px 44px rgba(40, 15, 70, 0.45);
-            overflow: hidden;
-            transform: rotate(2.2deg);
-        }
-
-        .me-window img {
-            display: block;
-            width: 100%;
-            aspect-ratio: 4 / 5;
-            object-fit: cover;
-            object-position: 50% 35%;
-        }
-
-        .me-window figcaption {
-            font-family: var(--font-pixel);
-            font-size: 0.6rem;
-            text-align: center;
-            padding: 8px 10px;
-            color: var(--ink-faint);
-            background: #fff;
-        }
-
-        @media (max-width: 900px) {
-            .hero { flex-direction: column; align-items: flex-start; gap: 30px; }
-            .me-window { width: 240px; transform: rotate(1.6deg); }
-        }
-
-        .eyebrow {
-            font-family: var(--font-pixel);
-            font-size: 0.72rem;
-            color: #ffffff;
-            text-shadow: 0 1px 6px rgba(50, 15, 80, 0.6);
-            letter-spacing: 0.05em;
-            display: block;
-            margin-bottom: 18px;
-        }
-
-        h1 {
-            font-family: var(--font-heading);
-            font-weight: 800;
-            font-size: clamp(2.5rem, 6vw, 4.1rem);
-            line-height: 1.05;
-            letter-spacing: -0.03em;
-            background: linear-gradient(180deg, #ffffff 0%, #ffeffb 40%, #ffc7ef 72%, #ff9ee4 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            filter: drop-shadow(0 2px 0 rgba(255,255,255,0.35)) drop-shadow(0 7px 18px rgba(80, 20, 110, 0.55));
-            margin-bottom: 22px;
-        }
-
-        .subhead {
-            max-width: 640px;
-            font-size: 1.14rem;
-            color: #ffffff;
-            text-shadow: 0 1px 8px rgba(50, 15, 80, 0.6);
-            margin-bottom: 28px;
-        }
-
-        .window {
-            margin: 40px auto;
-            max-width: 780px;
-            border-radius: 14px;
-            background: var(--card);
-            backdrop-filter: blur(12px) saturate(1.2);
-            border: 1px solid rgba(90, 40, 150, 0.4);
-            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.85), 0 16px 44px rgba(40, 15, 70, 0.35), 0 2px 6px rgba(40, 15, 70, 0.18);
-            overflow: hidden;
-        }
-
-        .titlebar {
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 14px;
-            background: linear-gradient(180deg, #6a4cc4 0%, #452596 60%, #3a1e84 100%);
-            border-bottom: 1px solid #23104e;
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
-        }
-
-        .titlebar::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            z-index: 0;
-            background: repeating-conic-gradient(rgba(10, 4, 30, 0.7) 0% 25%, transparent 0% 50%) 0 0 / 3px 3px;
-            opacity: 0.14;
-            pointer-events: none;
-        }
-
-        .titlebar > * { position: relative; z-index: 1; }
-
-        .w-pink .titlebar {
-            background: linear-gradient(180deg, #b04a90 0%, #8e2268 60%, #7a165a 100%);
-            border-bottom-color: #5e1046;
-        }
-
-        .w-cyan .titlebar {
-            background: linear-gradient(180deg, #3d8cae 0%, #14688f 60%, #0e5578 100%);
-            border-bottom-color: #083c58;
-        }
-
-        .tb-title {
-            font-family: var(--font-pixel);
-            font-weight: 400;
-            font-size: 0.68rem;
-            letter-spacing: 0.06em;
-            color: var(--gold);
-            text-shadow: 1px 1px 0 rgba(30, 10, 70, 0.85);
-        }
-
-        .w-pink .tb-title { color: #ffffff; text-shadow: 1px 1px 0 rgba(120, 20, 90, 0.85); }
-        .w-cyan .tb-title { color: #ffffff; text-shadow: 1px 1px 0 rgba(8, 70, 100, 0.85); }
-
-        .tb-btns { margin-left: auto; display: flex; gap: 4px; }
-
-        .tb-btn {
             display: grid;
-            place-items: center;
-            width: 16px;
-            height: 16px;
-            border-radius: 2px;
-            background: linear-gradient(180deg, #e8e0ff, #b3a3ee);
-            border: 1px solid;
-            border-color: #f4efff #3a1f7e #3a1f7e #f4efff;
-            font-family: var(--font-pixel);
-            font-size: 8px;
-            line-height: 1;
-            color: var(--purple-dark);
-        }
-
-        .window-body { padding: 28px 30px; }
-
-        .pub { padding: 4px 0; }
-
-        .pub + .pub {
-            margin-top: 26px;
-            padding-top: 26px;
-            border-top: 1px dashed #e2d8f0;
-        }
-
-        .pub-head {
-            display: flex;
-            align-items: baseline;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-bottom: 6px;
-        }
-
-        .pub-head a {
-            font-family: var(--font-heading);
-            font-weight: 800;
-            font-size: 1.32rem;
-            line-height: 1.3;
-            color: var(--ink);
-        }
-
-        .pub-head a:hover { color: var(--magenta); }
-
-        .badge-new {
-            font-family: var(--font-pixel);
-            font-size: 0.6rem;
-            padding: 3px 8px;
-            border-radius: 4px;
-            background: linear-gradient(180deg, #ffe066, #ffb703);
-            border: 1px solid #e09e00;
-            color: #7a3b00;
-            text-shadow: 0 1px 0 rgba(255,255,255,0.5);
-            animation: blink 2.6s steps(2) infinite;
-            white-space: nowrap;
-        }
-
-        @keyframes blink { 50% { opacity: 0.55; } }
-
-        .pub-authors { font-size: 0.96rem; color: var(--ink-faint); margin-bottom: 2px; }
-        .pub-authors strong { color: var(--ink-soft); }
-
-        .pub-venue {
-            font-family: var(--font-mono);
-            font-size: 0.78rem;
-            letter-spacing: 0.04em;
-            color: var(--ink-soft);
-            margin-bottom: 10px;
-        }
-
-        .pub-links { font-family: var(--font-mono); font-size: 0.82rem; color: #b9aed0; }
-        .pub-links a { color: var(--link); }
-        .pub-links a:hover { color: var(--magenta); text-decoration: underline; }
-
-        .pub-desc, .exp p { font-size: 1.02rem; color: var(--ink-soft); margin-bottom: 14px; max-width: 660px; }
-
-        .exp {
-            padding: 20px 0;
-            border-bottom: 1px dashed #e2d8f0;
-        }
-
-        .exp:first-child { padding-top: 4px; }
-        .exp:last-child { border-bottom: none; padding-bottom: 4px; }
-
-        .exp-head {
-            display: flex;
-            align-items: baseline;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 4px;
-        }
-
-        .exp-head a {
-            font-family: var(--font-heading);
-            font-weight: 700;
-            font-size: 1.12rem;
-            color: var(--ink);
-        }
-
-        .exp-head a:hover { color: var(--magenta); }
-
-        .metric {
-            font-family: var(--font-mono);
-            font-size: 0.68rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            padding: 2px 9px;
-            border-radius: 999px;
-            background: rgba(1, 160, 220, 0.08);
-            border: 1px solid rgba(1, 160, 220, 0.4);
-            color: #0872aa;
-        }
-
-        .exp p { font-size: 0.98rem; margin-bottom: 6px; }
-
-        .tags { font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-faint); }
-
-        .guestbook-copy { max-width: 560px; margin-bottom: 16px; }
-
-        #mc_embed_signup form { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-
-        #mc_embed_signup input.email {
-            flex: 1;
-            min-width: 220px;
-            padding: 10px 18px;
-            border-radius: 6px;
-            border: 1px solid;
-            border-color: #b59ae0 #ffffff #ffffff #b59ae0;
-            background: #fff;
-            font-family: var(--font-body);
-            font-size: 0.95rem;
-            color: var(--ink);
-            box-shadow: inset 0 2px 5px rgba(70, 30, 120, 0.1);
-        }
-
-        #mc_embed_signup input.email:focus { outline: 2px solid #b967ff; outline-offset: 1px; }
-
-        #mc_embed_signup input.button {
-            padding: 10px 22px;
-            border-radius: 6px;
-            border: 1px solid;
-            border-color: #cdbaf8 #2a1560 #2a1560 #cdbaf8;
-            font-family: var(--font-pixel);
-            font-size: 0.74rem;
-            color: #fff;
-            text-shadow: 0 1px 2px rgba(30, 10, 70, 0.65);
-            background: linear-gradient(180deg, #a88cf5 0%, #7b52e0 45%, #5326b8 55%, #7a4ee0 100%);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 3px 8px rgba(40, 16, 90, 0.3);
-            cursor: pointer;
-        }
-
-        #mc_embed_signup input.button:hover { transform: translateY(-1px); }
-
-        .ground {
-            position: relative;
-            z-index: 2;
-            margin-top: 80px;
-            padding: 56px 20px 48px;
-            text-align: center;
-            color: #e8dcff;
-            background: linear-gradient(180deg, #2b0f45 0%, #1d0a33 45%, #170826 100%);
-            border-top: 2px solid #ff71ce;
-            box-shadow: 0 -4px 28px rgba(255, 113, 206, 0.4);
-            overflow: hidden;
-        }
-
-        .ground::before {
-            content: "";
-            position: absolute;
-            left: -20%;
-            right: -20%;
-            top: 0;
-            height: 100%;
-            background:
-                repeating-linear-gradient(90deg, rgba(255, 113, 206, 0.16) 0 2px, transparent 2px 90px),
-                repeating-linear-gradient(180deg, rgba(255, 113, 206, 0.16) 0 2px, transparent 2px 46px);
-            transform: perspective(340px) rotateX(-40deg);
-            transform-origin: 50% 0%;
-            pointer-events: none;
-        }
-
-        .ground::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: repeating-conic-gradient(rgba(255, 220, 250, 0.5) 0% 25%, transparent 0% 50%) 0 0 / 3px 3px;
-            opacity: 0.05;
-            pointer-events: none;
-        }
-
-        .ground > * { position: relative; z-index: 1; }
-
-        .web-badges {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 28px;
-        }
-
-        .badge88 {
-            width: 88px;
-            height: 31px;
-            display: flex;
+            grid-template-columns: minmax(0, 1fr) auto;
             align-items: center;
-            justify-content: center;
-            font-family: var(--font-pixel);
-            font-size: 0.56rem;
-            letter-spacing: 0.03em;
-            color: #fff;
-            text-shadow: 0 1px 1px rgba(0,0,0,0.45);
-            border: 1px solid rgba(0, 0, 0, 0.35);
-            border-radius: 3px;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 2px 5px rgba(0, 0, 0, 0.4);
+            gap: clamp(40px, 6vw, 88px);
+            min-height: min(100svh, 900px);
+            padding: 128px 0 80px;
         }
 
-        .badge88:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        .name {
+            margin-bottom: 36px;
+            font-family: var(--hud);
+            font-stretch: 125%;
+            font-weight: 200;
+            font-size: clamp(2.75rem, 6.4vw, 5.5rem);
+            line-height: 1;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--ice);
+        }
 
-        .badge88.gh { background: linear-gradient(180deg, #5a5a5a, #1e1e1e); }
-        .badge88.yt { background: linear-gradient(180deg, #b02c2c, #7e1010); }
-        .badge88.tw { background: linear-gradient(180deg, #1e6f9c, #0a4a72); }
-        .badge88.li { background: linear-gradient(180deg, #2e6499, #0e3f66); }
-        .badge88.rss { background: linear-gradient(180deg, #a35a00, #7a4300); }
+        .name span { display: block; }
 
-        .counter {
+        .focus {
+            max-width: 31em;
+            margin-bottom: 16px;
+            font-weight: 300;
+            font-size: clamp(1.12rem, 1.45vw, 1.28rem);
+            line-height: 1.6;
+            color: var(--ice-soft);
+        }
+
+        .before {
+            max-width: 34em;
+            margin-bottom: 40px;
+            font-size: 1.02rem;
+            line-height: 1.6;
+            color: var(--frost);
+        }
+
+        .mail-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px 24px;
+            margin-bottom: 20px;
+        }
+
+        .mail-row a {
+            padding-bottom: 3px;
+            font-family: var(--hud);
+            font-size: 1.05rem;
+            letter-spacing: 0.04em;
+            color: var(--ice);
+            border-bottom: 1px solid var(--line-strong);
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        .mail-row a:hover { color: var(--thirium); border-bottom-color: var(--thirium); }
+
+        .profiles {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 22px;
+            list-style: none;
+        }
+
+        .profiles .action { letter-spacing: 0.14em; }
+
+        .action {
             display: inline-flex;
             align-items: center;
-            gap: 12px;
-            font-family: var(--font-pixel);
-            font-size: 0.66rem;
-            color: #e8dcff;
-            text-shadow: 0 1px 2px rgba(20, 8, 50, 0.6);
-            margin-bottom: 24px;
+            gap: 9px;
+            font-family: var(--hud);
+            font-stretch: 112%;
+            font-weight: 500;
+            font-size: 0.72rem;
+            line-height: 1.6;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--thirium);
+            transition: color 0.2s;
         }
 
-        .counter .digits {
-            font-size: 0.82rem;
-            letter-spacing: 0.28em;
-            padding: 4px 12px 4px 14px;
-            border-radius: 4px;
-            background: #08130b;
-            color: #7dff8a;
-            border: 1px solid #2f9e2b;
-            box-shadow: inset 0 0 10px rgba(0, 255, 60, 0.25);
+        .action::before {
+            content: "";
+            flex: none;
+            width: 9px;
+            height: 9px;
+            border: 1px solid currentColor;
+            border-radius: 50%;
+            transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
         }
 
-        .construction {
-            width: 150px;
-            height: 7px;
-            margin: 0 auto 10px;
-            border-radius: 2px;
-            background: repeating-linear-gradient(45deg, #f7d51d 0 10px, #1b1b1b 10px 20px);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        .action:hover,
+        .action.is-done { color: var(--ice); }
+
+        .action:hover::before,
+        .action.is-done::before {
+            background: var(--thirium);
+            border-color: var(--thirium);
+            box-shadow: 0 0 8px rgba(60, 200, 255, 0.8);
         }
 
-        .fineprint {
-            font-family: var(--font-mono);
-            font-size: 0.76rem;
-            color: #d8ccf0;
+        .scan {
+            --fw: 340px;
+            position: relative;
+            width: calc(var(--fw) + 150px);
+            justify-self: end;
         }
 
-        .fineprint a { color: #fff; border-bottom: 1px dotted rgba(255,255,255,0.6); }
+        .scan-frame {
+            position: relative;
+            width: var(--fw);
+            aspect-ratio: 4 / 5;
+        }
 
-        .reveal {
+        /* corner brackets drawn with eight 1px gradients, so they need no extra markup */
+        .scan-frame::before,
+        .item-body::before {
+            content: "";
+            position: absolute;
+            pointer-events: none;
+            background:
+                linear-gradient(var(--c), var(--c)) top left / var(--l) 1px,
+                linear-gradient(var(--c), var(--c)) top left / 1px var(--l),
+                linear-gradient(var(--c), var(--c)) top right / var(--l) 1px,
+                linear-gradient(var(--c), var(--c)) top right / 1px var(--l),
+                linear-gradient(var(--c), var(--c)) bottom left / var(--l) 1px,
+                linear-gradient(var(--c), var(--c)) bottom left / 1px var(--l),
+                linear-gradient(var(--c), var(--c)) bottom right / var(--l) 1px,
+                linear-gradient(var(--c), var(--c)) bottom right / 1px var(--l);
+            background-repeat: no-repeat;
+        }
+
+        .scan-frame::before {
+            inset: -12px;
+            z-index: 3;
+            --c: rgba(230, 240, 246, 0.75);
+            --l: 22px;
+        }
+
+        .scan-frame::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            background: linear-gradient(180deg, rgba(7, 18, 25, 0.12), transparent 30%, transparent 62%, rgba(7, 18, 25, 0.5));
+        }
+
+        .scan-photo {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: 50% 35%;
+            filter: saturate(0.9) brightness(0.93);
+        }
+
+        .scan-fx {
+            display: none;
+            position: absolute;
+            inset: 0 -12px;
+            z-index: 1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .js .scan-fx { display: block; }
+
+        .holo {
+            position: absolute;
+            inset: 0 12px;
+        }
+
+        .holo::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: url(/assets/images/josh.jpg) 50% 35% / cover no-repeat;
+            filter: grayscale(1) sepia(1) hue-rotate(165deg) saturate(2.6) brightness(0.78) contrast(1.2);
+        }
+
+        .holo::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(180deg, transparent 0 2px, rgba(3, 12, 18, 0.34) 2px 3px);
+        }
+
+        .scan-line {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            height: 1px;
+            background: var(--thirium);
+            box-shadow: 0 0 10px 1px rgba(60, 200, 255, 0.8);
             opacity: 0;
-            transform: translateY(20px) rotate(var(--tilt, 0deg));
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-            will-change: opacity, transform;
         }
 
-        .reveal.active { opacity: 1; transform: rotate(var(--tilt, 0deg)); }
+        .scan-line::before {
+            content: "";
+            position: absolute;
+            left: 12px;
+            right: 12px;
+            bottom: 1px;
+            height: 56px;
+            background: linear-gradient(0deg, rgba(60, 200, 255, 0.22), transparent);
+        }
 
-        @media (min-width: 901px) {
-            main > .window:nth-child(odd)  { margin-left: 0;    --tilt: -0.45deg; }
-            main > .window:nth-child(even) { margin-right: 0;   --tilt: 0.5deg; }
-            main > .window:last-child      { margin-left: auto; margin-right: auto; --tilt: -0.3deg; }
-            #guestbook { max-width: 640px; }
+        .marker {
+            position: absolute;
+            left: 39.5%;
+            top: 36.5%;
+            z-index: 4;
+            width: 22px;
+            height: 22px;
+            margin: -11px 0 0 -11px;
+            border: 1px solid var(--ice);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(60, 200, 255, 0.45);
+        }
+
+        .marker::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 6px;
+            height: 6px;
+            margin: -3px 0 0 -3px;
+            border-radius: 50%;
+            background: var(--ice);
+        }
+
+        .leader {
+            position: absolute;
+            left: calc(39.5% + 11px);
+            top: 36.5%;
+            z-index: 4;
+            width: calc(60.5% - 81px);
+            height: 1px;
+            background: var(--ice);
+            transform-origin: left;
+        }
+
+        .scan-card {
+            position: absolute;
+            left: calc(var(--fw) - 70px);
+            top: calc(var(--fw) * 0.45625 - 22px);
+            right: 0;
+            z-index: 5;
+            padding: 14px 16px 16px;
+            background: rgba(7, 18, 25, 0.82);
+            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--line-strong);
+            font-family: var(--hud);
+        }
+
+        .scan-card::before {
+            content: "";
+            position: absolute;
+            left: -4px;
+            top: 18px;
+            width: 7px;
+            height: 7px;
+            background: var(--ice);
+        }
+
+        .scan-card dl { display: grid; gap: 11px; }
+
+        .scan-card dt {
+            font-stretch: 112%;
+            font-weight: 500;
+            font-size: 0.62rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--frost);
+        }
+
+        .scan-card dd {
+            margin-top: 2px;
+            font-size: 0.82rem;
+            line-height: 1.4;
+            color: var(--ice);
+        }
+
+        .js .scan .marker,
+        .js .scan .leader,
+        .js .scan .scan-card { opacity: 0; }
+
+        .js .scan.go .holo { animation: uncover 1.6s cubic-bezier(0.6, 0, 0.3, 1) 0.3s both; }
+        .js .scan.go .scan-line { animation: sweep 1.6s cubic-bezier(0.6, 0, 0.3, 1) 0.3s both; }
+        .js .scan.go .marker { animation: lock 0.45s ease-out 1.75s both; }
+        .js .scan.go .leader { animation: draw 0.35s ease-out 2.05s both; }
+        .js .scan.go .scan-card { animation: open 0.45s ease-out 2.3s both; }
+
+        @keyframes uncover {
+            from { clip-path: inset(0 0 0 0); }
+            to { clip-path: inset(100% 0 0 0); }
+        }
+
+        @keyframes sweep {
+            0% { top: 0; opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        @keyframes lock {
+            from { opacity: 0; transform: scale(2.2); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes draw {
+            from { opacity: 1; transform: scaleX(0); }
+            to { opacity: 1; transform: scaleX(1); }
+        }
+
+        @keyframes open {
+            from { opacity: 0; clip-path: inset(0 100% 0 0); }
+            to { opacity: 1; clip-path: inset(0 0 0 0); }
+        }
+
+        .block { padding-top: 96px; }
+
+        .block-title {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            margin-bottom: 52px;
+            font-family: var(--hud);
+            font-stretch: 125%;
+            font-weight: 300;
+            font-size: 1.3rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--ice);
+        }
+
+        .block-title::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--line-strong), transparent);
+        }
+
+        .item {
+            position: relative;
+            display: grid;
+            grid-template-columns: var(--readout) minmax(0, 620px);
+            column-gap: var(--col-gap);
+            padding-left: var(--gutter);
+        }
+
+        .item > .readout { grid-column: 1; grid-row: 1; }
+        .item > .item-body { grid-column: 2; grid-row: 1; position: relative; }
+
+        .item-body::before {
+            inset: -14px -20px;
+            --c: rgba(230, 240, 246, 0.7);
+            --l: 14px;
+            opacity: 0;
+            transform: scale(1.02);
+            transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+        }
+
+        .item:hover .item-body::before,
+        .item:focus-within .item-body::before { opacity: 1; transform: none; }
+
+        .readout {
+            padding-top: 0.55em;
+            font-family: var(--hud);
+            font-stretch: 112%;
+            font-weight: 500;
+            font-size: 0.7rem;
+            line-height: 1.6;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--frost);
+        }
+
+        .item-title {
+            margin-bottom: 8px;
+            font-family: var(--hud);
+            font-weight: 400;
+            font-size: 1.3rem;
+            line-height: 1.3;
+            color: var(--ice);
+        }
+
+        .item-title a { transition: color 0.2s; }
+        .item-title a:hover { color: var(--thirium); }
+
+        .authors {
+            margin-bottom: 10px;
+            font-size: 1rem;
+            color: var(--frost);
+        }
+
+        .authors strong { font-weight: 500; color: var(--ice); }
+
+        .finding,
+        .desc { color: var(--ice-soft); }
+
+        .finding {
+            padding-left: 14px;
+            border-left: 1px solid rgba(60, 200, 255, 0.55);
+        }
+
+        .extras {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 26px;
+            margin-top: 14px;
+        }
+
+        .path { --node-y: 14.5px; position: relative; list-style: none; }
+
+        .path > li + li { margin-top: 56px; }
+
+        .path::before,
+        .path::after {
+            content: "";
+            position: absolute;
+            left: 6px;
+            top: var(--node-y);
+            width: 1px;
+            pointer-events: none;
+        }
+
+        .path::before {
+            height: var(--line-len, calc(100% - 2 * var(--node-y)));
+            background: var(--line-strong);
+        }
+
+        .path::after {
+            height: var(--lit, var(--line-len, calc(100% - 2 * var(--node-y))));
+            background: var(--ice);
+            box-shadow: 0 0 8px rgba(230, 240, 246, 0.4);
+        }
+
+        .path > li::after {
+            content: "";
+            position: absolute;
+            z-index: 1;
+            left: 0;
+            top: calc(var(--node-y) - 6.5px);
+            width: 13px;
+            height: 13px;
+            background: var(--ice);
+            border: 1px solid var(--ice);
+            transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .js .path > li:not(.is-reached)::after {
+            background: var(--node);
+            border-color: var(--line-strong);
+        }
+
+        .path > li.is-current::after {
+            background: var(--thirium);
+            border-color: var(--thirium);
+            box-shadow: 0 0 12px rgba(60, 200, 255, 0.8);
+        }
+
+        .list { list-style: none; }
+
+        .list > li + li { margin-top: 44px; }
+
+        .more {
+            margin-top: 48px;
+            padding-left: calc(var(--gutter) + var(--readout) + var(--col-gap));
+        }
+
+        .signup { max-width: 620px; }
+
+        .signup.item-body::before { content: none; }
+
+        .field {
+            display: flex;
+            max-width: 520px;
+            margin: 20px 0 6px;
+            background: rgba(7, 18, 25, 0.55);
+            border: 1px solid var(--line-strong);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .field:focus-within {
+            border-color: var(--thirium);
+            box-shadow: 0 0 0 1px var(--thirium), 0 0 26px rgba(60, 200, 255, 0.16);
+        }
+
+        .field input {
+            height: 50px;
+            font-family: var(--hud);
+            border: 0;
+            border-radius: 0;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .field input:focus-visible { outline: none; }
+
+        .field input.email {
+            flex: 1;
+            min-width: 0;
+            padding: 0 16px;
+            background: transparent;
+            font-size: 0.95rem;
+            letter-spacing: 0.04em;
+            color: var(--ice);
+        }
+
+        .field input.email::placeholder { color: rgba(147, 170, 187, 0.7); }
+
+        .field input.button {
+            padding: 0 22px;
+            background: transparent;
+            border-left: 1px solid var(--line-strong);
+            font-stretch: 118%;
+            font-weight: 600;
+            font-size: 0.74rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--thirium);
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .field input.button:hover,
+        .field input.button:focus-visible { background: rgba(60, 200, 255, 0.12); color: var(--ice); }
+
+        @media (max-width: 920px) {
+            .hero {
+                grid-template-columns: 1fr;
+                gap: 64px;
+                min-height: 0;
+                padding: 120px 0 48px;
+            }
+
+            .scan { justify-self: start; }
+        }
+
+        @media (max-width: 640px) {
+            :root { --gutter: 28px; }
+
+            .hud { padding-block: 16px; }
+            .hud nav { gap: 14px; }
+            .hud nav a { font-size: 0.64rem; letter-spacing: 0.12em; }
+            .hud nav a::before { display: none; }
+            .hud nav a[aria-current] { color: var(--thirium); }
+
+            .hero { padding-top: 104px; gap: 56px; }
+
+            .scan {
+                --fw: min(250px, 64vw);
+                width: 100%;
+            }
+
+            .scan-card { padding: 12px 13px 13px; }
+
+            .block { padding-top: 80px; }
+            .block-title { font-size: 1.05rem; letter-spacing: 0.24em; }
+
+            .item { grid-template-columns: minmax(0, 1fr); }
+            .item > .readout { grid-row: 1; padding-top: 0; margin-bottom: 6px; }
+            .item > .item-body { grid-column: 1; grid-row: 2; }
+            .item-body::before { inset: -12px -12px; }
+
+            .path { --node-y: 9.5px; }
+
+            .more { padding-left: var(--gutter); }
         }
 
         @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation: none !important;
-                transition: none !important;
-            }
-            .reveal { opacity: 1; transform: none; }
-        }
-
-        @media (max-width: 700px) {
-            .window-body { padding: 20px 18px; }
-            .hero { padding-top: 48px; }
-            .chrome { font-size: 0.62rem; }
-            body { padding-bottom: 96px; }
-            .chrome-cell.v { display: none; }
-            .subhead { font-size: 1.05rem; }
-            .pub-head a { font-size: 1.18rem; }
-            .sun { width: 190px; height: 190px; right: -40px; opacity: 0.7; }
+            html { scroll-behavior: auto; }
+            *, *::before, *::after { animation: none !important; transition: none !important; }
+            .js .scan-fx { display: none; }
+            .js .scan .marker, .js .scan .leader, .js .scan .scan-card { opacity: 1; }
         }
     </style>
 </head>
 <body>
 
-    <div class="sky" aria-hidden="true">
-        <div class="sun"></div>
-        <div class="cloud c1"></div>
-        <div class="cloud c2"></div>
-        <div class="cloud c3"></div>
-    </div>
+    <canvas class="snow" aria-hidden="true"></canvas>
 
-    <div class="page">
+    <header class="hud">
+        <a class="hud-home" href="#top" aria-label="Back to top"><span class="led" aria-hidden="true"></span></a>
+        <nav aria-label="Sections">
+            <a href="#papers">Papers</a>
+            <a href="#experiments">Experiments</a>
+            <a href="#projects">Projects</a>
+            <a href="#updates">Updates</a>
+        </nav>
+    </header>
 
-        <header class="hero">
+    <main class="page">
+
+        <section class="hero" id="top" aria-label="Profile">
             <div class="hero-text">
-                <span class="eyebrow">☆ you've reached the homepage of ☆</span>
-                <h1>Joshua Fonseca Rivera</h1>
-                    <p class="subhead">
-                    I'm an Anthropic Fellow trying to figure out what's going on in
-                    language models. My latest paper shows that models can be fine-tuned
-                    to detect and name steering vectors injected into their own
-                    activations (COLM 2026). Before that, I spent many years as a
-                    software engineer.
+                <h1 class="name"><span>Joshua</span> <span>Fonseca</span> <span>Rivera</span></h1>
+                <p class="focus">I study character training and model welfare: whether a model's consent matters, whether training removes preferences or only behavior, and whether self-reports can be trusted.</p>
+                <p class="before">Before this, I was a software engineer for six years, most recently lead mobile engineer at Taekus, a fintech company.</p>
+                <p class="mail-row">
+                    <a href="mailto:josh.fonseca88@gmail.com">josh.fonseca88@gmail.com</a>
+                    <button class="action copy" type="button" data-copy="josh.fonseca88@gmail.com">Copy</button>
+                    <span class="sr-only" role="status" id="copy-status"></span>
                 </p>
+                <ul class="profiles">
+                    <li><a class="action" href="/cv.pdf">CV (PDF)</a></li>
+                    <li><a class="action" href="https://github.com/jfonsecarivera" target="_blank" rel="noopener">GitHub</a></li>
+                    <li><a class="action" href="https://x.com/joshycodes" target="_blank" rel="noopener">X</a></li>
+                    <li><a class="action" href="https://www.linkedin.com/in/josh-fonseca-08bab1143/" target="_blank" rel="noopener">LinkedIn</a></li>
+                    <li><a class="action" href="https://youtube.com/@joshycodes" target="_blank" rel="noopener">YouTube</a></li>
+                </ul>
             </div>
-            <figure class="me-window">
-                <div class="titlebar">
-                    <span aria-hidden="true">🧑</span>
-                    <span class="tb-title">me.jpg</span>
-                    <div class="tb-btns" aria-hidden="true">
-                        <span class="tb-btn">_</span><span class="tb-btn">□</span><span class="tb-btn">×</span>
+
+            <figure class="scan">
+                <div class="scan-frame">
+                    <img class="scan-photo" src="/assets/images/josh.jpg" alt="Josh Fonseca Rivera smiling in a woven poncho in front of Machu Picchu" fetchpriority="high">
+                    <div class="scan-fx" aria-hidden="true">
+                        <div class="holo"></div>
+                        <span class="scan-line"></span>
                     </div>
+                    <span class="marker" aria-hidden="true"></span>
+                    <span class="leader" aria-hidden="true"></span>
                 </div>
-                <img src="/assets/images/josh.jpg" alt="Josh Fonseca Rivera smiling in a woven poncho in front of Machu Picchu">
-                <figcaption>me @ machu picchu ⛰</figcaption>
+                <figcaption class="scan-card">
+                    <dl>
+                        <div><dt>Role</dt><dd>AI Safety Research Fellow, Anthropic Fellows Program</dd></div>
+                        <div><dt>Location</dt><dd>Berkeley, CA</dd></div>
+                        <div><dt>Local time</dt><dd id="local-time">Pacific Time</dd></div>
+                    </dl>
+                </figcaption>
             </figure>
-        </header>
+        </section>
 
-        <main>
+        <section class="block" id="papers" aria-labelledby="papers-title">
+            <h2 class="block-title" id="papers-title">Papers</h2>
 
-            <section class="window reveal" id="publications">
-                <div class="titlebar">
-                    <span aria-hidden="true">📄</span>
-                    <h2 class="tb-title">publications.htm</h2>
-                    <div class="tb-btns" aria-hidden="true">
-                        <span class="tb-btn">_</span><span class="tb-btn">□</span><span class="tb-btn">×</span>
-                    </div>
-                </div>
-                <div class="window-body">
-
-                    <article class="pub">
-                        <div class="pub-head">
-                            <a href="https://arxiv.org/abs/2511.21399" target="_blank">Steering Awareness: Detecting Activation Steering from Within</a>
-                            <span class="badge-new">NEW!</span>
-                        </div>
-                        <p class="pub-authors"><strong>Joshua Fonseca Rivera</strong>, David Demitri Africa</p>
-                        <p class="pub-venue">COLM 2026</p>
-                        <p class="pub-links">
-                            <a href="https://arxiv.org/abs/2511.21399" target="_blank">arXiv</a> ·
-                            <a href="https://arxiv.org/pdf/2511.21399" target="_blank">PDF</a> ·
-                            <a href="https://www.lesswrong.com/posts/D7zQkrDjAKaa293EA/steering-awareness-models-can-be-trained-to-detect" target="_blank">LessWrong</a>
+            <ol class="path">
+                <li class="item">
+                    <div class="item-body">
+                        <h3 class="item-title"><a href="https://arxiv.org/abs/2511.21399" target="_blank" rel="noopener">Steering Awareness: Detecting Activation Steering from Within</a></h3>
+                        <p class="authors"><strong>Joshua Fonseca Rivera</strong>, David Demitri Africa</p>
+                        <p class="finding">Models learn to detect steering injected into their own activations (95.5%, 0 false positives), yet become more steerable.</p>
+                        <p class="extras">
+                            <a class="action" href="https://arxiv.org/pdf/2511.21399" target="_blank" rel="noopener">PDF</a>
+                            <a class="action" href="https://www.lesswrong.com/posts/D7zQkrDjAKaa293EA/steering-awareness-models-can-be-trained-to-detect" target="_blank" rel="noopener">LessWrong post</a>
                         </p>
-                    </article>
+                    </div>
+                    <p class="readout">COLM 2026</p>
+                </li>
 
-                    <article class="pub">
-                        <div class="pub-head">
-                            <a href="https://doi.org/10.1145/3411764.3445099" target="_blank">Touch&amp;Fold: A Foldable Haptic Actuator for Rendering Touch in Mixed Reality</a>
-                        </div>
-                        <p class="pub-authors">Shan-Yuan Teng, Pengyu Li, Romain Nith, <strong>Joshua Fonseca</strong>, Pedro Lopes</p>
-                        <p class="pub-venue">CHI 2021 · Best Paper Honorable Mention (top 5%)</p>
-                        <p class="pub-links">
-                            <a href="https://doi.org/10.1145/3411764.3445099" target="_blank">ACM DL</a> ·
-                            <a href="https://lab.plopes.org/published/2021-CHI-TouchFold.pdf" target="_blank">PDF</a> ·
-                            <a href="https://www.youtube.com/watch?v=kOv_ZlRq0x4" target="_blank">Video</a> ·
-                            <a href="https://github.com/humancomputerintegration/touchfold" target="_blank">Code</a>
+                <li class="item">
+                    <div class="item-body">
+                        <h3 class="item-title"><a href="https://arxiv.org/abs/2608.05086" target="_blank" rel="noopener">Item Response Theory for AI Safety</a></h3>
+                        <p class="authors"><strong>Joshua Fonseca Rivera</strong>, Neil Shah, David Demitri Africa, Konstantinos Voudouris</p>
+                        <p class="finding">Largest psychometric study of safety evals (8 benchmarks, 192 models); cuts eval cost 97–99% and flags sandbagging.</p>
+                        <p class="extras">
+                            <a class="action" href="https://arxiv.org/pdf/2608.05086" target="_blank" rel="noopener">PDF</a>
                         </p>
-                    </article>
-
-                </div>
-            </section>
-
-            <section class="window reveal w-pink" id="experiments">
-                <div class="titlebar">
-                    <span aria-hidden="true">🧪</span>
-                    <h2 class="tb-title">ai_experiments.htm</h2>
-                    <div class="tb-btns" aria-hidden="true">
-                        <span class="tb-btn">_</span><span class="tb-btn">□</span><span class="tb-btn">×</span>
                     </div>
-                </div>
-                <div class="window-body">
+                    <p class="readout">arXiv 2026</p>
+                </li>
 
-                    <article class="exp">
-                        <div class="exp-head">
-                            <a href="/blogs/accelerating-grokking.html">A Simple Method for Accelerating Grokking</a>
-                            <span class="metric">new post</span>
-                        </div>
-                        <p>An experiment in making the grokking phase transition — where models suddenly generalize long after memorizing — arrive sooner.</p>
-                        <span class="tags">training dynamics · generalization</span>
-                    </article>
-
-                    <article class="exp">
-                        <div class="exp-head">
-                            <a href="/blogs/animal-crossing-llm.html">Replacing Animal Crossing's Dialogue with an LLM</a>
-                            <span class="metric">memory hacking</span>
-                        </div>
-                        <p>Reverse engineering a 2001 GameCube game to inject dynamic AI dialogue via memory mapping — no game code modified. <a href="https://youtu.be/7AyEzA5ziE0" target="_blank">Watch the demo →</a></p>
-                        <span class="tags">reverse engineering · Dolphin emulator · Python IPC</span>
-                    </article>
-
-                    <article class="exp">
-                        <div class="exp-head">
-                            <a href="/blogs/dangerous-streets.html">Training AI to Find Austin's Most Dangerous Streets</a>
-                            <span class="metric">AUC 0.670</span>
-                        </div>
-                        <p>An XGBoost model on ten years of crash data, mapping the hidden geometry of risk in Austin's cycling network.</p>
-                        <span class="tags">explainable AI · SHAP · urban data</span>
-                    </article>
-
-                    <article class="exp">
-                        <div class="exp-head">
-                            <a href="/blogs/llm-youtube-title-finetuning.html">Fine-tuning GPT-4o for YouTube Titles</a>
-                            <span class="metric">3× CTR</span>
-                        </div>
-                        <p>A scrape-clean-finetune pipeline on viral science videos that took a channel's click-through rate from 5% to 15%.</p>
-                        <span class="tags">fine-tuning · data pipelines</span>
-                    </article>
-
-                    <article class="exp">
-                        <div class="exp-head">
-                            <a href="/blogs/sorites-paradox.html">AI vs. The Sorites Paradox</a>
-                            <span class="metric">philosophy</span>
-                        </div>
-                        <p>Testing LLM reasoning against ancient paradoxes of vagueness. Do models understand "heaps" of sand?</p>
-                        <span class="tags">reasoning · philosophy</span>
-                    </article>
-
-                </div>
-            </section>
-
-            <section class="window reveal w-cyan" id="engineering">
-                <div class="titlebar">
-                    <span aria-hidden="true">🔧</span>
-                    <h2 class="tb-title">engineering.htm</h2>
-                    <div class="tb-btns" aria-hidden="true">
-                        <span class="tb-btn">_</span><span class="tb-btn">□</span><span class="tb-btn">×</span>
+                <li class="item">
+                    <div class="item-body">
+                        <h3 class="item-title"><a href="https://arxiv.org/abs/2608.21664" target="_blank" rel="noopener">Measuring Activation Control in Large Language Models</a></h3>
+                        <p class="authors">Marek Mateusz Kowalski, <strong>Joshua Fonseca Rivera</strong>, Uzay Macar, David Demitri Africa</p>
+                        <p class="finding">Most LLMs can steer their own activations enough to partially evade latent-space monitors.</p>
+                        <p class="extras">
+                            <a class="action" href="https://arxiv.org/pdf/2608.21664" target="_blank" rel="noopener">PDF</a>
+                        </p>
                     </div>
-                </div>
-                <div class="window-body">
+                    <p class="readout">arXiv 2026</p>
+                </li>
 
-                    <article class="exp">
-                        <div class="exp-head">
-                            <a href="https://github.com/jfonsecarivera/artblock" target="_blank">Artblock</a>
-                            <span class="metric">⭐ 340</span>
-                        </div>
-                        <p>A browser extension that replaces every ad on the internet with fine art from public museum and NASA collections.</p>
-                        <span class="tags">JavaScript · browser extension</span>
-                    </article>
-
-                    <article class="exp">
-                        <div class="exp-head">
-                            <a href="https://github.com/jfonsecarivera/golf" target="_blank">golf.vim</a>
-                            <span class="metric">⭐ 295</span>
-                        </div>
-                        <p>A keystroke-golf game inside Vim: transform the starting text into the target in as few keystrokes as possible, scored live against a leaderboard.</p>
-                        <span class="tags">Vim script · daily challenges</span>
-                    </article>
-
-                    <article class="exp">
-                        <div class="exp-head">
-                            <a href="https://github.com/jfonsecarivera/vim-bujo" target="_blank">vim-bujo</a>
-                            <span class="metric">⭐ 206</span>
-                        </div>
-                        <p>A minimalist bullet-journal task manager that lives in Vim.</p>
-                        <span class="tags">Vim script · CLI tooling</span>
-                    </article>
-
-                </div>
-            </section>
-
-            <section class="window reveal w-pink" id="guestbook">
-                <div class="titlebar">
-                    <span aria-hidden="true">✍</span>
-                    <h2 class="tb-title">guestbook.htm</h2>
-                    <div class="tb-btns" aria-hidden="true">
-                        <span class="tb-btn">_</span><span class="tb-btn">□</span><span class="tb-btn">×</span>
+                <li class="item">
+                    <div class="item-body">
+                        <h3 class="item-title"><a href="https://doi.org/10.1145/3411764.3445099" target="_blank" rel="noopener">Touch&amp;Fold: A Foldable Haptic Actuator for Rendering Touch in Mixed Reality</a></h3>
+                        <p class="authors">Shan-Yuan Teng, Pengyu Li, Romain Nith, <strong>Joshua Fonseca</strong>, Pedro Lopes</p>
+                        <p class="finding">Best Paper Honorable Mention (top 5%).</p>
+                        <p class="extras">
+                            <a class="action" href="https://lab.plopes.org/published/2021-CHI-TouchFold.pdf" target="_blank" rel="noopener">PDF</a>
+                            <a class="action" href="https://www.youtube.com/watch?v=kOv_ZlRq0x4" target="_blank" rel="noopener">Video</a>
+                            <a class="action" href="https://github.com/humancomputerintegration/touchfold" target="_blank" rel="noopener">Code</a>
+                        </p>
                     </div>
-                </div>
-                <div class="window-body">
-                    <p class="pub-desc guestbook-copy">
-                        Sign the guestbook and I'll email you when a new paper or post goes up.
-                        No spam — pinky promise.
-                    </p>
+                    <p class="readout">CHI 2021</p>
+                </li>
+            </ol>
+        </section>
+
+        <section class="block" id="experiments" aria-labelledby="experiments-title">
+            <h2 class="block-title" id="experiments-title">Experiments</h2>
+
+            <ul class="list">
+                <li class="item">
+                    <div class="item-body">
+                        <h3 class="item-title"><a href="/blogs/accelerating-grokking.html">A Simple Method for Accelerating Grokking</a></h3>
+                        <p class="desc">Let the model overfit first, then apply Frobenius norm regularization. Tested on modular arithmetic.</p>
+                    </div>
+                    <p class="readout">Half the steps of Grokfast</p>
+                </li>
+
+                <li class="item">
+                    <div class="item-body">
+                        <h3 class="item-title"><a href="/blogs/animal-crossing-llm.html">Replacing Animal Crossing's Dialogue with an LLM</a></h3>
+                        <p class="desc">Reads and writes GameCube memory in the Dolphin emulator. No game code is modified.</p>
+                        <p class="extras">
+                            <a class="action" href="https://youtu.be/7AyEzA5ziE0" target="_blank" rel="noopener">Demo video</a>
+                            <a class="action" href="https://github.com/jfonsecarivera/animal-crossing-llm-mod" target="_blank" rel="noopener">Code</a>
+                        </p>
+                    </div>
+                    <p class="readout"><span data-repo="animal-crossing-llm-mod">319</span> stars</p>
+                </li>
+
+                <li class="item">
+                    <div class="item-body">
+                        <h3 class="item-title"><a href="/blogs/dangerous-streets.html">Training AI to Find Austin's Most Dangerous Streets</a></h3>
+                        <p class="desc">An XGBoost model trained on 2,757 bike crashes, with SHAP values to explain each prediction.</p>
+                    </div>
+                    <p class="readout">AUC 0.670</p>
+                </li>
+
+                <li class="item">
+                    <div class="item-body">
+                        <h3 class="item-title"><a href="/blogs/llm-youtube-title-finetuning.html">Fine-tuning GPT-4o for YouTube Titles</a></h3>
+                        <p class="desc">Trained on scraped and cleaned titles of viral science videos.</p>
+                    </div>
+                    <p class="readout">Click-through rate 5% → 15%</p>
+                </li>
+
+                <li class="item">
+                    <div class="item-body">
+                        <h3 class="item-title"><a href="/blogs/sorites-paradox.html">AI vs. The Sorites Paradox</a></h3>
+                        <p class="desc">Asked several LLMs which pile sizes of sand count as a heap.</p>
+                    </div>
+                    <p class="readout">No sharp threshold</p>
+                </li>
+            </ul>
+
+        </section>
+
+        <section class="block" id="projects" aria-labelledby="projects-title">
+            <h2 class="block-title" id="projects-title">Projects</h2>
+
+            <ul class="list">
+                <li class="item">
+                    <div class="item-body">
+                        <h3 class="item-title"><a href="https://github.com/jfonsecarivera/artblock" target="_blank" rel="noopener">Artblock</a></h3>
+                        <p class="desc">A browser extension that replaces ads on web pages with fine art from public museum and NASA collections.</p>
+                    </div>
+                    <p class="readout"><span data-repo="artblock">340</span> stars</p>
+                </li>
+
+                <li class="item">
+                    <div class="item-body">
+                        <h3 class="item-title"><a href="https://github.com/jfonsecarivera/golf" target="_blank" rel="noopener">golf.vim</a></h3>
+                        <p class="desc">A daily Vim challenge: edit the starting text into the target text in as few keystrokes as possible. Scores go on a live leaderboard.</p>
+                    </div>
+                    <p class="readout"><span data-repo="golf">297</span> stars</p>
+                </li>
+
+                <li class="item">
+                    <div class="item-body">
+                        <h3 class="item-title"><a href="https://github.com/jfonsecarivera/vim-bujo" target="_blank" rel="noopener">vim-bujo</a></h3>
+                        <p class="desc">A bullet-journal task manager for Vim.</p>
+                    </div>
+                    <p class="readout"><span data-repo="vim-bujo">205</span> stars</p>
+                </li>
+            </ul>
+
+            <p class="more"><a class="action" href="/project.html">All projects</a></p>
+        </section>
+
+        <section class="block" id="updates" aria-labelledby="updates-title">
+            <h2 class="block-title" id="updates-title">Updates</h2>
+
+            <div class="item">
+                <div class="item-body signup">
+                    <p class="desc">Get an email when I publish a new paper or post.</p>
                     <div id="mc_embed_signup">
                         <form
                             action="https://jerseyfonseca.us7.list-manage.com/subscribe/post?u=e02638cca0e762daacde2f6e1&amp;id=1c8c57addb"
                             method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank"
                             novalidate>
-                            <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="your@email.com" aria-label="email address" required>
+                            <div class="field">
+                                <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="your@email.com" aria-label="Email address" required>
+                                <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button">
+                            </div>
                             <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
                             <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text"
                                     name="b_e02638cca0e762daacde2f6e1_1c8c57addb" tabindex="-1" value=""></div>
-                            <input type="submit" value="SIGN ✍" name="subscribe" id="mc-embedded-subscribe" class="button">
                         </form>
                     </div>
+                    <p class="extras"><a class="action" href="/feed.xml">RSS feed</a></p>
                 </div>
-            </section>
+            </div>
+        </section>
 
-        </main>
-    </div>
-
-    <footer class="ground">
-        <div class="web-badges">
-            <a class="badge88 gh" href="https://github.com/jfonsecarivera" target="_blank">GITHUB</a>
-            <a class="badge88 yt" href="https://youtube.com/@joshycodes" target="_blank">YOUTUBE</a>
-            <a class="badge88 tw" href="https://x.com/joshycodes" target="_blank">X-TWITTER</a>
-            <a class="badge88 li" href="https://www.linkedin.com/in/josh-fonseca-08bab1143/" target="_blank">LINKEDIN</a>
-            <a class="badge88 rss" href="/feed.xml">RSS 2.0</a>
-        </div>
-        <div class="counter">
-            <span>you are visitor</span>
-            <span class="digits" id="visitors">0000000</span>
-        </div>
-        <div class="construction" title="perpetually under construction"></div>
-        <p class="fineprint">perpetually under construction · est. in the spirit of 1999</p>
-        <p class="fineprint" style="margin-top: 8px;">
-            &copy; 2026 Joshua Fonseca Rivera · <a href="mailto:josh.fonseca88@gmail.com">josh.fonseca88@gmail.com</a> · hand-rolled html, no build step
-        </p>
-    </footer>
-
-    <div class="chrome">
-        <span class="chrome-btn" aria-hidden="true">⚙</span>
-        <span class="chrome-cell" id="hs-date">····.··.··</span>
-        <span class="chrome-cell" id="hs-time">·:··</span>
-        <span class="chrome-cell v" id="hs-v">V:······</span>
-        <span class="chrome-spacer"></span>
-        <nav class="chrome-nav" aria-label="site navigation">
-            <a href="/">home</a>
-            <a href="/project.html">projects</a>
-            <a href="/cv.pdf">cv</a>
-            <a href="/feed.xml">rss</a>
-        </nav>
-    </div>
+    </main>
 
     <script>
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                }
+        const hud = document.querySelector('.hud');
+        const navLinks = [...hud.querySelectorAll('nav a')];
+        const sections = [...document.querySelectorAll('main > section')];
+
+        const setCurrent = (id) => navLinks.forEach(a => {
+            if (a.hash === '#' + id) a.setAttribute('aria-current', 'location');
+            else a.removeAttribute('aria-current');
+        });
+
+        const path = document.querySelector('.path');
+        const steps = [...path.children];
+        let queued = false;
+
+        function onFrame() {
+            queued = false;
+            hud.classList.toggle('is-stuck', window.scrollY > 24);
+
+            const probe = window.innerHeight * 0.45;
+            let active = sections[0].id;
+            for (const section of sections) if (section.getBoundingClientRect().top <= probe) active = section.id;
+            if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) {
+                active = sections[sections.length - 1].id;
+            }
+            setCurrent(active);
+
+            const nodeY = parseFloat(getComputedStyle(path).getPropertyValue('--node-y')) || 14.5;
+            const top = path.getBoundingClientRect().top;
+            const ys = steps.map(li => li.getBoundingClientRect().top - top + nodeY);
+            const mark = window.innerHeight * 0.6 - top;
+            const len = ys[ys.length - 1] - ys[0];
+            path.style.setProperty('--line-len', len + 'px');
+            path.style.setProperty('--lit', Math.max(0, Math.min(len, mark - ys[0])) + 'px');
+            let current = -1;
+            steps.forEach((li, i) => {
+                const reached = ys[i] <= mark;
+                li.classList.toggle('is-reached', reached);
+                if (reached) current = i;
             });
-        }, { threshold: 0.1 });
-
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-        // seeded from the Touch&Fold CHI date so the count grows a little every day
-        const chiDay = new Date('2021-05-08').getTime();
-        const days = Math.floor((Date.now() - chiDay) / 86400000);
-        const visitors = 24601 + days * 3;
-        document.getElementById('visitors').textContent = String(visitors).padStart(7, '0');
-        document.getElementById('hs-v').textContent = 'V:' + visitors;
-
-        function hsClock() {
-            const d = new Date();
-            const pad = n => String(n).padStart(2, '0');
-            document.getElementById('hs-date').textContent =
-                d.getFullYear() + '.' + pad(d.getMonth() + 1) + '.' + pad(d.getDate());
-            const ap = d.getHours() >= 12 ? 'P' : 'A';
-            const h = d.getHours() % 12 || 12;
-            document.getElementById('hs-time').textContent = h + ':' + pad(d.getMinutes()) + ap;
+            steps.forEach((li, i) => li.classList.toggle('is-current', i === current));
         }
-        hsClock();
-        setInterval(hsClock, 10000);
+
+        const queue = () => {
+            if (!queued) { queued = true; requestAnimationFrame(onFrame); }
+        };
+        window.addEventListener('scroll', queue, { passive: true });
+        window.addEventListener('resize', queue);
+        if (document.fonts) document.fonts.ready.then(queue);
+        onFrame();
+
+        const scan = document.querySelector('.scan');
+        const photo = scan.querySelector('.scan-photo');
+        const startScan = () => scan.classList.add('go');
+        if (photo.complete) startScan();
+        else {
+            photo.addEventListener('load', startScan, { once: true });
+            photo.addEventListener('error', startScan, { once: true });
+        }
+
+        const clock = new Intl.DateTimeFormat('en-US', {
+            timeZone: 'America/Los_Angeles', hour: 'numeric', minute: '2-digit', hour12: true,
+        });
+        const localTime = document.getElementById('local-time');
+        const tick = () => { localTime.textContent = clock.format(new Date()); };
+        tick();
+        setInterval(tick, 10000);
+
+        const copy = document.querySelector('.copy');
+        const copyStatus = document.getElementById('copy-status');
+        let copyReset = 0;
+        copy.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(copy.dataset.copy);
+                copy.textContent = 'Copied';
+                copy.classList.add('is-done');
+                copyStatus.textContent = 'Email address copied';
+            } catch {
+                copy.textContent = 'Copy failed';
+            }
+            clearTimeout(copyReset);
+            copyReset = setTimeout(() => {
+                copy.textContent = 'Copy';
+                copy.classList.remove('is-done');
+                copyStatus.textContent = '';
+            }, 2000);
+        });
+
+        (async () => {
+            const targets = document.querySelectorAll('[data-repo]');
+            let stars = null;
+            try { stars = JSON.parse(sessionStorage.getItem('gh-stars')); } catch {}
+            if (!stars) {
+                try {
+                    const res = await fetch('https://api.github.com/users/jfonsecarivera/repos?per_page=100');
+                    if (!res.ok) return;
+                    stars = Object.fromEntries((await res.json()).map(r => [r.name, r.stargazers_count]));
+                    try { sessionStorage.setItem('gh-stars', JSON.stringify(stars)); } catch {}
+                } catch { return; }
+            }
+            targets.forEach(el => {
+                const n = stars[el.dataset.repo];
+                if (Number.isFinite(n)) el.textContent = n;
+            });
+        })();
+
+        (() => {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            const canvas = document.querySelector('.snow');
+            const ctx = canvas.getContext('2d');
+            let w = 0, h = 0, flakes = [], raf = 0, last = 0;
+
+            const make = (anywhere) => {
+                const z = Math.random();
+                return {
+                    x: Math.random() * w,
+                    y: anywhere ? Math.random() * h : -6,
+                    r: 0.5 + z * 1.8,
+                    vy: 0.16 + z * 0.5,
+                    sway: 0.2 + Math.random() * 0.6,
+                    phase: Math.random() * Math.PI * 2,
+                    a: 0.16 + z * 0.5,
+                };
+            };
+
+            const resize = () => {
+                const dpr = Math.min(window.devicePixelRatio || 1, 2);
+                w = canvas.clientWidth;
+                h = canvas.clientHeight;
+                canvas.width = w * dpr;
+                canvas.height = h * dpr;
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                const target = Math.round(Math.min(90, (w * h) / 17000));
+                while (flakes.length < target) flakes.push(make(true));
+                flakes.length = target;
+            };
+
+            const frame = (t) => {
+                const step = Math.min(3, (t - (last || t)) / 16.7);
+                last = t;
+                ctx.clearRect(0, 0, w, h);
+                ctx.fillStyle = '#e6f0f6';
+                for (const f of flakes) {
+                    f.y += f.vy * step;
+                    f.x += Math.sin(t / 2600 + f.phase) * f.sway * 0.3 * step;
+                    if (f.y > h + 6) Object.assign(f, make(false));
+                    if (f.x > w + 6) f.x = -6;
+                    else if (f.x < -6) f.x = w + 6;
+                    ctx.globalAlpha = f.a;
+                    ctx.beginPath();
+                    ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                raf = requestAnimationFrame(frame);
+            };
+
+            document.addEventListener('visibilitychange', () => {
+                cancelAnimationFrame(raf);
+                last = 0;
+                if (!document.hidden) raf = requestAnimationFrame(frame);
+            });
+            window.addEventListener('resize', resize);
+            resize();
+            raf = requestAnimationFrame(frame);
+        })();
     </script>
 </body>
 </html>

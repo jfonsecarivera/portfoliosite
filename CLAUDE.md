@@ -35,10 +35,13 @@ npx serve .
 
 ## Design System
 
-- Dark theme background (#0a0a0a) with light text (#e0e0e0)
-- Accent colors: cyan (#00f3ff), purple (#bd00ff), orange (#ffaa00), green (#10b981)
-- Fonts: Inter (headings), Merriweather (body), Fira Code (code)
-- Max content width: 900px
+Detroit: Become Human (CyberLife UI) look. Tokens are CSS custom properties in `css/index.css`; `index.html` is self-contained and repeats them inline.
+
+- Night-blue background (`--night` #0b1a24), ice-white text (`--ice` #e6f0f6), secondary text (`--frost` #93aabb)
+- One accent color: thirium blue (`--thirium` #3cc8ff)
+- Fonts: Saira (navigation, labels, headings), Spectral (body text)
+- Homepage copy is direct and factual: no metaphors or jokes, and no fact shown twice
+- `blog.html`, the `*-wrapped-2025.html` pages, and posts that don't load `js/loadTemplates.js` keep their own inline designs
 - Uses Prism.js (CDN) for code syntax highlighting
 
 ## Adding Blog Posts
