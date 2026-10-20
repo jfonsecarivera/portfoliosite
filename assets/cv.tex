@@ -1,146 +1,91 @@
-\documentclass[letterpaper,10.5pt]{article}
+\documentclass[10pt,letterpaper]{article}
 
-\usepackage[empty]{fullpage}
-\usepackage{titlesec}
-\usepackage[usenames,dvipsnames]{color}
+\usepackage[margin=0.5in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
 \usepackage{enumitem}
-\usepackage[hidelinks]{hyperref}
-\usepackage{fancyhdr}
-\usepackage[english]{babel}
-\usepackage{tabularx}
-\input{glyphtounicode}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{needspace}
 
-\pagestyle{fancy}
-\fancyhf{}
-\fancyfoot{}
-\renewcommand{\headrulewidth}{0pt}
-\renewcommand{\footrulewidth}{0pt}
+\definecolor{linkblue}{RGB}{0,0,139}
+\hypersetup{colorlinks=true, linkcolor=linkblue, urlcolor=linkblue}
 
-\addtolength{\oddsidemargin}{-0.6in}
-\addtolength{\evensidemargin}{-0.6in}
-\addtolength{\textwidth}{1.2in}
-\addtolength{\topmargin}{-0.6in}
-\addtolength{\textheight}{1.2in}
+\pagenumbering{gobble}
 
-\urlstyle{same}
-\raggedbottom
-\raggedright
-\setlength{\tabcolsep}{0in}
+\titleformat{\section}{\large\bfseries\uppercase}{}{0em}{}[\titlerule]
+\titlespacing{\section}{0pt}{9pt}{4pt}
 
-\titleformat{\section}{\vspace{-5pt}\scshape\raggedright\large}{}{0em}{}[\color{black}\titlerule\vspace{-6pt}]
+\setlength{\parindent}{0pt}
+\setlist[itemize]{nosep, leftmargin=*, topsep=2pt}
 
-\pdfgentounicode=1
-
-\newcommand{\resumeItem}[1]{\item\small{#1\vspace{-3pt}}}
-
-\newcommand{\resumeSubheading}[4]{
-  \vspace{-1pt}\item
-    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
-      \textbf{#1} & #2 \\
-      \textit{\small#3} & \textit{\small #4} \\
-    \end{tabular*}\vspace{-8pt}
+\newcommand{\entryhead}[4]{
+    \textbf{#1} \hfill #2 \\
+    \textit{#3} \hfill \textit{#4}
 }
-
-\newcommand{\resumeOneLiner}[4]{
-  \vspace{-1pt}\item
-    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
-      \textbf{#1} \textit{\small · #3} & #2 \\
-    \end{tabular*}\vspace{-8pt}
-  \ifx\relax#4\relax\else\vspace{2pt}{\small #4}\fi
-}
-
-\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.0in, label={}]}
-\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
-\newcommand{\resumeItemListStart}{\begin{itemize}[leftmargin=0.15in]\vspace{2pt}}
-\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-4pt}}
+\newcommand{\me}{\textbf{Joshua Fonseca Rivera}}
 
 \begin{document}
 
 \begin{center}
-    {\Huge \scshape Joshua Fonseca Rivera} \\ \vspace{4pt}
-    \small Berkeley, CA \quad $|$ \quad
-    \href{mailto:josh.fonseca88@gmail.com}{josh.fonseca88@gmail.com} \quad $|$ \quad
-    \href{https://jfr.dev}{jfr.dev} \quad $|$ \quad
+    {\LARGE\textbf{Joshua Fonseca Rivera}} \\[5pt]
+    Berkeley, CA \quad
+    \href{mailto:josh.fonseca88@gmail.com}{josh.fonseca88@gmail.com} \quad
+    \href{https://jfr.dev}{jfr.dev} \quad
     \href{https://github.com/jfonsecarivera}{github.com/jfonsecarivera}
 \end{center}
 
-\section{Education}
-\resumeSubHeadingListStart
-  \resumeSubheading
-    {The University of Texas at Austin}{2026}
-    {M.S., Artificial Intelligence}{Austin, TX}
-  \resumeSubheading
-    {The University of Chicago}{2020}
-    {B.S., Computer Science · Dean's List (2016--2020)}{Chicago, IL}
-\resumeSubHeadingListEnd
+\section{Research Focus}
+Character training and model welfare: testing, with controlled training runs, whether a model's consent matters, whether training removes preferences or only behavior, and whether self-reports can be trusted.
 
 \section{Publications}
-\begin{itemize}[leftmargin=0.15in]
-  \resumeItem{\textbf{Steering Awareness: Detecting Activation Steering from Within.} \underline{Joshua Fonseca Rivera}, David Demitri Africa. \textit{Conference on Language Modeling (COLM)}, 2026. \href{https://arxiv.org/abs/2511.21399}{arXiv:2511.21399}}
-  \resumeItem{\textbf{Touch\&Fold: A Foldable Haptic Actuator for Rendering Touch in Mixed Reality.} Shan-Yuan Teng, Pengyu Li, Romain Nith, \underline{Joshua Fonseca}, Pedro Lopes. \textit{ACM CHI}, 2021. \textbf{Best Paper Honorable Mention} (top 5\%). \href{https://doi.org/10.1145/3411764.3445099}{doi:10.1145/3411764.3445099}}
+\begin{itemize}
+    \item \textbf{Steering Awareness: Detecting Activation Steering from Within.} \me, David Demitri Africa. \textit{COLM}, 2026. \href{https://arxiv.org/abs/2511.21399}{arXiv:2511.21399} \\
+    Models learn to detect steering injected into their own activations (95.5\%, 0 false positives), yet become \textit{more} steerable.
+    \item \textbf{Item Response Theory for AI Safety.} \me, Neil Shah, David Demitri Africa, Konstantinos Voudouris. \textit{arXiv}, 2026. \href{https://arxiv.org/abs/2608.05086}{arXiv:2608.05086} \\
+    Largest psychometric study of safety evals (8 benchmarks, 192 models); cuts eval cost 97--99\% and flags sandbagging.
+    \item \textbf{Measuring Activation Control in Large Language Models.} Marek Mateusz Kowalski, \me, Uzay Macar, David Demitri Africa. \textit{arXiv}, 2026. \href{https://arxiv.org/abs/2608.21664}{arXiv:2608.21664} \\
+    Most LLMs can steer their own activations enough to partially evade latent-space monitors.
+    \item \textbf{Touch\&Fold: A Foldable Haptic Actuator for Rendering Touch in Mixed Reality.} Teng, Li, Nith, \textbf{Fonseca}, Lopes. \textit{ACM CHI}, 2021. \textbf{Best Paper Honorable Mention (top 5\%).}
+    \item \textbf{Invited talk:} ``Steering Awareness,'' BlueDot Impact, 2026.
 \end{itemize}
 
-\section{Experience}
-\resumeSubHeadingListStart
+\section{Research Experience}
 
-  \resumeSubheading
-    {Anthropic Fellows Program}{2026 -- Present}
-    {AI Safety Research Fellow}{Berkeley, CA}
-    \resumeItemListStart
-      \resumeItem{Research on language model interpretability.}
-    \resumeItemListEnd
-
-  \resumeSubheading
-    {Independent Research}{2025 -- 2026}
-    {First author, Steering Awareness (COLM 2026)}{}
-    \resumeItemListStart
-      \resumeItem{Designed and ran the study behind ``Steering Awareness'': fine-tuned seven instruction-tuned models to detect and name steering vectors injected into their own activations (95.5\% detection, 71.2\% concept identification, zero false positives), showing detection dissociates from resistance.}
-    \resumeItemListEnd
-
-  \resumeSubheading
-    {Taekus (fintech)}{Jan 2024 -- 2026}
-    {Software Engineer $\rightarrow$ Lead Mobile Engineer}{Remote}
-    \resumeItemListStart
-      \resumeItem{Led a production cross-platform banking app end-to-end (Expo, React Native, TypeScript): 150+ screens across onboarding, money movement, and disputes; built a native Swift/Kotlin module and Expo config plugin for Apple/Google Wallet card provisioning.}
-      \resumeItem{Cut login p95 latency from ${>}$15s to ${<}$2s by parallelizing authentication requests.}
-      \resumeItem{Shipped check deposit and check mailing 0${\to}$1; rebuilt statement credits as idempotent, self-healing workflows with reconciliation, eliminating double-credit incidents and manual clean-ups.}
-      \resumeItem{Scaled IP telemetry over high-risk operations, enabling fraud analytics and controls that reduced fraud cases.}
-    \resumeItemListEnd
-
-  \resumeSubheading
-    {Root16, Technology Consulting}{Jul 2020 -- Apr 2023}
-    {Software Engineer}{Remote}
-    \resumeItemListStart
-      \resumeItem{Led .NET/C\# delivery for clients including Energizer, RSM, and Plante Moran; built a data-migration tool and Azure CI/CD pipelines; mentored junior engineers.}
-    \resumeItemListEnd
-
-  \resumeSubheading
-    {Human--Computer Integration Lab, University of Chicago}{Jan -- Jun 2020}
-    {Research Assistant (Prof.\ Pedro Lopes)}{Chicago, IL}
-    \resumeItemListStart
-      \resumeItem{Built VR/AR demonstrations (Unity, Leap Motion) and ran user studies for an exoskeleton-EMS haptic system; work contributed to Touch\&Fold (CHI 2021, Best Paper Honorable Mention).}
-    \resumeItemListEnd
-
-\resumeSubHeadingListEnd
-
-\section{Invited Talks}
-\begin{itemize}[leftmargin=0.15in]
-  \resumeItem{``Steering Awareness: Detecting Activation Steering from Within,'' BlueDot Impact, 2026.}
+\entryhead{Anthropic Fellows Program}{Berkeley, CA}{AI Safety Research Fellow: character training and model welfare}{2026 -- Present}
+\begin{itemize}
+    \item \textbf{Does a model's consent matter?} Training 4 models on their own elicited preferences won 98/112 adversarial-pressure scenarios and improved all 8 psych-health dimensions at flat capability. Controls showed the gains come from the character's content, not the model's choice, and that training rewrites consent (refused traits later endorsed 57/60 times).
+    \item \textbf{Training suppresses behavior, not preference.} SFT cut a preferred behavior from 44\% to 0\% in 5 steps; after 92 steps the model still chose it 85\% of the time.
+    \item \textbf{Welfare without breakage.} A flourishing corpus made Gemma-4-12B steadier under pressure (blind judge 25/27, $p<0.001$) with capability intact, at a cost of +9 pts on corrigibility evals.
+    \item Built the stack: synthetic-document midtraining (up to 300M tokens), on-policy SFT, Petri, welfare interviews, emotion probes; replicated across up to 7 models and 4 families.
 \end{itemize}
 
-\section{Open Source \& Projects}
-\begin{itemize}[leftmargin=0.15in]
-  \resumeItem{\textbf{\href{https://github.com/jfonsecarivera/artblock}{Artblock}} (340$\star$) --- browser extension replacing web ads with fine art from public museum and NASA collections.}
-  \resumeItem{\textbf{\href{https://github.com/jfonsecarivera/animal-crossing-llm-mod}{animal-crossing-llm-mod}} (319$\star$) --- LLM-driven dialogue injected into a 2001 GameCube game via live memory mapping.}
-  \resumeItem{\textbf{\href{https://github.com/jfonsecarivera/golf}{golf.vim}} (295$\star$) / \textbf{\href{https://github.com/jfonsecarivera/vim-bujo}{vim-bujo}} (206$\star$) --- a keystroke-golf game and a minimalist task manager for Vim.}
-  \resumeItem{\textbf{\href{https://simplifyextension.com}{Simplify AI}} --- founder; browser extension converting dense text to plain English using fine-tuned GPT models.}
+
+\section{Engineering Experience}
+
+\entryhead{Taekus (fintech)}{Remote}{Software Engineer $\to$ Lead Mobile Engineer}{Jan 2024 -- Jun 2026}
+\begin{itemize}
+    \item Built the iOS/Android banking app from first commit through 60+ releases (69\% of the codebase; 3,000+ MAU) and its money-movement suite (ACH, wire, P2P, check deposit, wallet provisioning), now processing $\sim$\$350M/month.
+    \item Built the company's internal agent platform on Claude: a Slack-native engineering agent that merged 113 production PRs in 3 months, and a natural-language SQL agent used by 19 staff over 700+ sessions.
+    \item Built reconciliation and auditing infrastructure (1.08M high-risk operations logged); designed a referral feature now driving $\sim$70\% of signups; cut login p95 from $>$15s to $<$2s.
 \end{itemize}
 
-\section{Teaching \& Skills}
-\begin{itemize}[leftmargin=0.15in]
-  \resumeItem{\textbf{Teaching:} TA, Emerging Technologies, University of Chicago (Winter 2020).}
-  \resumeItem{\textbf{ML/Research:} Python, PyTorch, HuggingFace, model evaluation \& interpretability tooling.}
-  \resumeItem{\textbf{Engineering:} TypeScript, React/React Native, Django, Postgres, AWS, C\#/.NET, Swift/Kotlin.}
-\end{itemize}
+\vspace{4pt}
+\textbf{Simplify}, Founder and sole engineer (ed-tech startup) \hfill \textit{2023} \\
+Built an LLM tool rewriting course material to each student's reading level; YC final round; early customers.
+
+\vspace{4pt}
+\textbf{Root16}, Software Engineer (technology consulting) \hfill \textit{Jul 2020 -- Apr 2023} \\
+Led .NET/C\# delivery for Energizer, RSM, and Plante Moran; built data-migration tooling and Azure CI/CD.
+
+\section{Education}
+\textbf{The University of Texas at Austin}, M.S.\ in Artificial Intelligence \hfill 2026 \\
+\textbf{The University of Chicago}, B.S.\ in Computer Science; Dean's List; TA, Emerging Technologies \hfill 2020
+
+\section{Open Source \& Skills}
+\textbf{Projects:} animal-crossing-llm-mod (319$\star$), Artblock (340$\star$), golf.vim (295$\star$), vim-bujo (206$\star$) \\
+\textbf{Research:} synthetic document finetuning, on-policy SFT, LoRA, activation steering, probes, LLM judges, Petri, IRT \\
+\textbf{Engineering:} Python, PyTorch, Hugging Face, TypeScript, React Native, Django, Postgres, AWS
 
 \end{document}
